@@ -1,0 +1,194 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{6D1B91DB-8D3B-4969-B9B4-100B6C76B827}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MagentoConnect</RootNamespace>
+    <AssemblyName>MagentoConnect</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\RestSharp.105.2.3\lib\net452\RestSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\EndlessAisle\ClassificationController.cs" />
+    <Compile Include="Mappers\BaseMapper.cs" />
+    <Compile Include="Controllers\EndlessAisle\AssetsController.cs" />
+    <Compile Include="Controllers\EndlessAisle\AuthController.cs" />
+    <Compile Include="Controllers\EndlessAisle\AvailabilityController.cs" />
+    <Compile Include="Controllers\EndlessAisle\CatalogsController.cs" />
+    <Compile Include="Controllers\EndlessAisle\EntitiesController.cs" />
+    <Compile Include="Controllers\EndlessAisle\FieldDefinitionController.cs" />
+    <Compile Include="Controllers\EndlessAisle\ProductLibraryController.cs" />
+    <Compile Include="Controllers\Magento\CategoryController.cs" />
+    <Compile Include="Controllers\Magento\CustomAttributesController.cs" />
+    <Compile Include="Mappers\AvailabilityMapper.cs" />
+    <Compile Include="Mappers\ColorMapper.cs" />
+    <Compile Include="Mappers\FieldMapper.cs" />
+    <Compile Include="Mappers\ProductMapper.cs" />
+    <Compile Include="Models\EndlessAisle\Availability\AvailabilityResource.cs" />
+    <Compile Include="Models\EndlessAisle\ProductLibrary\AssetResource.cs" />
+    <Compile Include="Models\EndlessAisle\ProductLibrary\ColorTagsResource.cs" />
+    <Compile Include="Models\EndlessAisle\ProductLibrary\Projections\BulkProductDetailsResource.cs" />
+    <Compile Include="Models\EndlessAisle\ProductLibrary\Projections\AssetResponse.cs" />
+    <Compile Include="Models\EndlessAisle\ProductLibrary\Projections\ClassificationBreadcrumbItem.cs" />
+    <Compile Include="Models\EndlessAisle\ProductLibrary\Projections\ClassificationBreadcrumbResource.cs" />
+    <Compile Include="Models\EndlessAisle\ProductLibrary\Projections\GetBulkProductDetailsCommand.cs" />
+    <Compile Include="Models\EndlessAisle\ProductLibrary\Projections\GetProductSummariesCommand.cs" />
+    <Compile Include="Models\EndlessAisle\ProductLibrary\Projections\IdentifierResource.cs" />
+    <Compile Include="Models\EndlessAisle\ProductLibrary\Projections\MoneyResource.cs" />
+    <Compile Include="Models\EndlessAisle\ProductLibrary\Projections\ProductDetailAssetResource.cs" />
+    <Compile Include="Models\EndlessAisle\ProductLibrary\Projections\ProductDetailsResource.cs" />
+    <Compile Include="Models\EndlessAisle\ProductLibrary\Projections\ProductSummariesResource.cs" />
+    <Compile Include="Models\EndlessAisle\ProductLibrary\Projections\ProductSummaryResource.cs" />
+    <Compile Include="Models\EndlessAisle\ProductLibrary\Projections\SpecificationFieldResource.cs" />
+    <Compile Include="Models\EndlessAisle\ProductLibrary\Projections\SpecificationGroupResource.cs" />
+    <Compile Include="Models\EndlessAisle\ProductLibrary\Projections\VariationInfoResource.cs" />
+    <Compile Include="Models\EndlessAisle\ProductLibrary\Projections\VaryingFieldResource.cs" />
+    <Compile Include="Models\EndlessAisle\ProductLibrary\RevisionEditResource.cs" />
+    <Compile Include="Models\Magento\CustomAttributes\AttributeSetResource.cs" />
+    <Compile Include="Models\Magento\CustomAttributes\CreateCustomAttributeResource.cs" />
+    <Compile Include="Models\Magento\CustomAttributes\CustomAttributeSearchResource.cs" />
+    <Compile Include="Models\Magento\Products\ProductSearchResource.cs" />
+    <Compile Include="Models\Magento\Products\UpdateProductBodyResource.cs" />
+    <Compile Include="Models\Magento\Products\UpdateProductResource.cs" />
+    <Compile Include="Models\Mapping\MagentoEaMapping.cs" />
+    <Compile Include="Models\EndlessAisle\Authentication\AuthenticationCredentialsResource.cs" />
+    <Compile Include="Controllers\Magento\AuthController.cs" />
+    <Compile Include="Controllers\Magento\ProductController.cs" />
+    <Compile Include="App.cs" />
+    <Compile Include="Models\EndlessAisle\Assets\AssetResource.cs" />
+    <Compile Include="Models\EndlessAisle\Authentication\AuthTokenResource.cs" />
+    <Compile Include="Models\EndlessAisle\Catalog\CatalogItemResource.cs" />
+    <Compile Include="Models\EndlessAisle\ClassificationTree\ClassificationTreeNode.cs" />
+    <Compile Include="Models\EndlessAisle\ClassificationTree\ClassificationTreeResourceSummary.cs" />
+    <Compile Include="Models\EndlessAisle\ClassificationTree\ClassificationTreesResource.cs" />
+    <Compile Include="Models\EndlessAisle\Entities\EntityRoleResource.cs" />
+    <Compile Include="Models\EndlessAisle\Entities\ManufacturerResource.cs" />
+    <Compile Include="Models\EndlessAisle\FieldDefinitions\FieldDefinitionResource.cs" />
+    <Compile Include="Models\EndlessAisle\FieldDefinitions\OptionValueResource.cs" />
+    <Compile Include="Models\EndlessAisle\ProductLibrary\BaseRevisionResource.cs" />
+    <Compile Include="Models\EndlessAisle\ClassificationTree\ClassificationCategoryResource.cs" />
+    <Compile Include="Models\EndlessAisle\ClassificationTree\ClassificationResource.cs" />
+    <Compile Include="Models\EndlessAisle\ClassificationTree\ClassificationTreeResource.cs" />
+    <Compile Include="Models\EndlessAisle\ProductLibrary\ColorDefinitionResource.cs" />
+    <Compile Include="Models\EndlessAisle\ProductLibrary\ColorDefinitionsResource.cs" />
+    <Compile Include="Models\EndlessAisle\ProductLibrary\ColorTagResource.cs" />
+    <Compile Include="Models\EndlessAisle\ProductLibrary\CreatedVariationResource.cs" />
+    <Compile Include="Models\EndlessAisle\ProductLibrary\EntityRefResource.cs" />
+    <Compile Include="Models\EndlessAisle\ProductLibrary\FieldEditResource.cs" />
+    <Compile Include="Models\EndlessAisle\ProductLibrary\FieldResource.cs" />
+    <Compile Include="Models\EndlessAisle\ProductLibrary\ProductClassificationRefResource.cs" />
+    <Compile Include="Models\EndlessAisle\ProductLibrary\ProductDocumentResource.cs" />
+    <Compile Include="Models\EndlessAisle\ProductLibrary\ProductIdentifierGroupResource.cs" />
+    <Compile Include="Models\EndlessAisle\ProductLibrary\ProductIdentifierResource.cs" />
+    <Compile Include="Models\EndlessAisle\ProductLibrary\ProductRevisionResource.cs" />
+    <Compile Include="Models\EndlessAisle\ProductLibrary\RegionRefResource.cs" />
+    <Compile Include="Models\EndlessAisle\ProductLibrary\RevisionContext.cs" />
+    <Compile Include="Models\EndlessAisle\ProductLibrary\RevisionGroupResource.cs" />
+    <Compile Include="Models\EndlessAisle\ProductLibrary\RevisionGroupTypeResource.cs" />
+    <Compile Include="Models\EndlessAisle\ProductLibrary\RootRevisionResource.cs" />
+    <Compile Include="Models\EndlessAisle\ProductLibrary\SwatchResource.cs" />
+    <Compile Include="Models\EndlessAisle\ProductLibrary\VariationResource.cs" />
+    <Compile Include="Models\Magento\Authentication\AuthenticationCredentialsResource.cs" />
+    <Compile Include="Models\Magento\Category\CategoryResource.cs" />
+    <Compile Include="Models\Magento\CustomAttributes\CustomAttributeResource.cs" />
+    <Compile Include="Models\Magento\CustomAttributes\OptionResource.cs" />
+    <Compile Include="Models\Magento\Products\ConfigurableProductOption.cs" />
+    <Compile Include="Models\Magento\Products\ConfigurableValue.cs" />
+    <Compile Include="Models\Magento\Products\CustomAttributeRefResource.cs" />
+    <Compile Include="Models\Magento\Products\ExtensionAttributes.cs" />
+    <Compile Include="Models\Magento\Products\MediaGalleryEntryResource.cs" />
+    <Compile Include="Models\Magento\Products\OptionResource.cs" />
+    <Compile Include="Models\Magento\Products\ProductLinkResource.cs" />
+    <Compile Include="Models\Magento\Products\ProductResource.cs" />
+    <Compile Include="Models\Magento\Products\TierPriceResource.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\ConfigReader.cs" />
+    <Compile Include="Mappers\AssetMapper.cs" />
+    <Compile Include="Utilities\UrlFormatter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5.2 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
