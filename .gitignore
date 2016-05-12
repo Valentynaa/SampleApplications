@@ -7,3 +7,4 @@ App.config
 TestingApp.config
 Tests/Tests/obj/Debug/*
 Tests/Tests/bin/Debug/
+Tests/Tests/App.config

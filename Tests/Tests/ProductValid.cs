@@ -5,119 +5,117 @@ using MagentoConnect.Models.Magento.Products;
 using MagentoConnect.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
+using Tests.Utilities;
 
 namespace Tests
 {
-    [TestClass]
-    public class ProductValid
-    {
-        private const string MagentoProductSku = "MJ01-S-Yellow";
+	[TestClass]
+	public class ProductValid
+	{
+		private ProductController _magentoProductController;
+		private ProductResource _magentoProduct;
 
-        private ProductController _magentoProductController;
+		[TestInitialize]
+		public void SetUp()
+		{
+			var magentoAuthToken = App.GetMagentoAuthToken();
+			_magentoProductController = new ProductController(magentoAuthToken);
 
-        private ProductResource _magentoProduct;
+			_magentoProduct = TestHelper.TestProduct;
+		}
 
-        [TestInitialize]
-        public void SetUp()
-        {
-            var magentoAuthToken = App.GetMagentoAuthToken();
-            _magentoProductController = new ProductController(magentoAuthToken);
+		//If this test fails, your Magento product sku may be invalid
+		[TestMethod]
+		public void MagentoProduct_Exists()
+		{
+			Assert.IsNotNull(_magentoProduct);
+		}
 
-            _magentoProduct = _magentoProductController.GetProductBySku(MagentoProductSku);
-        }
+		//If this test fails, your product does not have an image
+		[TestMethod]
+		public void MagentoProduct_HasImages()
+		{
+			Assert.IsTrue(_magentoProduct.media_gallery_entries.Count > 0);
+		}
 
-        //If this test fails, your Magento product sku may be invalid
-        [TestMethod]
-        public void MagentoProduct_Exists()
-        {
-            Assert.IsNotNull(_magentoProduct);
-        }
+		//If this test fails, your product does not have a "base" image assigned
+		[TestMethod]
+		public void MagentoProduct_HasBaseImage()
+		{
+			object imageAttr = null;
 
-        //If this test fails, your product does not have an image
-        [TestMethod]
-        public void MagentoProduct_HasImages()
-        {
-            Assert.IsTrue(_magentoProduct.media_gallery_entries.Count > 0);
-        }
+			foreach (var option in _magentoProduct.custom_attributes.Where(option => option.attribute_code == ConfigReader.MagentoImageCode))
+			{
+				imageAttr = option.value;
+			}
 
-        //If this test fails, your product does not have a "base" image assigned
-        [TestMethod]
-        public void MagentoProduct_HasBaseImage()
-        {
-            object imageAttr = null;
+			Assert.IsNotNull(imageAttr);
+			Assert.IsFalse(string.IsNullOrEmpty(imageAttr.ToString()));
+		}
 
-            foreach (var option in _magentoProduct.custom_attributes.Where(option => option.attribute_code == ConfigReader.MagentoImageCode))
-            {
-                imageAttr = option.value;
-            }
+		//If this test fails, your product does not have a category
+		[TestMethod]
+		public void MagentoProduct_HasCategory()
+		{
+			object categoryAttr = null;
 
-            Assert.IsNotNull(imageAttr);
-            Assert.IsFalse(string.IsNullOrEmpty(imageAttr.ToString()));
-        }
+			foreach (var option in _magentoProduct.custom_attributes.Where(option => option.attribute_code == ConfigReader.MagentoCategoryCode))
+			{
+				categoryAttr = option.value;
+			}
 
-        //If this test fails, your product does not have a category
-        [TestMethod]
-        public void MagentoProduct_HasCategory()
-        {
-            object categoryAttr = null;
+			Assert.IsNotNull(categoryAttr);
+		}
 
-            foreach (var option in _magentoProduct.custom_attributes.Where(option => option.attribute_code == ConfigReader.MagentoCategoryCode))
-            {
-                categoryAttr = option.value;
-            }
+		//If this test fails, your product's category is not mapped in App.config
+		[TestMethod]
+		public void MagentoProduct_HasMappedCategory()
+		{
+			JArray categoryAttr = null;
+			var magentoCategoryId = -1;
 
-            Assert.IsNotNull(categoryAttr);
-        }
+			foreach (var option in _magentoProduct.custom_attributes.Where(option => option.attribute_code == ConfigReader.MagentoCategoryCode))
+			{
+				categoryAttr = (JArray) option.value;
+			}
 
-        //If this test fails, your product's category is not mapped in App.config
-        [TestMethod]
-        public void MagentoProduct_HasMappedCategory()
-        {
-            JArray categoryAttr = null;
-            var magentoCategoryId = -1;
+			Assert.IsNotNull(categoryAttr);
 
-            foreach (var option in _magentoProduct.custom_attributes.Where(option => option.attribute_code == ConfigReader.MagentoCategoryCode))
-            {
-                categoryAttr = (JArray) option.value;
-            }
+			magentoCategoryId = int.Parse(categoryAttr.First().ToString());
 
-            Assert.IsNotNull(categoryAttr);
+			Assert.IsTrue(ConfigReader.GetMatchingEndlessAisleCategory(magentoCategoryId) != -1);
+		}
 
-            magentoCategoryId = int.Parse(categoryAttr.First().ToString());
+		//If this test fails, your product does not have a manufacturer
+		[TestMethod]
+		public void MagentoProduct_HasManufacturer()
+		{
+			object magentoAttr = null;
 
-            Assert.IsTrue(ConfigReader.GetMatchingEndlessAisleCategory(magentoCategoryId) != -1);
-        }
+			foreach (var option in _magentoProduct.custom_attributes.Where(option => option.attribute_code == ConfigReader.MagentoManufacturerCode))
+			{
+				magentoAttr = option.value;
+			}
 
-        //If this test fails, your product does not have a manufacturer
-        [TestMethod]
-        public void MagentoProduct_HasManufacturer()
-        {
-            object magentoAttr = null;
+			Assert.IsNotNull(magentoAttr);
+		}
 
-            foreach (var option in _magentoProduct.custom_attributes.Where(option => option.attribute_code == ConfigReader.MagentoManufacturerCode))
-            {
-                magentoAttr = option.value;
-            }
+		//If this test fails, your product's manufacturer is not mapped in App.config
+		[TestMethod]
+		public void MagentoProduct_HasMappedManufacturer()
+		{
+			object manufacturerAttr = null;
 
-            Assert.IsNotNull(magentoAttr);
-        }
+			foreach (var option in _magentoProduct.custom_attributes.Where(option => option.attribute_code == ConfigReader.MagentoManufacturerCode))
+			{
+				manufacturerAttr = option.value;
+			}
 
-        //If this test fails, your product's manufacturer is not mapped in App.config
-        [TestMethod]
-        public void MagentoProduct_HasMappedManufacturer()
-        {
-            object manufacturerAttr = null;
+			Assert.IsNotNull(manufacturerAttr);
 
-            foreach (var option in _magentoProduct.custom_attributes.Where(option => option.attribute_code == ConfigReader.MagentoManufacturerCode))
-            {
-                manufacturerAttr = option.value;
-            }
+			var magentoManufacturerId = int.Parse(manufacturerAttr.ToString());
 
-            Assert.IsNotNull(manufacturerAttr);
-
-            var magentoManufacturerId = int.Parse(manufacturerAttr.ToString());
-
-            Assert.IsTrue(ConfigReader.GetMatchingEndlessAisleManufacturer(magentoManufacturerId) != -1);
-        }
-    }
+			Assert.IsTrue(ConfigReader.GetMatchingEndlessAisleManufacturer(magentoManufacturerId) != -1);
+		}
+	}
 }

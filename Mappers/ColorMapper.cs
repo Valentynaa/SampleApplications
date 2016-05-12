@@ -10,7 +10,7 @@ using MagentoConnect.Utilities;
 
 namespace MagentoConnect.Mappers
 {
-    class ColorMapper : BaseMapper
+    public class ColorMapper : BaseMapper
     {
         private readonly CustomAttributeResource _customAttributeColor;
 
@@ -112,7 +112,7 @@ namespace MagentoConnect.Mappers
          */
         public string GetMagentoColorAttribute(ProductResource magentoProduct)
         {
-            if (_customAttributeColor == null)
+            if (_customAttributeColor == null || magentoProduct == null)
                 return null;
 
             var colorObj = GetAttributeByCode(magentoProduct.custom_attributes, ConfigReader.MagentoColorCode);
