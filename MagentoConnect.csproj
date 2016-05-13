@@ -68,6 +68,7 @@
   <ItemGroup>
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\EndlessAisle\ClassificationController.cs" />
+    <Compile Include="Controllers\EndlessAisle\PricingController.cs" />
     <Compile Include="Mappers\BaseMapper.cs" />
     <Compile Include="Controllers\EndlessAisle\AssetsController.cs" />
     <Compile Include="Controllers\EndlessAisle\AuthController.cs" />
@@ -81,8 +82,11 @@
     <Compile Include="Mappers\AvailabilityMapper.cs" />
     <Compile Include="Mappers\ColorMapper.cs" />
     <Compile Include="Mappers\FieldMapper.cs" />
+    <Compile Include="Mappers\PricingMapper.cs" />
     <Compile Include="Mappers\ProductMapper.cs" />
     <Compile Include="Models\EndlessAisle\Availability\AvailabilityResource.cs" />
+    <Compile Include="Models\EndlessAisle\Catalog\CatalogSearchResultResource.cs" />
+    <Compile Include="Models\EndlessAisle\Pricing\PricingResource.cs" />
     <Compile Include="Models\EndlessAisle\ProductLibrary\AssetResource.cs" />
     <Compile Include="Models\EndlessAisle\ProductLibrary\ColorTagsResource.cs" />
     <Compile Include="Models\EndlessAisle\ProductLibrary\Projections\BulkProductDetailsResource.cs" />

@@ -291,5 +291,20 @@ namespace MagentoConnect.Mappers
 
 			return variationIds;
 		}
+
+		/// <summary>
+		/// Finds the catalog items that match the provided slug and returns the first item's catalogItemId.
+		/// 
+		/// NOTE: Multiple catalog items could correspond to a single slug, but for now only the first item
+		/// will have the pricing updated in EA.
+		/// </summary>
+		/// <param name="slug">Slug to find catalog items for.</param>
+		/// <returns>CatalogItemId of first item or null if no items are found.</returns>
+		public string GetCatalogItemIdBySlug(string slug)
+		{
+			var item = _eaCatalogController.GetCatalogItemsBySlug(slug).FirstOrDefault();
+			
+			return item?.CatalogItemId.ToString();
+		}
 	}
 }

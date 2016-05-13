@@ -61,11 +61,14 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Configuration.cs" />
+    <Compile Include="Controllers\EndlessAisle\CatalogsControllerTests.cs" />
+    <Compile Include="Controllers\EndlessAisle\PricingControllerTests.cs" />
     <Compile Include="Mappers\AssetMapperTests.cs" />
     <Compile Include="Mappers\AvailabilityMapperTests.cs" />
     <Compile Include="Mappers\BaseMapperTests.cs" />
     <Compile Include="Mappers\ColorMapperTests.cs" />
     <Compile Include="Mappers\FieldMapperTests.cs" />
+    <Compile Include="Mappers\PricingMapperTests.cs" />
     <Compile Include="Mappers\ProductMapperTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProductValid.cs" />
@@ -87,6 +90,7 @@
       <Name>MagentoConnect</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

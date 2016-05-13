@@ -37,7 +37,5 @@ namespace MagentoConnect.Mappers
 
 			_eaAvailabilityController.CreateCatalogItem(availability);
 		}
-
-
 	}
 }
