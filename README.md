@@ -140,9 +140,17 @@ Product Library supports units for fields.
 
 Units are not supported in the App, a plugin would be required to implement this feature.
 
+### Prices
+
+Base Magento does not allow you to set Pricing at a store level, unlike Endless Aisle.
+
+When MagentoConnect syncs price, it sets it at the Company level in Endless Aisle.
+
+Using a Magento extention could allow you to set price at the Location level in Endless Aisle.
+
 ## File Structure
 
-The files in this project are organized in the following structure:
+The files in the Magento Connect project are organized in the following structure:
 
 * Controllers - Classes that deal specifically with sending API requests
 * Mappers - Classes with business logic for the app
@@ -172,6 +180,7 @@ EndlessAisle:
 * **ClassificationController** - Controller used by Tests, see [ClassificationTree](http://developers.iqmetrix.com/api/classification-tree/)
 * **EntitiesController** - Allows you to get Manufacturer information, see [Entities](http://developers.iqmetrix.com/api/entity-store/)
 * **FieldDefinitionController** - Allows you to get Field Definitions, see [FieldDefinitions](http://developers.iqmetrix.com/api/field-definitions/)
+* **PricingController* - Allows you to set Prices, see [Pricing](http://developers.iqmetrix.com/api/pricing/)
 * **ProductLibraryController** - Allows you to create Master Products, Variations and Revisions, see [Product Structure ](http://developers.iqmetrix.com/api/product-structure/)
 
 Magento:
@@ -199,6 +208,7 @@ The table below lists each folder and the relevant API reference.
 | | Entities | [Entities](http://developers.iqmetrix.com/api/entity-store/) |
 | | FieldDefinitions | [FieldDefinitions](http://developers.iqmetrix.com/api/field-definitions/) |
 | | ProductLibrary | [Product Structure](http://developers.iqmetrix.com/api/product-structure/) |
+| | Pricing | [Pricing](http://developers.iqmetrix.com/api/pricing/) |
 | Magento | | |
 | | Authentication | [Magento REST API Reference](http://devdocs.magento.com/swagger/index.html#/) |
 | | Category | [Magento REST API Reference](http://devdocs.magento.com/swagger/index.html#/)  |
@@ -213,6 +223,7 @@ The following utilities are included in the project,
 
 * **UrlFormatter** - Formats and returns endpoint URLs as strings given URL variables. This is useful because Endless Aisle endpoints differ between [Enviornments](http://developers.iqmetrix.com/api/environments/). 
 * **ConfigReager** - Reads values from App.config, used for reading authentication information and Environment value
+* **RegexPatterns** - Holds a list of Regex patterns used for validation
 
 ### App.config
 
@@ -256,3 +267,5 @@ The App solution includes a series of unit tests which are intended to help figu
 |:-----|:-----|
 | Configuration.cs | These tests will debug problems with App.config |
 | ProductValid.cs | Given a magento product SKU, these tests will determine if there are any missing required fields and if the mapping values are valid |
+| TemplateTests.cs | Template that can be used to create more tests |
+| TestHelper.cs | Utility file for test classes | 

@@ -39,6 +39,5 @@ namespace MagentoConnect.Controllers.EndlessAisle
 
             return JsonConvert.DeserializeObject<AvailabilityResource>(response.Content);
         }
-
     }
 }

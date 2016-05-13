@@ -18,7 +18,8 @@ namespace MagentoConnect
 		private static AssetMapper _assetMapper;
 		private static AvailabilityMapper _availabilityMapper;
 		private static ColorMapper _colorMapper;
-		private static FieldMapper _fieldMapper;      
+		private static FieldMapper _fieldMapper;
+		private static PricingMapper _pricingMapper;
 
 		/**
 		 * This console app will sync products created in the last X time
@@ -33,6 +34,7 @@ namespace MagentoConnect
 			_availabilityMapper = new AvailabilityMapper(_cachedMagentoAuthToken, _cachedEaAuthToken);
 			_colorMapper = new ColorMapper(_cachedMagentoAuthToken, _cachedEaAuthToken);
 			_fieldMapper = new FieldMapper(_cachedMagentoAuthToken, _cachedEaAuthToken);
+			_pricingMapper = new PricingMapper(_cachedMagentoAuthToken, _cachedEaAuthToken);
 
 			var productsToUpdate = _productMapper.GetMagentoProductsUpdatedAfter(DateTime.Now.AddHours(-1));
 
@@ -112,16 +114,32 @@ namespace MagentoConnect
 
 			var slug = _productMapper.CalculateSlug(productDocumentId, null);
 
+			string catalogItemId;
 			if (productMapping == null)
 			{
 				//Add newly created product library product to your catalog
-				var catalogItemId = _productMapper.AddProductToEndlessAisle(slug);
+				catalogItemId = _productMapper.AddProductToEndlessAisle(slug);
 
 				//Create availability for product at company level (required for EA - this is just a stub)
 				_availabilityMapper.CreateAvailabilityForCatalogItem(catalogItemId);
 
 				//Set the mapping SLUG on the product so we know it is mapped
 				_fieldMapper.CreateMappingForProduct(magentoProduct, slug);
+			}
+			else
+			{
+				catalogItemId = _productMapper.GetCatalogItemIdBySlug(slug);
+			}
+
+			if (catalogItemId != null)
+			{
+				_pricingMapper.UpsertPricingForCatalogItem(catalogItemId, magentoProduct.price);
+			}
+			else
+			{
+				Console.WriteLine(
+					"Product {0} unable to have its price updated since no catalog items could be found for mapping code {1}.",
+					magentoProduct.sku, slug);
 			}
 
 			//If we have colors defined, add it as a color definition (if its not already added)
@@ -186,16 +204,33 @@ namespace MagentoConnect
 
 				SetHeroShot(childProductObj, assets, slug);
 
-				if (productMapping != null) continue;
+				string catalogItemId;
+				if (productMapping == null)
+				{
+					//Add to Endless Aisle
+					catalogItemId = _productMapper.AddProductToEndlessAisle(slug);
 
-				//Add to Endless Aisle
-				var catalogItemId = _productMapper.AddProductToEndlessAisle(slug);
+					//Create availability for product at company level (required for EA - this is just a stub)
+					_availabilityMapper.CreateAvailabilityForCatalogItem(catalogItemId);
 
-				//Create availability for product at company level (required for EA - this is just a stub)
-				_availabilityMapper.CreateAvailabilityForCatalogItem(catalogItemId);
+					//Set the mapping on the product to make updating it easier next time
+					_fieldMapper.CreateMappingForProduct(childProduct, slug);
+				}
+				else
+				{
+					catalogItemId = _productMapper.GetCatalogItemIdBySlug(slug);
+				}
 
-				//Set the mapping on the product to make updating it easier next time
-				_fieldMapper.CreateMappingForProduct(childProduct, slug);
+				if (catalogItemId != null)
+				{
+					_pricingMapper.UpsertPricingForCatalogItem(catalogItemId, magentoProduct.price);
+				}
+				else
+				{
+					Console.WriteLine(
+						"Product {0} unable to have its price updated since no catalog items could be found for mapping code {1}.",
+						magentoProduct.sku, slug);
+				}
 			}
 		}
 		
