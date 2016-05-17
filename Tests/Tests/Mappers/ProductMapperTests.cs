@@ -23,6 +23,7 @@ namespace Tests.Mappers
 		private const int MagentoProductId = 1;
 		private const string MagentoProductSku = "24-MB01";
 		private const int MagentoCategoryId = 4;
+		private const int MagentoProductQuantity = 100;
 
 		[TestInitialize]
 		public void SetUp()
@@ -83,6 +84,15 @@ namespace Tests.Mappers
 		public void ProductMapper_AddProductHierarchyToEndlessAisle_InvalidDocumentId()
 		{
 			_productMapper.AddProductHierarchyToEndlessAisle(Int32.MaxValue);
+		}
+
+		/// <summary>
+		/// If this test fails, the GetQuantityBySku function did not match the test value for quantity provided.
+		/// </summary>
+		[TestMethod]
+		public void ProductMapper_GetQuantityBySku()
+		{
+			Assert.AreEqual(MagentoProductQuantity, _productMapper.GetQuantityBySku(MagentoProductSku));
 		}
 	}
 }

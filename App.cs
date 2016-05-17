@@ -120,9 +120,6 @@ namespace MagentoConnect
 				//Add newly created product library product to your catalog
 				catalogItemId = _productMapper.AddProductToEndlessAisle(slug);
 
-				//Create availability for product at company level (required for EA - this is just a stub)
-				_availabilityMapper.CreateAvailabilityForCatalogItem(catalogItemId);
-
 				//Set the mapping SLUG on the product so we know it is mapped
 				_fieldMapper.CreateMappingForProduct(magentoProduct, slug);
 			}
@@ -134,11 +131,14 @@ namespace MagentoConnect
 			if (catalogItemId != null)
 			{
 				_pricingMapper.UpsertPricingForCatalogItem(catalogItemId, magentoProduct.price);
+
+				//Create availability for product at company level
+				_availabilityMapper.UpsertAvailabilityForCatalogItem(catalogItemId, _productMapper.GetQuantityBySku(magentoProduct.sku));
 			}
 			else
 			{
 				Console.WriteLine(
-					"Product {0} unable to have its price updated since no catalog items could be found for mapping code {1}.",
+					"Product {0} unable to have its price or inventory updated since no catalog items could be found for mapping code {1}.",
 					magentoProduct.sku, slug);
 			}
 
@@ -210,9 +210,6 @@ namespace MagentoConnect
 					//Add to Endless Aisle
 					catalogItemId = _productMapper.AddProductToEndlessAisle(slug);
 
-					//Create availability for product at company level (required for EA - this is just a stub)
-					_availabilityMapper.CreateAvailabilityForCatalogItem(catalogItemId);
-
 					//Set the mapping on the product to make updating it easier next time
 					_fieldMapper.CreateMappingForProduct(childProduct, slug);
 				}
@@ -224,11 +221,14 @@ namespace MagentoConnect
 				if (catalogItemId != null)
 				{
 					_pricingMapper.UpsertPricingForCatalogItem(catalogItemId, magentoProduct.price);
+
+					//Create availability for product at company level
+					_availabilityMapper.UpsertAvailabilityForCatalogItem(catalogItemId, _productMapper.GetQuantityBySku(magentoProduct.sku));
 				}
 				else
 				{
 					Console.WriteLine(
-						"Product {0} unable to have its price updated since no catalog items could be found for mapping code {1}.",
+						"Product {0} unable to have its price or inventory updated since no catalog items could be found for mapping code {1}.",
 						magentoProduct.sku, slug);
 				}
 			}

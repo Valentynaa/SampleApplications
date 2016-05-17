@@ -163,7 +163,7 @@ namespace MagentoConnect.Utilities
 		 *
 		 * @return  string  Url needed to search for products in Magento
 		 */
-		public string MagentoSearchProducsUrl(string property, string value, string condition)
+		public string MagentoSearchProductsUrl(string property, string value, string condition)
 		{
 			return string.Format("{0}rest/V1/products?searchCriteria[filter_groups][0][filters][0][field]={1}&searchCriteria[filter_groups][0][filters][0][value]={2}&searchCriteria[filter_groups][0][filters][0][condition_type]={3}", MagentoUrl, property, value, condition);
 		}
@@ -177,6 +177,16 @@ namespace MagentoConnect.Utilities
 		public string MagentoAddCustomAttributeUrl(string sku, string attrCode)
 		{
 			return string.Format("{0}rest/V1/products/{1}/attributes/{2}", MagentoUrl, sku, attrCode);
+		}
+
+		/// <summary>
+		/// Gets the URL needed to see inventory details for products in Magento by searching via SKU
+		/// </summary>
+		/// <param name="sku">SKU to get product for</param>
+		/// <returns>URL needed to see inventory details for products in Magento by searching via SKU</returns>
+		public string MagentoInventoryBySkuUrl(string sku)
+		{
+			return string.Format("{0}rest/V1/stockItems/{1}", MagentoUrl, sku);
 		}
 
 		/**
