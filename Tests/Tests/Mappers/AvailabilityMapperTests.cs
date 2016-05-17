@@ -27,22 +27,22 @@ namespace Tests.Mappers
 		//Tests go here
 
 		/// <summary>
-		/// This test ensures that an exception is thrown when null is passed in as the catagory
+		/// This test ensures that an exception is thrown when null is passed in as the catalog
 		/// </summary>
 		[TestMethod]
 		[ExpectedException(typeof(Exception))]
-		public void AvailabilityMapper_CreateAvailabilityForCatalogItem_NullCatalogId()
+		public void AvailabilityMapper_UpsertAvailabilityForCatalogItem_NullCatalogId()
 		{
-			_availabilityMapper.CreateAvailabilityForCatalogItem(null);
+			_availabilityMapper.UpsertAvailabilityForCatalogItem(null);
 		}
 
 		/// <summary>
 		/// This test ensures that an availability can be created from a new guid
 		/// </summary>
 		[TestMethod]
-		public void AvailabilityMapper_CreateAvailabilityForCatalogItem_NewGuid()
+		public void AvailabilityMapper_UpsertAvailabilityForCatalogItem_NewGuid()
 		{
-			_availabilityMapper.CreateAvailabilityForCatalogItem(Guid.NewGuid().ToString());
+			_availabilityMapper.UpsertAvailabilityForCatalogItem(Guid.NewGuid().ToString());
 		}
 	}
 }

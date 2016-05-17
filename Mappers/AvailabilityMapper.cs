@@ -14,14 +14,19 @@ namespace MagentoConnect.Mappers
 			_eaAvailabilityController = new AvailabilityController(eaAuthToken);
 		}
 
-		/**
-		 * This function exists only because as of the creation of this app, EA requires products to have availability
-		 * Before they can show up. This function creates an availability record of 1 for a product across the company
-		 * Allowing a product to appear in EA, passing the "do not display out of stock products" rule
-		 * 
-		 * @param   catalogItemId            Slug of a Product in EA
-		 */
-		public void CreateAvailabilityForCatalogItem(string catalogItemId)
+		/// <summary>
+		/// Upserts an EA availability / quantity record for a catalog product. EA requires products to have availability
+		/// before they can show up.
+		/// 
+		/// Availability is set at the COMPANY level in EA
+		/// 
+		/// NOTE:
+		///		By default, this function creates an availability record of 1 for a product across the company
+		///		Allowing a product to appear in EA, passing the "do not display out of stock products" rule.
+		/// </summary>
+		/// <param name="catalogItemId">Item ID for EA catalog</param>
+		/// <param name="quantity">Quantity to set for the item. Defaults to 1 if not set.</param>
+		public void UpsertAvailabilityForCatalogItem(string catalogItemId, int quantity = 1)
 		{
 			if (catalogItemId == null)
 			{
@@ -31,8 +36,8 @@ namespace MagentoConnect.Mappers
 			var availability = new AvailabilityResource
 			{
 				Id = new Guid(catalogItemId),
-				EntityId = ConfigReader.EaLocationId,
-				Quantity = 1
+				EntityId = ConfigReader.EaCompanyId,
+				Quantity = quantity
 			};
 
 			_eaAvailabilityController.CreateCatalogItem(availability);

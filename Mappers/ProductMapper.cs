@@ -295,8 +295,9 @@ namespace MagentoConnect.Mappers
 		/// <summary>
 		/// Finds the catalog items that match the provided slug and returns the first item's catalogItemId.
 		/// 
-		/// NOTE: Multiple catalog items could correspond to a single slug, but for now only the first item
-		/// will have the pricing updated in EA.
+		/// NOTE: 
+		///		Multiple catalog items could correspond to a single slug, but for now only the first item
+		///		will have the pricing updated in EA.
 		/// </summary>
 		/// <param name="slug">Slug to find catalog items for.</param>
 		/// <returns>CatalogItemId of first item or null if no items are found.</returns>
@@ -305,6 +306,23 @@ namespace MagentoConnect.Mappers
 			var item = _eaCatalogController.GetCatalogItemsBySlug(slug).FirstOrDefault();
 			
 			return item?.CatalogItemId.ToString();
+		}
+
+		/// <summary>
+		/// Finds the quantity for a magento product based on the SKU provided. 
+		/// If the product is not set  as "in stock" it will give a quantity of 0. 
+		/// In the case that the quantity is returned as null,  then 1 is returned.
+		/// </summary>
+		/// <param name="sku">SKU to get inventory for</param>
+		/// <returns>Quantity of product</returns>
+		public int GetQuantityBySku(string sku)
+		{
+			var inventoryItem = _magentoProductController.GetInventoryBySku(sku);
+
+			if (!inventoryItem.is_in_stock)
+				return 0;
+
+			return inventoryItem.qty == null ? 1 : (int) inventoryItem.qty;
 		}
 	}
 }

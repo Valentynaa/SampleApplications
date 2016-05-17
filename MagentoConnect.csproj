@@ -109,6 +109,7 @@
     <Compile Include="Models\Magento\CustomAttributes\AttributeSetResource.cs" />
     <Compile Include="Models\Magento\CustomAttributes\CreateCustomAttributeResource.cs" />
     <Compile Include="Models\Magento\CustomAttributes\CustomAttributeSearchResource.cs" />
+    <Compile Include="Models\Magento\Inventory\CatalogInventoryItemResource.cs" />
     <Compile Include="Models\Magento\Products\ProductSearchResource.cs" />
     <Compile Include="Models\Magento\Products\UpdateProductBodyResource.cs" />
     <Compile Include="Models\Magento\Products\UpdateProductResource.cs" />
