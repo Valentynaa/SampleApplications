@@ -17,6 +17,7 @@ namespace MagentoConnect.Utilities
 		public readonly string EaAvailabilityTemplate = "https://availability{UrlSuffix}.iqmetrix.net/v1";
 		public readonly string EaProductManagerTemplate = "https://productlibrary{UrlSuffix}.iqmetrix.net/ProductManager";
 		public readonly string EaPricingTemplate = "https://pricing{UrlSuffix}.iqmetrix.net/v1";
+		public readonly string EaOrderTemplate = "https://order{UrlSuffix}.iqmetrix.net/v1";
 
 
 		public readonly string EaProductLibraryUrl;
@@ -27,6 +28,7 @@ namespace MagentoConnect.Utilities
 		public readonly string EaAvailabilityUrl;
 		public readonly string EaProductManagerUrl;
 		public readonly string EaPricingUrl;
+		public readonly string EaOrderUrl;
 
 		public UrlFormatter ()
 		{
@@ -44,6 +46,7 @@ namespace MagentoConnect.Utilities
 			EaAvailabilityUrl = ReplaceEnviornment(EaAvailabilityTemplate);
 			EaProductManagerUrl = ReplaceEnviornment(EaProductManagerTemplate);
 			EaPricingUrl = ReplaceEnviornment(EaPricingTemplate);
+			EaOrderUrl = ReplaceEnviornment(EaOrderTemplate);
 		}
 
 		/**
@@ -57,6 +60,7 @@ namespace MagentoConnect.Utilities
 			return url.Replace("{UrlSuffix}", Environment);
 		}
 
+		#region Magento URLs
 		/**
 		 * Gets location of Magento assets
 		 * 
@@ -179,6 +183,109 @@ namespace MagentoConnect.Utilities
 			return string.Format("{0}rest/V1/products/{1}/attributes/{2}", MagentoUrl, sku, attrCode);
 		}
 
+		/// <summary>
+		/// Returns the URL for getting a Magento customer associated with the customer ID provided
+		/// </summary>
+		/// <param name="customerId">Customer ID to search for</param>
+		/// <returns>URL for getting Magento customer</returns>
+		public string MagentoGetCustomerByIdUrl(int customerId)
+		{
+			return string.Format("{0}rest/V1/customers/{1}", MagentoUrl, customerId);
+		}
+
+		/// <summary>
+		/// Returns the URL for making a Magento customer a cart
+		/// </summary>
+		/// <param name="customerId">Customer ID to create cart for</param>
+		/// <returns>URL for creating Magento customer's cart</returns>
+		public string MagentoCreateCartForCustomerUrl(int customerId)
+		{
+			return string.Format("{0}rest/V1/customers/{1}/carts", MagentoUrl, customerId);
+		}
+
+		//TODO 294: 6) Searching for Product URL
+
+		/// <summary>
+		/// Returns the URL for adding a products to a cart
+		/// </summary>
+		/// <param name="cartId">Cart to add items to</param>
+		/// <returns>URL for adding a products to a cart</returns>
+		public string MagentoAddItemToCartUrl(int cartId)
+		{
+			return string.Format("{0}rest/V1/carts/{1}/items", MagentoUrl, cartId);
+		}
+
+		/// <summary>
+		/// Returns the URL for getting a cart's shipping methods
+		/// </summary>
+		/// <param name="cartId">Cart to get shipping methods for</param>
+		/// <returns>URL for getting a cart's shipping methods</returns>
+		public string MagentoGetShippingMethodsForCartUrl(int cartId)
+		{
+			return string.Format("{0}rest/V1/carts/{1}/shipping-methods", MagentoUrl, cartId);
+		}
+
+		/// <summary>
+		/// Returns the URL for getting Magento Region IDs
+		/// </summary>
+		/// <returns>URL for getting Magento Region IDs</returns>
+		public string MagentoGetRegionIdsUrl()
+		{
+			return string.Format("{0}rest/V1/directory/countries", MagentoUrl);
+		}
+
+		/// <summary>
+		/// Returns the URL for setting a cart's shipping and billing information
+		/// </summary>
+		/// <param name="cartId">Cart to set information for</param>
+		/// <returns>URL for setting a cart's shipping and billing information</returns>
+		public string MagentoSetBillingAndShippingInformationUrl(int cartId)
+		{
+			return string.Format("{0}rest/V1/carts/{1}/shipping-information", MagentoUrl, cartId);
+		}
+
+		/// <summary>
+		/// Returns the URL for getting a cart's payment methods
+		/// </summary>
+		/// <param name="cartId">Cart to get payment methods for</param>
+		/// <returns>URL for getting a cart's payment methods</returns>
+		public string MagentoGetAvailablePaymentMethodsUrl(int cartId)
+		{
+			return string.Format("{0}rest/V1/carts/{1}/payment-methods", MagentoUrl, cartId);
+		}
+
+		/// <summary>
+		/// Returns the URL for creating an order for a cart
+		/// </summary>
+		/// <param name="cartId">Cart to create order for</param>
+		/// <returns>URL for creating an order for a cart</returns>
+		public string MagentoCreateAnOrderUrl(int cartId)
+		{
+			return string.Format("{0}rest/V1/carts/{1}/order", MagentoUrl, cartId);
+		}
+
+		/// <summary>
+		/// Returns the URL getting a cart
+		/// </summary>
+		/// <param name="cartId">Cart to get</param>
+		/// <returns>URL getting a cart</returns>
+		public string MagentoGetCart(int cartId)
+		{
+			return string.Format("{0}rest/V1/carts/{1}", MagentoUrl, cartId);
+		}
+
+		/// <summary>
+		/// Returns the URL for getting a cart's items
+		/// </summary>
+		/// <param name="cartId">Cart to get items for</param>
+		/// <returns>URL for getting a cart's items</returns>
+		public string MagentoGetItemsInCartUrl(int cartId)
+		{
+			return string.Format("{0}rest/V1/carts/{1}/items", MagentoUrl, cartId);
+		}
+		#endregion
+
+		#region EA URLs
 		/// <summary>
 		/// Gets the URL needed to see inventory details for products in Magento by searching via SKU
 		/// </summary>
@@ -377,5 +484,6 @@ namespace MagentoConnect.Utilities
 		{
 			return string.Format("{0}/companies({1})/Pricing", EaPricingUrl, CompanyId);
 		}
+		#endregion
 	}
 }
