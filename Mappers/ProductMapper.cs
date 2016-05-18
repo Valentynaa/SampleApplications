@@ -24,17 +24,15 @@ namespace MagentoConnect.Mappers
 			_magentoProductController = new ProductController(MagentoAuthToken);
 		}
 
-		/**
-		 * This function will return a list of Magento Products updated after a specific date
-		 * This could be used to sync products between Magento and EA
-		 * 
-		 * @param   updatedAfter                    Date to compare with product updated dates, use format YYYY-MM-DD HH:MM:SS (other formats may work, see Magento docs)
-		 *
-		 * @return  IEnumerable<ProductResource>   Magento products
-		 */
+		/// <summary>
+		/// This function will return a list of Magento Products updated after a specific date
+		/// This could be used to sync products between Magento and EA
+		/// </summary>
+		/// <param name="updatedAfter">Date to compare with product updated dates, use format YYYY-MM-DD HH:MM:SS (other formats may work, see Magento docs)</param>
+		/// <returns>Magento products</returns>
 		public IEnumerable<ProductResource> GetMagentoProductsUpdatedAfter(DateTime updatedAfter)
 		{
-			if(DateTime.Compare(updatedAfter, DateTime.UtcNow) > 0)
+			if(updatedAfter > DateTime.UtcNow)
 				throw new ArgumentOutOfRangeException(nameof(updatedAfter));
 
 			var dateString = updatedAfter.ToString(ConfigReader.MagentoSearchDateString, CultureInfo.InvariantCulture);
@@ -42,7 +40,9 @@ namespace MagentoConnect.Mappers
 			var updatedProducts = _magentoProductController.SearchForProducts(ConfigReader.MagentoUpdatedAtProperty,
 				dateString, ConfigReader.MagentoGreaterThanCondition);
 
-			return updatedProducts.items;
+			//Magento API doesn't seem to filter by time updated perfectly. Some items will be returned 
+			//even if they were updated before the time specified so we manually filter the collection
+			return updatedProducts.items.Where(x => x.updated_at > updatedAfter);
 		}
 
 		/**

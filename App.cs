@@ -35,21 +35,52 @@ namespace MagentoConnect
 			_colorMapper = new ColorMapper(_cachedMagentoAuthToken, _cachedEaAuthToken);
 			_fieldMapper = new FieldMapper(_cachedMagentoAuthToken, _cachedEaAuthToken);
 			_pricingMapper = new PricingMapper(_cachedMagentoAuthToken, _cachedEaAuthToken);
+			bool success = true;
 
-			var productsToUpdate = _productMapper.GetMagentoProductsUpdatedAfter(DateTime.Now.AddHours(-1));
-
-			if (!productsToUpdate.Any())
+			try
 			{
-				Console.WriteLine("No products to update.");
+				//Get the time to sync from
+				DateTime lastSync;
+				IEnumerable<ProductResource> productsToUpdate;
+				if (LogWriter.TryGetLastLog(Log.Sync, out lastSync))
+				{
+					productsToUpdate = _productMapper.GetMagentoProductsUpdatedAfter(lastSync);
+				}
+				else
+				{
+					productsToUpdate = _productMapper.GetMagentoProductsUpdatedAfter(DateTime.Now.AddHours(-1));
+				}
+
+				if (!productsToUpdate.Any())
+				{
+					Console.WriteLine("No products to update.");
+				}
+
+				foreach (var newProduct in productsToUpdate)
+				{
+					UpsertProduct(_productMapper.GetProductBySku(newProduct.sku));
+					Console.WriteLine("Product with SKU {0} has been updated.", newProduct.sku);
+				}
+			}
+			catch (Exception ex)
+			{
+				success = false;
+				LogWriter.Write(ex.Message, Log.Error);
+				
+				//Uncomment if you want exceptions thrown at runtime.
+				//throw;
 			}
 
-			foreach (var newProduct in productsToUpdate)
+			if (success)
 			{
-				UpsertProduct(_productMapper.GetProductBySku(newProduct.sku));
-				Console.WriteLine("Product with SKU {0} has been updated.", newProduct.sku);
+				LogWriter.Write("Successful Sync", Log.Sync);
+				Console.WriteLine("All products updated. Press enter to exit...");
 			}
-
-			Console.WriteLine("All products updated. Press enter to exit...");
+			else
+			{
+				Console.WriteLine("An error occurred. Check errorLog.txt for more details. Press enter to exit...");
+			}
+			
 			Console.ReadLine();
 		}
 
