@@ -43,7 +43,7 @@ See [Getting Started Guide](https://github.com/iQmetrix/MagentoConnect/blob/mast
 
 The App works according to the following logic:
 
-* All products created or updated in Magento in the last **hour** (this value can be changed) are fetched
+* All products created or updated in Magento since the last sync, or the last **hour** (this value can be changed) if no sync data is found, are fetched
 * Each product is checked for the `{MappingCode}` attribute
 * If the product is mapped, an update is performed. If the product is **not** mapped, a create is performed
 * The product is checked for type (simple/virtual/configurable)
