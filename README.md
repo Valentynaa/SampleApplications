@@ -13,7 +13,7 @@ Specifically, this project will demonstrate how to:
 * [How it Works](#how-it-works)
 * [Limitations](#limitations)
 	* [Required Product Fields](#required-product-fields)
-	* [Magento File Storage](#magento-file-storange)
+	* [Magento File Storage](#magento-file-storage)
 	* [Supported Product Types](#supported-product-types)
 	* [Supported Attribute Types](#supported-attribute-types)
 	* [SKUs/UPCs](#skusupcs)
@@ -27,7 +27,8 @@ Specifically, this project will demonstrate how to:
 	* [Models](#models)
 	* [Utilities](#utilities)
 	* [App.config](#appconfig)
-* [Errors](#errors)
+* [Tests](#tests)
+* [Logging](#logging)
 
 ## Important Notes
 
@@ -223,9 +224,10 @@ The table below lists each folder and the relevant API reference.
 
 The following utilities are included in the project,
 
-* **UrlFormatter** - Formats and returns endpoint URLs as strings given URL variables. This is useful because Endless Aisle endpoints differ between [Enviornments](http://developers.iqmetrix.com/api/environments/). 
 * **ConfigReager** - Reads values from App.config, used for reading authentication information and Environment value
+* **LogWriter.cs** - Creates logs 
 * **RegexPatterns** - Holds a list of Regex patterns used for validation
+* **UrlFormatter** - Formats and returns endpoint URLs as strings given URL variables. This is useful because Endless Aisle endpoints differ between [Enviornments](http://developers.iqmetrix.com/api/environments/). 
 
 ### App.config
 
@@ -261,7 +263,7 @@ The following values are constants in Magento and will only need to be changed i
 * `Magento_MaterialCode` - Magento attribute code for material
 * `Magento_ImageCode` - Magento attribute code for image
 
-## Errors
+## Tests
 
 The App solution includes a series of unit tests which are intended to help figure out problems with the App.
 
@@ -271,3 +273,14 @@ The App solution includes a series of unit tests which are intended to help figu
 | ProductValid.cs | Given a magento product SKU, these tests will determine if there are any missing required fields and if the mapping values are valid |
 | TemplateTests.cs | Template that can be used to create more tests |
 | TestHelper.cs | Utility file for test classes | 
+| LogWriter.cs | Tests for Logging |
+
+## Logging
+
+When Magento Connect runs it creates a log file in the same location as the executable. Using Visual Studio, this is generally bin/Debug or bin/Release.
+
+Successful syncs are logged in `syncLog.txt`, errors are logged in `errorLog.txt`.
+
+Additional logging can be added by extending `Enums.cs`.
+
+If you encounter problems, check these logs for additional details.
