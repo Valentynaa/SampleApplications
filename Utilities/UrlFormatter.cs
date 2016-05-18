@@ -184,6 +184,16 @@ namespace MagentoConnect.Utilities
 		}
 
 		/// <summary>
+		/// Gets the URL needed to see inventory details for products in Magento by searching via SKU
+		/// </summary>
+		/// <param name="sku">SKU to get product for</param>
+		/// <returns>URL needed to see inventory details for products in Magento by searching via SKU</returns>
+		public string MagentoInventoryBySkuUrl(string sku)
+		{
+			return string.Format("{0}rest/V1/stockItems/{1}", MagentoUrl, sku);
+		}
+
+		/// <summary>
 		/// Returns the URL for getting a Magento customer associated with the customer ID provided
 		/// </summary>
 		/// <param name="customerId">Customer ID to search for</param>
@@ -286,17 +296,8 @@ namespace MagentoConnect.Utilities
 		#endregion
 
 		#region EA URLs
-		/// <summary>
-		/// Gets the URL needed to see inventory details for products in Magento by searching via SKU
-		/// </summary>
-		/// <param name="sku">SKU to get product for</param>
-		/// <returns>URL needed to see inventory details for products in Magento by searching via SKU</returns>
-		public string MagentoInventoryBySkuUrl(string sku)
-		{
-			return string.Format("{0}rest/V1/stockItems/{1}", MagentoUrl, sku);
-		}
-
-		/**
+		
+		 /**
 		 * @return  string  Url needed to authenticate with EA
 		 */
 		public string EndlessAisleAuthUrl()
@@ -484,6 +485,36 @@ namespace MagentoConnect.Utilities
 		{
 			return string.Format("{0}/companies({1})/Pricing", EaPricingUrl, CompanyId);
 		}
+
+		/// <summary>
+		/// Returns the URL for getting company's orders in EA
+		/// </summary>
+		/// <returns>URL for getting company's orders in EA</returns>
+		public string EndlessAisleGetOrdersUrl()
+		{
+			return string.Format("{0}/Companies({1})/Orders", EaOrderUrl, CompanyId);
+		}
+
+		/// <summary>
+		/// Returns the URL for getting an order's items in EA
+		/// </summary>
+		/// <param name="orderId">Order to get items for</param>
+		/// <returns>URL for getting an order's items in EA</returns>
+		public string EndlessAisleGetOrderItemsUrl(int orderId)
+		{
+			return string.Format("{0}/Companies({1})/Order({2})/Items", EaOrderUrl, CompanyId, orderId);
+		}
+
+		/// <summary>
+		/// Returns the URL for getting a catalog itemin EA
+		/// </summary>
+		/// <param name="catalogItemId">Catalog item to get</param>
+		/// <returns>URL for getting a catalog itemin EA</returns>
+		public string EndlessAisleGetCatalogItemUrl(string catalogItemId)
+		{
+			return string.Format("{0}/companies({1})/catalog/items({2})", EaCatalogsUrl, CompanyId, catalogItemId);
+		}
+
 		#endregion
 	}
 }
