@@ -58,7 +58,9 @@ The App works according to the following logic:
     * [Inventory Availability](http://developers.iqmetrix.com/api/availability/#availability) is set (non serialized, Quantity of 1) at `{EA_LocationId}` 
     * The [Slug](http://developers.iqmetrix.com/api/catalog/#product-slug) of the new product is calculated
     * The Slug is added to the magento product in the `{MappingCode}` attribute
-* If the magento product has a color, it is created or updated as a ColorDefinition on the product
+* If the Magento product has a color, it is created or updated as a ColorDefinition on the product
+* If the Magento product has a quantity, it is created or updated as an [Availability](/api/availability/#availability) resource
+* If the Magento product has a price, it is created or updated as a [Pricing](/api/pricing/#pricing) resource
 
 ## Limitations
 
@@ -140,13 +142,13 @@ Product Library supports units for fields.
 
 Units are not supported in the App, a plugin would be required to implement this feature.
 
-### Prices
+### Prices and Quantities
 
-Base Magento does not allow you to set Pricing at a store level, unlike Endless Aisle.
+Base Magento does not allow you to set price or quantity at a store level, unlike Endless Aisle.
 
-When MagentoConnect syncs price, it sets it at the Company level in Endless Aisle.
+When MagentoConnect syncs price and quantity, it sets these values at the Company level in Endless Aisle.
 
-Using a Magento extention could allow you to set price at the Location level in Endless Aisle.
+Using a Magento extention could allow you to set price and quantity at the Location level in Endless Aisle.
 
 ## File Structure
 
