@@ -5,6 +5,7 @@ namespace MagentoConnect.Models.EndlessAisle.Pricing
 	/// <summary>
 	/// Pricing information provides pricing details for a given product.
 	/// </summary>
+	[Serializable]
 	public class PricingResource
 	{
 		/// <summary>

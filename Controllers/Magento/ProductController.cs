@@ -161,7 +161,7 @@ namespace MagentoConnect.Controllers.Magento
 		/// Gets the catalog inventory item based on the SKU provided.
 		/// </summary>
 		/// <param name="sku">SKU associated with the catalog inventory item</param>
-		/// <returns>Gatalog inventory item based on the SKU provided</returns>
+		/// <returns>Catalog inventory item based on the SKU provided</returns>
 		public CatalogInventoryItemResource GetInventoryBySku(string sku)
 		{
 			var endpoint = UrlFormatter.MagentoInventoryBySkuUrl(sku);

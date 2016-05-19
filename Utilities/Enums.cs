@@ -19,6 +19,44 @@ namespace MagentoConnect.Utilities
 		Error
 	}
 
+	public enum OrderState
+	{
+		/// <summary>
+		/// New Order created.
+		/// links/actions:
+		///     AddItems -> /Orders(123)/Items
+		///     DeleteOrder -> /Orders(123)/Delete
+		///     UpdateOrder -> /Orders(123)
+		/// </summary>
+		Created,
+
+		/// <summary>
+		/// links/actions:
+		///     AddItems -> /Orders(123)/Items
+		///     RemoveItems -> /Orders(123)/Items
+		///     ProcessOrder -> /Orders(123)/Process
+		///     CancelOrder -> /Orders(123)/Cancel
+		///     DeleteOrder -> /Orders(123)/Delete
+		///     UpdateOrder -> /Orders(123)
+		/// </summary>
+		Pending,
+
+		/// <summary>
+		/// Order processed, no action links.
+		/// </summary>
+		Processed,
+
+		/// <summary>
+		/// Order cancelled, no action links.
+		/// </summary>
+		Cancelled,
+
+		/// <summary>
+		/// Order completed, no action links.
+		/// </summary>
+		Completed
+	}
+
 	#region Enum Attributes
 	//Add new enum attributes here
 

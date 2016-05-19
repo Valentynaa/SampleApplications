@@ -8,6 +8,7 @@ namespace MagentoConnect.Utilities
 		public readonly string Environment;
 		public readonly string MagentoUrl;
 		public readonly int CompanyId;
+		public readonly int LocationId;
 
 		public readonly string EaProductLibraryTemplate = "https://productlibrary{UrlSuffix}.iqmetrix.net/v1";
 		public readonly string EaCatalogsTemplate = "https://catalogs{UrlSuffix}.iqmetrix.net/v1";
@@ -36,6 +37,7 @@ namespace MagentoConnect.Utilities
 			Environment = ConfigReader.EaEnviornment;
 			MagentoUrl = ConfigReader.MagentoUrl;
 			CompanyId = ConfigReader.EaCompanyId;
+			LocationId = ConfigReader.EaLocationId;
 
 			//Replace {UrlSuffix} with enviornment, for applicable endpoints
 			EaProductLibraryUrl = ReplaceEnviornment(EaProductLibraryTemplate);
@@ -60,7 +62,7 @@ namespace MagentoConnect.Utilities
 			return url.Replace("{UrlSuffix}", Environment);
 		}
 
-		#region Magento URLs
+	#region Magento URLs
 		/**
 		 * Gets location of Magento assets
 		 * 
@@ -212,9 +214,7 @@ namespace MagentoConnect.Utilities
 		{
 			return string.Format("{0}rest/V1/customers/{1}/carts", MagentoUrl, customerId);
 		}
-
-		//TODO 294: 6) Searching for Product URL
-
+		
 		/// <summary>
 		/// Returns the URL for adding a products to a cart
 		/// </summary>
@@ -293,9 +293,9 @@ namespace MagentoConnect.Utilities
 		{
 			return string.Format("{0}rest/V1/carts/{1}/items", MagentoUrl, cartId);
 		}
-		#endregion
+	#endregion
 
-		#region EA URLs
+	#region EA URLs
 		
 		 /**
 		 * @return  string  Url needed to authenticate with EA
@@ -502,19 +502,28 @@ namespace MagentoConnect.Utilities
 		/// <returns>URL for getting an order's items in EA</returns>
 		public string EndlessAisleGetOrderItemsUrl(int orderId)
 		{
-			return string.Format("{0}/Companies({1})/Order({2})/Items", EaOrderUrl, CompanyId, orderId);
+			return string.Format("{0}/Companies({1})/Orders({2})/Items", EaOrderUrl, CompanyId, orderId);
 		}
 
 		/// <summary>
-		/// Returns the URL for getting a catalog itemin EA
+		/// Returns the URL for getting a catalog item in EA
 		/// </summary>
 		/// <param name="catalogItemId">Catalog item to get</param>
-		/// <returns>URL for getting a catalog itemin EA</returns>
+		/// <returns>URL for getting a catalog item in EA</returns>
 		public string EndlessAisleGetCatalogItemUrl(string catalogItemId)
 		{
 			return string.Format("{0}/companies({1})/catalog/items({2})", EaCatalogsUrl, CompanyId, catalogItemId);
 		}
 
-		#endregion
+		/// <summary>
+		/// Returns the URL for getting the location in EA
+		/// </summary>
+		/// <returns>URL for getting the location in EA</returns>
+		public string EndlessAisleGetLocationUrl()
+		{
+			return string.Format("{0}/Companies({1})/Locations({2})", EaEntitiesUrl, CompanyId, LocationId);
+		}
+
+	#endregion
 	}
 }
