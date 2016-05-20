@@ -68,7 +68,11 @@
   <ItemGroup>
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\EndlessAisle\ClassificationController.cs" />
+    <Compile Include="Controllers\EndlessAisle\OrderController.cs" />
     <Compile Include="Controllers\EndlessAisle\PricingController.cs" />
+    <Compile Include="Controllers\Magento\CartController.cs" />
+    <Compile Include="Controllers\Magento\CustomerController.cs" />
+    <Compile Include="Controllers\Magento\RegionController.cs" />
     <Compile Include="Mappers\BaseMapper.cs" />
     <Compile Include="Controllers\EndlessAisle\AssetsController.cs" />
     <Compile Include="Controllers\EndlessAisle\AuthController.cs" />
@@ -100,8 +104,6 @@
     <Compile Include="Models\EndlessAisle\Entities\StoreHoursResource.cs" />
     <Compile Include="Models\EndlessAisle\Entities\TimeResource.cs" />
     <Compile Include="Models\EndlessAisle\Order\OrderItemResource.cs" />
-    <Compile Include="Models\EndlessAisle\Order\OrderItemSearchResultResource.cs" />
-    <Compile Include="Models\EndlessAisle\Order\OrderSearchResultResource.cs" />
     <Compile Include="Models\EndlessAisle\Order\OrderResource.cs" />
     <Compile Include="Models\EndlessAisle\Order\TrackingInformationResource.cs" />
     <Compile Include="Models\EndlessAisle\Pricing\PricingResource.cs" />
@@ -128,17 +130,23 @@
     <Compile Include="Models\Magento\Cart\BundleOptionResource.cs" />
     <Compile Include="Models\Magento\Cart\CartAddItemBodyResource.cs" />
     <Compile Include="Models\Magento\Cart\CartAddItemResource.cs" />
+    <Compile Include="Models\Magento\Cart\CartAddPaymentMethodBodyResource.cs" />
+    <Compile Include="Models\Magento\Cart\CartAddPaymentMethodResource.cs" />
+    <Compile Include="Models\Magento\Cart\CartShippingResponseResource.cs" />
     <Compile Include="Models\Magento\Cart\CartItemSearchResultResource.cs" />
     <Compile Include="Models\Magento\Cart\CartSetShippingInformationBodyResource.cs" />
     <Compile Include="Models\Magento\Cart\CartSetShippingInformationResource.cs" />
+    <Compile Include="Models\Magento\Cart\TotalsItemResource.cs" />
+    <Compile Include="Models\Magento\Cart\TotalsResource.cs" />
+    <Compile Include="Models\Magento\Cart\TotalsSegmentResource.cs" />
     <Compile Include="Models\Magento\Cart\ConfigurableItemOptionResource.cs" />
     <Compile Include="Models\Magento\Cart\CustomOptionResource.cs" />
     <Compile Include="Models\Magento\Cart\CartItemResource.cs" />
-    <Compile Include="Models\Magento\Cart\CartPaymentMethodResource.cs" />
-    <Compile Include="Models\Magento\Cart\CartPaymentMethodSearchResultResource.cs" />
+    <Compile Include="Models\Magento\Cart\PaymentMethodResource.cs" />
+    <Compile Include="Models\Magento\Cart\PaymentMethodSearchResultResource.cs" />
     <Compile Include="Models\Magento\Cart\ProductOptionResource.cs" />
     <Compile Include="Models\Magento\Cart\CartResource.cs" />
-    <Compile Include="Models\Magento\Cart\CartShippingMethodResource.cs" />
+    <Compile Include="Models\Magento\Cart\ShippingMethodResource.cs" />
     <Compile Include="Models\Magento\Cart\CartShippingMethodSearchResultResource.cs" />
     <Compile Include="Models\Magento\Cart\CurrencyResource.cs" />
     <Compile Include="Models\Magento\Cart\DownloadableOptionResource.cs" />

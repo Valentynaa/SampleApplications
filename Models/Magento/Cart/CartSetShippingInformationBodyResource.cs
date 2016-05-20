@@ -8,10 +8,9 @@ namespace MagentoConnect.Models.Magento.Cart
 	[Serializable]
 	public class CartSetShippingInformationBodyResource
 	{
-		public AddressResource shipping_address { get; set; }
-		public AddressResource billing_address { get; set; }
-		public string shipping_method_code { get; set; }// Shipping method code ,
-		public string shipping_carrier_code { get; set; }// Carrier code,
-		public IEnumerable<CustomAttributeResource> custom_attributes { get; set; }// Custom attributes values.
+		public AddressResource shippingAddress { get; set; }
+		public AddressResource billingAddress { get; set; }
+		public string shippingMethodCode { get; set; }// Shipping method code ,
+		public string shippingCarrierCode { get; set; }// Carrier code,
 	}
 }

@@ -1,27 +1,29 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using MagentoConnect.Models.EndlessAisle.Entities;
+using System.Text;
+using System.Threading.Tasks;
+using MagentoConnect.Models.EndlessAisle.Order;
 using Newtonsoft.Json;
 using RestSharp;
 
 namespace MagentoConnect.Controllers.EndlessAisle
 {
-	public class EntitiesController : BaseController
+	public class OrderController : BaseController
 	{
 		public static string EndlessAisleAuthToken;
-
-		public EntitiesController(string eaAuthToken)
+		public OrderController(string eaAuthToken)
 		{
 			EndlessAisleAuthToken = eaAuthToken;
 		}
 
 		/// <summary>
-		/// Gets information about all manufacturers
+		/// Gets all EA orders for the entire company 
 		/// </summary>
-		/// <returns>Returns a list of manufacturers</returns>
-		public List<ManufacturerResource> GetAllManufacturers()
+		/// <returns>List of orders for the company</returns>
+		public IEnumerable<OrderResource> GetOrders()
 		{
-			var endpoint = UrlFormatter.EndlessAisleEntitiesManufacturersUrl();
+			var endpoint = UrlFormatter.EndlessAisleGetOrdersUrl();
 
 			var client = new RestClient(endpoint);
 			var request = new RestRequest(Method.GET);
@@ -34,16 +36,17 @@ namespace MagentoConnect.Controllers.EndlessAisle
 			//Ensure we get the right code
 			CheckStatusCode(response.StatusCode);
 
-			return JsonConvert.DeserializeObject<List<ManufacturerResource>>(response.Content);
+			return JsonConvert.DeserializeObject<IEnumerable<OrderResource>>(response.Content);
 		}
 
 		/// <summary>
-		/// Gets the EA location set in the App.config file
+		/// Gets the items that appear on a specified order
 		/// </summary>
-		/// <returns></returns>
-		public LocationResource GetLocation()
+		/// <param name="orderId">Order to get items for</param>
+		/// <returns>List of items in the order</returns>
+		public IEnumerable<OrderItemResource> GetOrderItems(string orderId)
 		{
-			var endpoint = UrlFormatter.EndlessAisleGetLocationUrl();
+			var endpoint = UrlFormatter.EndlessAisleGetOrderItemsUrl(orderId);
 
 			var client = new RestClient(endpoint);
 			var request = new RestRequest(Method.GET);
@@ -56,7 +59,7 @@ namespace MagentoConnect.Controllers.EndlessAisle
 			//Ensure we get the right code
 			CheckStatusCode(response.StatusCode);
 
-			return JsonConvert.DeserializeObject<LocationResource>(response.Content);
+			return JsonConvert.DeserializeObject<IEnumerable<OrderItemResource>>(response.Content);
 		}
 	}
 }

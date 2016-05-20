@@ -62,7 +62,12 @@
   <ItemGroup>
     <Compile Include="Configuration.cs" />
     <Compile Include="Controllers\EndlessAisle\CatalogsControllerTests.cs" />
+    <Compile Include="Controllers\EndlessAisle\EntitiesControllerTests.cs" />
+    <Compile Include="Controllers\EndlessAisle\OrderControllerTests.cs" />
     <Compile Include="Controllers\EndlessAisle\PricingControllerTests.cs" />
+    <Compile Include="Controllers\Magento\CartControllerTests.cs" />
+    <Compile Include="Controllers\Magento\CustomerControllerTests.cs" />
+    <Compile Include="Controllers\Magento\RegionControllerTests.cs" />
     <Compile Include="Mappers\AssetMapperTests.cs" />
     <Compile Include="Mappers\AvailabilityMapperTests.cs" />
     <Compile Include="Mappers\BaseMapperTests.cs" />

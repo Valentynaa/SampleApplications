@@ -17,11 +17,11 @@ namespace MagentoConnect.Models.Magento.Cart
 		public string converted_at { get; set; }// Cart conversion date and time.Otherwise, null. ,
 		public bool? is_active { get; set; }// Active status flag value.Otherwise, null. ,
 		public bool? is_virtual { get; set; }// Virtual flag value.Otherwise, null. ,
-		public List<CartItemResource> items { get; set; }// Array of items.Otherwise, null. ,
+		public IEnumerable<CartItemResource> items { get; set; }// Array of items.Otherwise, null. ,
 		public int? items_count { get; set; }// Number of different items or products in the cart.Otherwise, null. ,
 		public decimal? items_qty { get; set; }// Total quantity of all cart items.Otherwise, null. ,
 		public CustomerResource customer { get; set; }
-		public CustomerAddressResource billing_address { get; set; }
+		public AddressResource billing_address { get; set; }
 		public int? reserved_order_id { get; set; }// Reserved order ID.Otherwise, null. ,
 		public int? orig_order_id { get; set; }// Original order ID.Otherwise, null. ,
 		public CurrencyResource currency { get; set; }

@@ -12,13 +12,12 @@ namespace MagentoConnect.Models.Magento.Cart
 		public int regionId { get; set; }// Region id,
 		public string regionCode { get; set; }// Region code,
 		public string countryId { get; set; }// Country id,
-		public List<string> street { get; set; }// Street,
+		public IEnumerable<string> street { get; set; }// Street,
 		public string telephone { get; set; }// Telephone number,
 		public string postcode { get; set; }// Postcode,
 		public string city { get; set; }// City name,
 		public string firstname { get; set; }// First name,
 		public string lastname { get; set; }// Last name,
 		public string email { get; set; }// Billing / shipping email,
-		public IEnumerable<CustomAttributeResource> customAttributes { get; set; }
 	}
 }

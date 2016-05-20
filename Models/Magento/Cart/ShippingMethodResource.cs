@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace MagentoConnect.Models.Magento.Cart
 {
 	[Serializable]
-	public class CartShippingMethodResource
+	public class ShippingMethodResource
 	{
 		public string carrier_code { get; set; }// Shipping carrier code. ,
 		public string method_code { get; set; }// Shipping method code. ,

@@ -3,9 +3,8 @@
 namespace MagentoConnect.Models.Magento.Cart
 {
 	[Serializable]
-	public class CartPaymentMethodResource
+	public class CartAddPaymentMethodBodyResource
 	{
-		public string code { get; set; }
-		public string title { get; set; }
+		public string method { get; set; }
 	}
 }

@@ -210,7 +210,7 @@ namespace MagentoConnect.Utilities
 		/// </summary>
 		/// <param name="customerId">Customer ID to create cart for</param>
 		/// <returns>URL for creating Magento customer's cart</returns>
-		public string MagentoCreateCartForCustomerUrl(int customerId)
+		public string MagentoCreateCartUrl(int customerId)
 		{
 			return string.Format("{0}rest/V1/customers/{1}/carts", MagentoUrl, customerId);
 		}
@@ -236,10 +236,10 @@ namespace MagentoConnect.Utilities
 		}
 
 		/// <summary>
-		/// Returns the URL for getting Magento Region IDs
+		/// Returns the URL for getting Magento Countries
 		/// </summary>
-		/// <returns>URL for getting Magento Region IDs</returns>
-		public string MagentoGetRegionIdsUrl()
+		/// <returns>URL for getting Magento Countries</returns>
+		public string MagentoGetCountriesUrl()
 		{
 			return string.Format("{0}rest/V1/directory/countries", MagentoUrl);
 		}
@@ -249,7 +249,7 @@ namespace MagentoConnect.Utilities
 		/// </summary>
 		/// <param name="cartId">Cart to set information for</param>
 		/// <returns>URL for setting a cart's shipping and billing information</returns>
-		public string MagentoSetBillingAndShippingInformationUrl(int cartId)
+		public string MagentoSetShippingInformationUrl(int cartId)
 		{
 			return string.Format("{0}rest/V1/carts/{1}/shipping-information", MagentoUrl, cartId);
 		}
@@ -259,9 +259,19 @@ namespace MagentoConnect.Utilities
 		/// </summary>
 		/// <param name="cartId">Cart to get payment methods for</param>
 		/// <returns>URL for getting a cart's payment methods</returns>
-		public string MagentoGetAvailablePaymentMethodsUrl(int cartId)
+		public string MagentoGetPaymentMethodsUrl(int cartId)
 		{
 			return string.Format("{0}rest/V1/carts/{1}/payment-methods", MagentoUrl, cartId);
+		}
+
+		/// <summary>
+		/// Returns the URL for adding a payment method to a cart
+		/// </summary>
+		/// <param name="cartId">Cart to add payment method to</param>
+		/// <returns>URL for adding a payment method to a cart</returns>
+		public string MagentoAddPaymentMethodUrl(int cartId)
+		{
+			return string.Format("{0}rest/V1/carts/{1}/selected-payment-method", MagentoUrl, cartId);
 		}
 
 		/// <summary>
@@ -279,7 +289,7 @@ namespace MagentoConnect.Utilities
 		/// </summary>
 		/// <param name="cartId">Cart to get</param>
 		/// <returns>URL getting a cart</returns>
-		public string MagentoGetCart(int cartId)
+		public string MagentoGetCartUrl(int cartId)
 		{
 			return string.Format("{0}rest/V1/carts/{1}", MagentoUrl, cartId);
 		}
@@ -500,7 +510,7 @@ namespace MagentoConnect.Utilities
 		/// </summary>
 		/// <param name="orderId">Order to get items for</param>
 		/// <returns>URL for getting an order's items in EA</returns>
-		public string EndlessAisleGetOrderItemsUrl(int orderId)
+		public string EndlessAisleGetOrderItemsUrl(string orderId)
 		{
 			return string.Format("{0}/Companies({1})/Orders({2})/Items", EaOrderUrl, CompanyId, orderId);
 		}

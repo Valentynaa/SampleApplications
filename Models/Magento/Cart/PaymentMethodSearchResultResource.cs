@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 namespace MagentoConnect.Models.Magento.Cart
 {
 	[Serializable]
-	public class CartPaymentMethodSearchResultResource
+	public class PaymentMethodSearchResultResource
 	{
-		public IEnumerable<CartPaymentMethodResource> Items { get; set; }
+		public IEnumerable<PaymentMethodResource> Items { get; set; }
 	}
 }

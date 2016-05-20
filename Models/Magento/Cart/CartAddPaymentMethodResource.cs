@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+//// ReSharper disable InconsistentNaming
 namespace MagentoConnect.Models.Magento.Cart
 {
 	[Serializable]
-	public class CartShippingMethodSearchResultResource
+	public class CartAddPaymentMethodResource
 	{
-		public IEnumerable<ShippingMethodResource> Items { get; set; }
+		public CartAddPaymentMethodBodyResource method { get; set; }
+		public string cartId { get; set; }
 	}
 }
