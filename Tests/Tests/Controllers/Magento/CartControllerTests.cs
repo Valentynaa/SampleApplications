@@ -18,6 +18,7 @@ namespace Tests.Controllers.Magento
 		private const int CartId = 3;
 		private const string ItemSku = "Configurable Product";
 		private const string PaymentMethod = "checkmo";
+		private const string ShippingMethod = "flatrate";
 		private const int CustomerId = 2;
 		private CartAddItemResource _itemToAdd;
 		private CartAddPaymentMethodResource _methodToAdd;
@@ -30,24 +31,9 @@ namespace Tests.Controllers.Magento
 			string magentoAuthToken = App.GetMagentoAuthToken();
 			_cartController = new CartController(magentoAuthToken);
 
-			_itemToAdd = new CartAddItemResource
-			{
-				cartItem = new CartAddItemBodyResource
-				{
-					sku = ItemSku,
-					qty = 1,
-					quote_id = CartId.ToString()
-				}
-			};
+			_itemToAdd = new CartAddItemResource(CartId, ItemSku, 1);
 
-			_methodToAdd = new CartAddPaymentMethodResource
-			{
-				cartId = CartId.ToString(),
-				method = new CartAddPaymentMethodBodyResource
-				{
-					method = PaymentMethod
-				}
-			};
+			_methodToAdd = new CartAddPaymentMethodResource(CartId, PaymentMethod);
 
 			_address = new AddressResource
 			{
@@ -64,16 +50,14 @@ namespace Tests.Controllers.Magento
 				email = "joe@blow.com"
 			};
 
-			_shippingToSet = new CartSetShippingInformationResource
+
+			var shippingInfo = new ShippingMethodResource
 			{
-				addressInformation = new CartSetShippingInformationBodyResource
-				{
-					shippingAddress = _address,
-					billingAddress = _address,
-					shippingCarrierCode = "flatrate",
-					shippingMethodCode = "flatrate"
-				}
+				carrier_code = ShippingMethod,
+				method_code = ShippingMethod
 			};
+
+			_shippingToSet = new CartSetShippingInformationResource(shippingInfo, _address);
 		}
 
 		//Tests go here

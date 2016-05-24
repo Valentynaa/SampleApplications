@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace MagentoConnect.Utilities
@@ -506,6 +509,15 @@ namespace MagentoConnect.Utilities
 		}
 
 		/// <summary>
+		/// Returns the URL for getting company's orders in EA
+		/// </summary>
+		/// <returns>URL for getting company's orders in EA</returns>
+		public string EndlessAisleGetOrdersByTimeUrl()
+		{
+			return string.Format("{0}/Companies({1})/Orders", EaOrderUrl, CompanyId);
+		}
+
+		/// <summary>
 		/// Returns the URL for getting an order's items in EA
 		/// </summary>
 		/// <param name="orderId">Order to get items for</param>
@@ -533,7 +545,33 @@ namespace MagentoConnect.Utilities
 		{
 			return string.Format("{0}/Companies({1})/Locations({2})", EaEntitiesUrl, CompanyId, LocationId);
 		}
+		#endregion
 
-	#endregion
+		/// <summary>
+		/// 
+		/// http://some.api.com/Location?$filter=City eq 'Berlin' and Created ge datetime'2014-06-21' and Created le datetime'2014-09-22'
+		/// </summary>
+		/// <param name="url"></param>
+		/// <param name="filters"></param>
+		/// <returns></returns>
+		public string HypermediaFilterUrl(string url, params Filter[] filters)
+		{
+			if (filters.Length == 0)
+				return url;
+
+			StringBuilder result = new StringBuilder(url);
+			result.Append("?$filter=");
+
+			var filterList = filters.ToList();
+
+			result.Append(filterList.First());
+			filterList.RemoveAt(0);
+
+			foreach (var filter in filterList)
+			{
+				result.Append(string.Format(" and {0}", filter));
+			}
+			return result.ToString();
+		}
 	}
 }

@@ -85,9 +85,12 @@
     <Compile Include="Controllers\Magento\CustomAttributesController.cs" />
     <Compile Include="Mappers\AvailabilityMapper.cs" />
     <Compile Include="Mappers\ColorMapper.cs" />
+    <Compile Include="Mappers\CustomerMapper.cs" />
     <Compile Include="Mappers\FieldMapper.cs" />
+    <Compile Include="Mappers\OrderMapper.cs" />
     <Compile Include="Mappers\PricingMapper.cs" />
     <Compile Include="Mappers\ProductMapper.cs" />
+    <Compile Include="Mappers\EntityMapper.cs" />
     <Compile Include="Models\EndlessAisle\Availability\AvailabilityResource.cs" />
     <Compile Include="Models\EndlessAisle\Catalog\CatalogSearchResultResource.cs" />
     <Compile Include="Models\EndlessAisle\Entities\AddressResource.cs" />
@@ -218,6 +221,7 @@
     <Compile Include="Utilities\ConfigReader.cs" />
     <Compile Include="Mappers\AssetMapper.cs" />
     <Compile Include="Utilities\Enums.cs" />
+    <Compile Include="Utilities\Filter.cs" />
     <Compile Include="Utilities\LogWriter.cs" />
     <Compile Include="Utilities\RegexPatterns.cs" />
     <Compile Include="Utilities\UrlFormatter.cs" />

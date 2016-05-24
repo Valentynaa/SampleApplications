@@ -43,12 +43,16 @@ namespace MagentoConnect.Controllers.Magento
 
 		/// <summary>
 		/// Adds an item to a cart in Magento and returns the CartItemResource created
+		/// Throws exception if invalid CartAddItemResource is passed in
 		/// </summary>
 		/// <param name="cartId">Cart to add item to</param>
 		/// <param name="item">Item to add to cart</param>
 		/// <returns>Cart Item that was added</returns>
 		public CartItemResource AddItemToCart(int cartId, CartAddItemResource item)
 		{
+			if(item.cartItem.quote_id == null || string.IsNullOrEmpty(item.cartItem.sku))
+				throw new Exception("Ensure that the body of the CartAddItemResource used is properly initialized.");
+
 			var endpoint = UrlFormatter.MagentoAddItemToCartUrl(cartId);
 
 			var client = new RestClient(endpoint);

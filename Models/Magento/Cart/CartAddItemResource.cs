@@ -9,6 +9,15 @@ namespace MagentoConnect.Models.Magento.Cart
 	[Serializable]
 	public class CartAddItemResource
 	{
+		public CartAddItemResource(int cartId, string sku, decimal qty)
+		{
+			cartItem = new CartAddItemBodyResource
+			{
+				quote_id = cartId.ToString(),
+				sku = sku,
+				qty = qty
+			};
+		}
 		public CartAddItemBodyResource cartItem { get; set; }
 	}
 }

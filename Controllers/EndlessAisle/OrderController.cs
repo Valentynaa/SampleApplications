@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MagentoConnect.Models.EndlessAisle.Order;
+using MagentoConnect.Utilities;
 using Newtonsoft.Json;
 using RestSharp;
 
@@ -18,12 +19,16 @@ namespace MagentoConnect.Controllers.EndlessAisle
 		}
 
 		/// <summary>
-		/// Gets all EA orders for the entire company 
+		/// Gets all EA orders for the entire company based on the filter if one is used
 		/// </summary>
+		/// <param name="filter">filter criteria for orders</param>
 		/// <returns>List of orders for the company</returns>
-		public IEnumerable<OrderResource> GetOrders()
+		public IEnumerable<OrderResource> GetOrders(Filter filter = null)
 		{
 			var endpoint = UrlFormatter.EndlessAisleGetOrdersUrl();
+
+			if (filter != null)
+				endpoint = UrlFormatter.HypermediaFilterUrl(endpoint, filter);
 
 			var client = new RestClient(endpoint);
 			var request = new RestRequest(Method.GET);

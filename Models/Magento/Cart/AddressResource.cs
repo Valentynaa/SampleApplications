@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using MagentoConnect.Models.EndlessAisle.Entities;
+using MagentoConnect.Models.Magento.Country;
 using MagentoConnect.Models.Magento.CustomAttributes;
+using MagentoConnect.Models.Magento.Customer;
 
 // ReSharper disable InconsistentNaming
 namespace MagentoConnect.Models.Magento.Cart
@@ -8,6 +12,25 @@ namespace MagentoConnect.Models.Magento.Cart
 	[Serializable]
 	public class AddressResource
 	{
+		public AddressResource(RegionResource magentoRegion, LocationResource eaLocation, CustomerResource customer)
+		{
+			region = magentoRegion.name;
+			regionId = int.Parse(magentoRegion.id);
+			regionCode = magentoRegion.code;
+			countryId = eaLocation.Address.CountryCode;
+			street = customer.addresses.First().street;
+			telephone = eaLocation.StorePhoneNumbers.First().Number;
+			postcode = eaLocation.Address.Zip;
+			city = eaLocation.Address.City;
+			firstname = customer.firstname;
+			lastname = customer.lastname;
+			email = customer.email;
+		}
+
+		public AddressResource()
+		{
+		}
+
 		public string region { get; set; }// Region name,
 		public int regionId { get; set; }// Region id,
 		public string regionCode { get; set; }// Region code,

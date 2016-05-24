@@ -20,6 +20,7 @@ namespace MagentoConnect
 		private static ColorMapper _colorMapper;
 		private static FieldMapper _fieldMapper;
 		private static PricingMapper _pricingMapper;
+		private static OrderMapper _orderMapper;
 
 		/**
 		 * This console app will sync products created in the last X time
@@ -35,6 +36,8 @@ namespace MagentoConnect
 			_colorMapper = new ColorMapper(_cachedMagentoAuthToken, _cachedEaAuthToken);
 			_fieldMapper = new FieldMapper(_cachedMagentoAuthToken, _cachedEaAuthToken);
 			_pricingMapper = new PricingMapper(_cachedMagentoAuthToken, _cachedEaAuthToken);
+			_orderMapper = new OrderMapper(_cachedMagentoAuthToken, _cachedEaAuthToken);
+
 			bool success = true;
 
 			try
