@@ -11,12 +11,12 @@ namespace MagentoConnect.Models.Magento.Cart
 	[Serializable]
 	public class CartSetShippingInformationBodyResource
 	{
-		public CartSetShippingInformationBodyResource(ShippingMethodResource shippingMethod, AddressResource shippingAddress, AddressResource billingAddress = null)
+		public CartSetShippingInformationBodyResource(string shippingCode, AddressResource shippingAddress, AddressResource billingAddress = null)
 		{
 			this.shippingAddress = shippingAddress;
 			this.billingAddress = billingAddress ?? shippingAddress;
-			shippingCarrierCode = shippingMethod.carrier_code;
-			shippingMethodCode = shippingMethod.method_code;
+			shippingCarrierCode = shippingCode;
+			shippingMethodCode = shippingCode;
 		}
 
 		public AddressResource shippingAddress { get; set; }

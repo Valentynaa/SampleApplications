@@ -45,8 +45,6 @@ namespace MagentoConnect.Mappers
 				throw new ArgumentOutOfRangeException(nameof(createdAfter));
 
 			var createdOrders = _eaOrderController.GetOrders(new Filter("CreatedDateUtc", createdAfter, FilterCondition.GreaterThan));
-
-			//Orders created after update
 			return createdOrders;
 		}
 
@@ -84,28 +82,21 @@ namespace MagentoConnect.Mappers
 
 		/// <summary>
 		/// Sets the shipping and billing information on a Magento cart.
+		/// Shipping address used is based on the magento customer.
 		/// Shipping method used will be the one set in App.config. If that shipping method cannot be used for the cart specified, an exception will occur.
 		/// </summary>
 		/// <param name="cartId">Cart to set information on.</param>
-		/// <param name="magentoRegion">Region for address information</param>
-		/// <param name="eaLocation">Location for address information</param>
 		/// <param name="customer">Customer for address information</param>
-		public void SetShippingAndBillingInformationForCart(int cartId, RegionResource magentoRegion, LocationResource eaLocation, CustomerResource customer)
+		public void SetShippingAndBillingInformationForCart(int cartId, CustomerResource customer)
 		{
-			var shippingAddress = new AddressResource(magentoRegion, eaLocation, customer);
+			var shippingAddress = new AddressResource(customer);
 
 			//Verfiy that shipping code matches App.config file
-			try
-			{
-				var shippingMethod =
-					_magentoCartController.GetShippingMethods(cartId).First(x => x.method_code == ConfigReader.MagentoShippingCode);
-				var shippingInformation = new CartSetShippingInformationResource(shippingMethod, shippingAddress);
-				_magentoCartController.SetShippingInformation(cartId, shippingInformation);
-			}
-			catch (InvalidOperationException)
-			{
+			var shippingInformation = new CartSetShippingInformationResource(ConfigReader.MagentoShippingCode, shippingAddress);
+			_magentoCartController.SetShippingInformation(cartId, shippingInformation);
+
+			if(_magentoCartController.GetShippingMethods(cartId).FirstOrDefault(x => x.method_code == ConfigReader.MagentoShippingCode) == null)
 				throw new Exception(string.Format("Unable to add shipping information to cart {0}. Ensure that shipping code {1} is valid for this cart.", cartId, ConfigReader.MagentoShippingCode));
-			}
 		}
 
 		/// <summary>
@@ -113,13 +104,14 @@ namespace MagentoConnect.Mappers
 		/// If the payment method is unable to be added to the cart then an exception will occur.
 		/// </summary>
 		/// <param name="cartId">Cart to create order from</param>
-		public void CreateOrderForCart(int cartId)
+		/// <returns>Order ID created in Magento.</returns>
+		public int CreateOrderForCart(int cartId)
 		{
 			var paymentMethod = new CartAddPaymentMethodResource(cartId, ConfigReader.MagentoPaymentMethod);
 			if (_magentoCartController.GetPaymenMethods(cartId).Any(x => x.code == ConfigReader.MagentoPaymentMethod))
 			{
 				_magentoCartController.AddPaymentMethod(cartId, paymentMethod);
-				_magentoCartController.CreateOrder(cartId, paymentMethod);
+				return _magentoCartController.CreateOrder(cartId, paymentMethod);
 			}
 			else
 			{

@@ -5,6 +5,7 @@ using MagentoConnect.Models.Magento.Products;
 using MagentoConnect.Utilities;
 using MagentoConnect.Models.EndlessAisle.ProductLibrary;
 using MagentoConnect.Mappers;
+using MagentoConnect.Models.EndlessAisle.Order;
 
 namespace MagentoConnect
 {
@@ -21,6 +22,8 @@ namespace MagentoConnect
 		private static FieldMapper _fieldMapper;
 		private static PricingMapper _pricingMapper;
 		private static OrderMapper _orderMapper;
+		private static EntityMapper _entityMapper;
+		private static CustomerMapper _customerMapper;
 
 		/**
 		 * This console app will sync products created in the last X time
@@ -37,9 +40,79 @@ namespace MagentoConnect
 			_fieldMapper = new FieldMapper(_cachedMagentoAuthToken, _cachedEaAuthToken);
 			_pricingMapper = new PricingMapper(_cachedMagentoAuthToken, _cachedEaAuthToken);
 			_orderMapper = new OrderMapper(_cachedMagentoAuthToken, _cachedEaAuthToken);
+			_entityMapper = new EntityMapper(_cachedMagentoAuthToken, _cachedEaAuthToken);
+			_customerMapper = new CustomerMapper(_cachedMagentoAuthToken, _cachedEaAuthToken);
 
-			bool success = true;
+			bool doOrderSync;
+			bool productsSynced = ProductSync();
+			if (productsSynced)
+			{
+				LogWriter.Write("Products successfully synced", Log.Sync);
+				doOrderSync = true;
+			}
+			else
+			{
+				Console.WriteLine("An error occurred while syncing products to Endless Aisle. Check errorLog.txt for more details.");
+				Console.WriteLine("Continue on to synchronizing Orders to Magento?");
+				doOrderSync = Console.ReadKey().ToString().Equals("y", StringComparison.OrdinalIgnoreCase);
+			}
 
+			//Order syncing
+			if (doOrderSync)
+			{
+				bool ordersSynced = OrderSync();
+				if (ordersSynced)
+				{
+					LogWriter.Write("Orders successfully synced", Log.Sync);
+				}
+				else
+				{
+					Console.WriteLine("An error occurred while syncing orders to Magento. Check errorLog.txt for more details.");
+				}
+			}
+			Console.WriteLine("Press enter to exit...");
+			Console.ReadLine();
+		}
+
+		private static bool OrderSync()
+		{
+			try
+			{
+				//Get the time to sync from
+				DateTime lastSync;
+				IEnumerable<OrderResource> ordersToCreate;
+				if (LogWriter.TryGetLastLog(Log.Sync, out lastSync))
+				{
+					ordersToCreate = _orderMapper.GetEaOrdersCreatedAfter(lastSync);
+				}
+				else
+				{
+					ordersToCreate = _orderMapper.GetEaOrdersCreatedAfter(DateTime.Now.AddHours(-1));
+				}
+
+				foreach (var order in ordersToCreate)
+				{
+					int cartId = _orderMapper.CreateCustomerCart();
+					_orderMapper.AddOrderItemsToCart(order.Id.ToString(), cartId);
+					_orderMapper.SetShippingAndBillingInformationForCart(cartId, _customerMapper.MagentoCustomer);
+					int orderCreatedId = _orderMapper.CreateOrderForCart(cartId);
+					Console.WriteLine(string.Format("Order with ID {0} in Magento has been created from order {1} in Endless Aisle.", orderCreatedId, order.Id));
+				}
+				return true;
+			}
+			catch (Exception ex)
+			{
+				LogException(ex);
+
+				//Uncomment if you want exceptions thrown at runtime.
+				//throw;
+			}
+			return false;
+		}
+
+		private static bool ProductSync()
+		{
+			//Product syncing
 			try
 			{
 				//Get the time to sync from
@@ -64,27 +137,21 @@ namespace MagentoConnect
 					UpsertProduct(_productMapper.GetProductBySku(newProduct.sku));
 					Console.WriteLine("Product with SKU {0} has been updated.", newProduct.sku);
 				}
+				return true;
 			}
 			catch (Exception ex)
 			{
-				success = false;
-				LogWriter.Write(ex.Message, Log.Error);
-				
+				LogException(ex);
+
 				//Uncomment if you want exceptions thrown at runtime.
 				//throw;
 			}
+			return false;
+		}
 
-			if (success)
-			{
-				LogWriter.Write("Successful Sync", Log.Sync);
-				Console.WriteLine("All products updated. Press enter to exit...");
-			}
-			else
-			{
-				Console.WriteLine("An error occurred. Check errorLog.txt for more details. Press enter to exit...");
-			}
-			
-			Console.ReadLine();
+		private static void LogException(Exception exception)
+		{
+			LogWriter.Write(exception.Message, Log.Error);
 		}
 
 		/**

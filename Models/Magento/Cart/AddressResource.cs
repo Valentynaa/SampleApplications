@@ -20,10 +20,26 @@ namespace MagentoConnect.Models.Magento.Cart
 			countryId = eaLocation.Address.CountryCode;
 			street = customer.addresses.FirstOrDefault()?.street ?? new List<string>();
 			telephone = eaLocation.StorePhoneNumbers.FirstOrDefault()?.Number;
-			postcode = eaLocation.Address.Zip;
-			city = eaLocation.Address.City;
+			postcode = customer.addresses.First().postcode;
+			city = customer.addresses.First().city;
 			firstname = customer.firstname;
 			lastname = customer.lastname;
+			email = customer.email;
+		}
+
+		public AddressResource(CustomerResource customer)
+		{
+			var address = customer.addresses.First();
+			region = address.region.region;
+			regionId = address.region.region_id;
+			regionCode = address.region.region_code;
+			countryId = address.country_id;
+			street = address.street;
+			telephone = address.telephone;
+			postcode = address.postcode;
+			city = address.city;
+			firstname = address.firstname;
+			lastname = address.lastname;
 			email = customer.email;
 		}
 

@@ -13,9 +13,9 @@ namespace MagentoConnect.Models.Magento.Cart
 	[Serializable]
 	public class CartSetShippingInformationResource
 	{
-		public CartSetShippingInformationResource(ShippingMethodResource shippingMethod, AddressResource shippingAddress, AddressResource billingAddress = null)
+		public CartSetShippingInformationResource(string shippingCode, AddressResource shippingAddress, AddressResource billingAddress = null)
 		{
-			addressInformation = new CartSetShippingInformationBodyResource(shippingMethod, shippingAddress, billingAddress);
+			addressInformation = new CartSetShippingInformationBodyResource(shippingCode, shippingAddress, billingAddress);
 		}
 
 		public CartSetShippingInformationBodyResource addressInformation { get; set; }

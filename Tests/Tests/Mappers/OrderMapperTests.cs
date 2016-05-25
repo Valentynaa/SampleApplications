@@ -19,7 +19,6 @@ namespace Tests.Mappers
 		//Private variables go here
 		private OrderMapper _orderMapper;
 		private CustomerMapper _customerMapper;
-		private EntityMapper _entityMapper;
 		private DateTime _filterDate;
 		private const int CartId = 3;
 		private const string OrderId = "2f471f62-411a-412a-89c9-5a5f4d9184be";
@@ -31,7 +30,6 @@ namespace Tests.Mappers
 			string magentoAuthToken = App.GetMagentoAuthToken();
 			_orderMapper = new OrderMapper(magentoAuthToken, eaAuthToken);
 			_customerMapper = new CustomerMapper(magentoAuthToken, eaAuthToken);
-			_entityMapper = new EntityMapper(magentoAuthToken, eaAuthToken);
 			_filterDate = new DateTime(2015, 12, 13);
 		}
 
@@ -93,7 +91,7 @@ namespace Tests.Mappers
 		[TestMethod]
 		public void OrderMapper_SetShippingAndBillingInformationForCart()
 		{
-			_orderMapper.SetShippingAndBillingInformationForCart(CartId, _entityMapper.MagentoRegion, _entityMapper.EaLocation, _customerMapper.MagentoCustomer);
+			_orderMapper.SetShippingAndBillingInformationForCart(CartId, _customerMapper.MagentoCustomer);
 		}
 
 		/// <summary>
@@ -103,7 +101,7 @@ namespace Tests.Mappers
 		[ExpectedException(typeof(Exception))]
 		public void OrderMapper_SetShippingAndBillingInformationForCart_InvalidCart()
 		{
-			_orderMapper.SetShippingAndBillingInformationForCart(1, _entityMapper.MagentoRegion, _entityMapper.EaLocation, _customerMapper.MagentoCustomer);
+			_orderMapper.SetShippingAndBillingInformationForCart(1, _customerMapper.MagentoCustomer);
 		}
 
 		/// <summary>
@@ -115,7 +113,7 @@ namespace Tests.Mappers
 			int cartIdForOrder = _orderMapper.CreateCustomerCart();
 
 			_orderMapper.AddOrderItemsToCart(OrderId, cartIdForOrder);
-			_orderMapper.SetShippingAndBillingInformationForCart(cartIdForOrder, _entityMapper.MagentoRegion, _entityMapper.EaLocation, _customerMapper.MagentoCustomer);
+			_orderMapper.SetShippingAndBillingInformationForCart(cartIdForOrder, _customerMapper.MagentoCustomer);
 			_orderMapper.CreateOrderForCart(cartIdForOrder);
 		}
 	}

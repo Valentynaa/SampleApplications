@@ -50,14 +50,7 @@ namespace Tests.Controllers.Magento
 				email = "joe@blow.com"
 			};
 
-
-			var shippingInfo = new ShippingMethodResource
-			{
-				carrier_code = ShippingMethod,
-				method_code = ShippingMethod
-			};
-
-			_shippingToSet = new CartSetShippingInformationResource(shippingInfo, _address);
+			_shippingToSet = new CartSetShippingInformationResource(ShippingMethod, _address);
 		}
 
 		//Tests go here
