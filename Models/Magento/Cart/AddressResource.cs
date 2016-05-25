@@ -18,8 +18,8 @@ namespace MagentoConnect.Models.Magento.Cart
 			regionId = int.Parse(magentoRegion.id);
 			regionCode = magentoRegion.code;
 			countryId = eaLocation.Address.CountryCode;
-			street = customer.addresses.First().street;
-			telephone = eaLocation.StorePhoneNumbers.First().Number;
+			street = customer.addresses.FirstOrDefault()?.street ?? new List<string>();
+			telephone = eaLocation.StorePhoneNumbers.FirstOrDefault()?.Number;
 			postcode = eaLocation.Address.Zip;
 			city = eaLocation.Address.City;
 			firstname = customer.firstname;

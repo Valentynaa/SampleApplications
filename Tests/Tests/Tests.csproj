@@ -72,6 +72,8 @@
     <Compile Include="Mappers\AvailabilityMapperTests.cs" />
     <Compile Include="Mappers\BaseMapperTests.cs" />
     <Compile Include="Mappers\ColorMapperTests.cs" />
+    <Compile Include="Mappers\CustomerMapperTests.cs" />
+    <Compile Include="Mappers\EntityMapperTests.cs" />
     <Compile Include="Mappers\FieldMapperTests.cs" />
     <Compile Include="Mappers\PricingMapperTests.cs" />
     <Compile Include="Mappers\ProductMapperTests.cs" />
@@ -89,6 +91,7 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+    <Compile Include="Mappers\OrderMapperTests.cs" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

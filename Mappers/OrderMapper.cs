@@ -59,6 +59,12 @@ namespace MagentoConnect.Mappers
 			return _magentoCartController.CreateCart(ConfigReader.MagentoCustomerId);
 		}
 
+		/// <summary>
+		/// Adds the items from an EA order to a Cart in Magento.
+		/// If an item on the order cannot be found in Magento an exception is thrown.
+		/// </summary>
+		/// <param name="orderId">Order to get items for</param>
+		/// <param name="cartId">Cart to add items to</param>
 		public void AddOrderItemsToCart(string orderId, int cartId)
 		{
 			IEnumerable<OrderItemResource> orderItems = _eaOrderController.GetOrderItems(orderId);
