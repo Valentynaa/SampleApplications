@@ -14,8 +14,10 @@ namespace MagentoConnect.Utilities
 	/// </summary>
 	public enum Log
 	{
-		[PathValue("\\syncLog.txt")]
-		Sync,
+		[PathValue("\\productSyncLog.txt")]
+		ProductSync,
+		[PathValue("\\orderSyncLog.txt")]
+		OrderSync,
 		[PathValue("\\errorLog.txt")]
 		Error
 	}

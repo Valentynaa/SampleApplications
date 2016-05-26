@@ -47,7 +47,7 @@ namespace MagentoConnect
 			bool productsSynced = ProductSync();
 			if (productsSynced)
 			{
-				LogWriter.Write("Products successfully synced", Log.Sync);
+				Console.WriteLine("Products successfully synced");
 				doOrderSync = true;
 			}
 			else
@@ -63,7 +63,7 @@ namespace MagentoConnect
 				bool ordersSynced = OrderSync();
 				if (ordersSynced)
 				{
-					LogWriter.Write("Orders successfully synced", Log.Sync);
+					Console.WriteLine("Orders successfully synced");
 				}
 				else
 				{
@@ -74,30 +74,46 @@ namespace MagentoConnect
 			Console.ReadLine();
 		}
 
+		/// <summary>
+		/// Performs the sync for Endless Aisle orders to Magento.
+		/// 
+		/// For each of the EA orders since the last sync, a cart is made in Magento
+		/// that has all of the order products added to it. The cart then has its 
+		/// shipping information set based on the location data in EA and an order is
+		/// created from the cart.
+		/// 
+		/// NOTE:
+		///		If the location data required cannot be found for the shipping and 
+		///		billing information, the customer data will be used instead. If the
+		///		customer does not have the required fields set in Magento an error 
+		///		will occur.
+		/// </summary>
+		/// <returns>If the sync was susscessful</returns>
 		private static bool OrderSync()
 		{
 			try
 			{
-				//Get the time to sync from
-				DateTime lastSync;
-				IEnumerable<OrderResource> ordersToCreate;
-				if (LogWriter.TryGetLastLog(Log.Sync, out lastSync))
+				DateTime lastSync = GetTimeForSync(Log.OrderSync);
+				IEnumerable<OrderResource> ordersToCreate = _orderMapper.GetEaOrdersCreatedAfter(lastSync);
+
+				if (!ordersToCreate.Any())
 				{
-					ordersToCreate = _orderMapper.GetEaOrdersCreatedAfter(lastSync);
+					Console.WriteLine("No orders to update.");
 				}
 				else
 				{
-					ordersToCreate = _orderMapper.GetEaOrdersCreatedAfter(DateTime.Now.AddHours(-1));
+					foreach (var order in ordersToCreate)
+					{
+						lastSync = order.CreatedDateUtc > lastSync ? order.CreatedDateUtc : lastSync;
+						int cartId = _orderMapper.CreateCustomerCart();
+						_orderMapper.AddOrderItemsToCart(order.Id.ToString(), cartId);
+						_orderMapper.SetShippingAndBillingInformationForCart(cartId, _entityMapper.MagentoRegion, _entityMapper.EaLocation, _customerMapper.MagentoCustomer);
+						int orderCreatedId = _orderMapper.CreateOrderForCart(cartId);
+						Console.WriteLine(string.Format("Order with ID {0} in Magento has been created from order {1} in Endless Aisle.", orderCreatedId, order.Id));
+					}
+					LogUtility.Write(Log.OrderSync, string.Format("Orders successfully synced. Last order synced was created at {0}", lastSync));
 				}
-
-				foreach (var order in ordersToCreate)
-				{
-					int cartId = _orderMapper.CreateCustomerCart();
-					_orderMapper.AddOrderItemsToCart(order.Id.ToString(), cartId);
-					_orderMapper.SetShippingAndBillingInformationForCart(cartId, _customerMapper.MagentoCustomer);
-					int orderCreatedId = _orderMapper.CreateOrderForCart(cartId);
-					Console.WriteLine(string.Format("Order with ID {0} in Magento has been created from order {1} in Endless Aisle.", orderCreatedId, order.Id));
-				}
+				
 				return true;
 			}
 			catch (Exception ex)
@@ -110,23 +126,17 @@ namespace MagentoConnect
 			return false;
 		}
 
+		/// <summary>
+		/// Performs the sync for Magento products orders to Endless Aisle.
+		/// </summary>
+		/// <returns>If the sync was susscessful</returns>
 		private static bool ProductSync()
 		{
-			//Product syncing
 			try
 			{
-				//Get the time to sync from
-				DateTime lastSync;
-				IEnumerable<ProductResource> productsToUpdate;
-				if (LogWriter.TryGetLastLog(Log.Sync, out lastSync))
-				{
-					productsToUpdate = _productMapper.GetMagentoProductsUpdatedAfter(lastSync);
-				}
-				else
-				{
-					productsToUpdate = _productMapper.GetMagentoProductsUpdatedAfter(DateTime.Now.AddHours(-1));
-				}
-
+				DateTime lastSync = GetTimeForSync(Log.ProductSync);
+				IEnumerable<ProductResource> productsToUpdate = _productMapper.GetMagentoProductsUpdatedAfter(lastSync);
+				
 				if (!productsToUpdate.Any())
 				{
 					Console.WriteLine("No products to update.");
@@ -134,9 +144,12 @@ namespace MagentoConnect
 
 				foreach (var newProduct in productsToUpdate)
 				{
+					lastSync = newProduct.updated_at > lastSync ? newProduct.updated_at : lastSync;
 					UpsertProduct(_productMapper.GetProductBySku(newProduct.sku));
 					Console.WriteLine("Product with SKU {0} has been updated.", newProduct.sku);
 				}
+				
+				LogUtility.Write(Log.ProductSync, string.Format("Products successfully synced. Last product synced was updated at {0}", lastSync));
 				return true;
 			}
 			catch (Exception ex)
@@ -149,9 +162,23 @@ namespace MagentoConnect
 			return false;
 		}
 
+		/// <summary>
+		/// Gets the timestamp in message of the last log of a specified log type
+		/// </summary>
+		/// <param name="logType">Log type to get time for</param>
+		/// <returns>Time to sync from</returns>
+		private static DateTime GetTimeForSync(Log logType)
+		{
+			DateTime lastSync;
+			DateTime lastLog;
+			if (LogUtility.TryGetLastLog(logType, out lastLog) && LogUtility.TryGetTimeInformationForLog(logType, lastLog, out lastSync))
+				return lastSync;
+			return DateTime.Now.AddHours(-1);
+		}
+
 		private static void LogException(Exception exception)
 		{
-			LogWriter.Write(exception.Message, Log.Error);
+			LogUtility.Write(Log.Error, exception.Message);
 		}
 
 		/**

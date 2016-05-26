@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MagentoConnect.Controllers.EndlessAisle;
 using MagentoConnect.Controllers.Magento;
 using MagentoConnect.Models.EndlessAisle.Catalog;
@@ -82,14 +80,20 @@ namespace MagentoConnect.Mappers
 
 		/// <summary>
 		/// Sets the shipping and billing information on a Magento cart.
-		/// Shipping address used is based on the magento customer.
+		/// Shipping address used is based on the EA location unless the data needed is not available. In this case, data is pulled from the customer.
 		/// Shipping method used will be the one set in App.config. If that shipping method cannot be used for the cart specified, an exception will occur.
 		/// </summary>
 		/// <param name="cartId">Cart to set information on.</param>
+		/// <param name="magentoRegion"></param>
+		/// <param name="eaLocation"></param>
 		/// <param name="customer">Customer for address information</param>
-		public void SetShippingAndBillingInformationForCart(int cartId, CustomerResource customer)
+		public void SetShippingAndBillingInformationForCart(int cartId, RegionResource magentoRegion, LocationResource eaLocation, CustomerResource customer)
 		{
-			var shippingAddress = new AddressResource(customer);
+			AddressResource shippingAddress;
+			if (magentoRegion != null)
+				shippingAddress = new AddressResource(magentoRegion, eaLocation, customer);
+			else
+				shippingAddress = new AddressResource(customer);
 
 			//Verfiy that shipping code matches App.config file
 			var shippingInformation = new CartSetShippingInformationResource(ConfigReader.MagentoShippingCode, shippingAddress);

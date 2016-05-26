@@ -1,35 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace MagentoConnect.Utilities
 {
-	public static class LogWriter
+	public static class LogUtility
 	{
 		/// <summary>
 		/// Writes the message to a log file.
 		/// </summary>
 		/// <param name="message">Message to write</param>
 		/// <param name="logType">Type of log to write to</param>
-		public static void Write(string message, Log logType)
+		public static void Write(Log logType, string message)
 		{
 			try
 			{
 				using (StreamWriter streamWriter = File.AppendText(Enums.GetPath(logType)))
 				{
 					streamWriter.WriteLine("-------------------------------");
-					streamWriter.WriteLine("{0}| {1}", DateTime.Now, message);
+					streamWriter.WriteLine("{0}| {1}", DateTime.Now.ToString(CultureInfo.CreateSpecificCulture("en-US")), message);
 				}
 			}
 			catch (Exception)
 			{
 				if (logType != Log.Error)
-					Write(string.Format("Error writing {0} to {1}", message, Enums.GetPath(logType)), Log.Error);
+					Write(Log.Error, string.Format("Error writing {0} to {1}", message, Enums.GetPath(logType)));
 			}
 		}
 
@@ -67,6 +69,42 @@ namespace MagentoConnect.Utilities
 
 			lastLogTime = lastLogTime.ToUniversalTime();
 			return true;
+		}
+
+		/// <summary>
+		/// Gets a DateTime value in the message of a log if that log matches the time provided.
+		/// If the time provided does not match any log or if the log that matches that timestamp
+		/// does not have a DateTime value in its message then DateTime.MinValue is returned.
+		/// </summary>
+		/// <param name="logType">Type of log</param>
+		/// <param name="logTime">Time of log to search for</param>
+		/// <param name="timeInformation">Time in message of log</param>
+		/// <returns>If a time was found in the message of the log done at the time specified</returns>
+		public static bool TryGetTimeInformationForLog(Log logType, DateTime logTime, out DateTime timeInformation)
+		{
+			//Create the log file if it does not exist
+			if (!File.Exists(Enums.GetPath(logType)))
+			{
+				var stream = File.Create(Enums.GetPath(logType));
+				stream.Close();
+			}
+
+			List<string> logs = File.ReadLines(Enums.GetPath(logType)).ToList();
+			Regex regex = new Regex(RegexPatterns.TimeStampPattern);
+			
+			foreach (var log in logs)
+			{
+				MatchCollection matches = regex.Matches(log);
+
+				//Ensure that there is a timestamp match in the log message
+				if (matches.Count > 1 && DateTime.Parse(matches[0].Value) == logTime)
+				{
+					timeInformation = DateTime.Parse(matches[1].Value);
+					return true;
+				}
+			}
+			timeInformation = DateTime.MinValue;
+			return false;
 		}
 	}
 }

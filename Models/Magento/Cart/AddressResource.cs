@@ -12,16 +12,34 @@ namespace MagentoConnect.Models.Magento.Cart
 	[Serializable]
 	public class AddressResource
 	{
+		/// <summary>
+		/// Creates Address based on EA location. If the data is not there, default to customer data.
+		/// </summary>
+		/// <param name="magentoRegion"></param>
+		/// <param name="eaLocation"></param>
+		/// <param name="customer"></param>
 		public AddressResource(RegionResource magentoRegion, LocationResource eaLocation, CustomerResource customer)
 		{
+			var customerAddress = customer.addresses.First();
 			region = magentoRegion.name;
 			regionId = int.Parse(magentoRegion.id);
 			regionCode = magentoRegion.code;
 			countryId = eaLocation.Address.CountryCode;
-			street = customer.addresses.FirstOrDefault()?.street ?? new List<string>();
-			telephone = eaLocation.StorePhoneNumbers.FirstOrDefault()?.Number;
-			postcode = customer.addresses.First().postcode;
-			city = customer.addresses.First().city;
+
+			street = new List<string>();
+			if (eaLocation.Address.AddressLine1 != null)
+				street.Add(eaLocation.Address.AddressLine1);
+			if(eaLocation.Address.AddressLine2 != null)
+				street.Add(eaLocation.Address.AddressLine2);
+
+			if (!street.Any())
+			{
+				street = customerAddress.street;
+			}
+
+			telephone = eaLocation.StorePhoneNumbers.FirstOrDefault()?.Number ?? customerAddress.telephone;
+			postcode = eaLocation.Address.Zip ?? customerAddress.postcode;
+			city = eaLocation.Address.City;
 			firstname = customer.firstname;
 			lastname = customer.lastname;
 			email = customer.email;
@@ -51,7 +69,7 @@ namespace MagentoConnect.Models.Magento.Cart
 		public int regionId { get; set; }// Region id,
 		public string regionCode { get; set; }// Region code,
 		public string countryId { get; set; }// Country id,
-		public IEnumerable<string> street { get; set; }// Street,
+		public List<string> street { get; set; }// Street,
 		public string telephone { get; set; }// Telephone number,
 		public string postcode { get; set; }// Postcode,
 		public string city { get; set; }// City name,

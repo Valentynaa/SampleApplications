@@ -21,7 +21,7 @@ namespace MagentoConnect.Mappers
 			_magentoRegionController = new RegionController(magentoAuthToken);
 		}
 
-		//Magento Region from the 
+		//Magento Region from the config file
 		public RegionResource MagentoRegion
 		{
 			get

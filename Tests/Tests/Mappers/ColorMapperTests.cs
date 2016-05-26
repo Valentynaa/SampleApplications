@@ -19,7 +19,7 @@ namespace Tests.Mappers
 		//Private variables go here
 		private ColorMapper _colorMapper;
 		private ProductResource _magentoTestProduct;
-		private const int EAProductDocumentId = 2039;
+		private const int EaProductDocumentId = 2039;
 		private const int MappedColorId = 49;
 
 		[TestInitialize]
@@ -43,8 +43,8 @@ namespace Tests.Mappers
 		public void ColorMapper_UpsertColorDefinitions()
 		{
 			//Color ID 0 is not mapped and color ID 1 is black
-			Assert.IsNull(_colorMapper.UpsertColorDefinitions(EAProductDocumentId, 0));
-			Assert.IsNotNull(_colorMapper.UpsertColorDefinitions(EAProductDocumentId, MappedColorId));
+			Assert.IsNull(_colorMapper.UpsertColorDefinitions(EaProductDocumentId, 0));
+			Assert.IsNotNull(_colorMapper.UpsertColorDefinitions(EaProductDocumentId, MappedColorId));
 		}
 
 		/// <summary>

@@ -222,7 +222,7 @@
     <Compile Include="Mappers\AssetMapper.cs" />
     <Compile Include="Utilities\Enums.cs" />
     <Compile Include="Utilities\Filter.cs" />
-    <Compile Include="Utilities\LogWriter.cs" />
+    <Compile Include="Utilities\LogUtility.cs" />
     <Compile Include="Utilities\RegexPatterns.cs" />
     <Compile Include="Utilities\UrlFormatter.cs" />
   </ItemGroup>

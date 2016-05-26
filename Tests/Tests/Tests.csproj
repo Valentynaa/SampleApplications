@@ -81,7 +81,7 @@
     <Compile Include="ProductValid.cs" />
     <Compile Include="TemplateTests.cs" />
     <Compile Include="Utilities\FilterTests.cs" />
-    <Compile Include="Utilities\LogWriterTests.cs" />
+    <Compile Include="Utilities\LogUtilityTests.cs" />
     <Compile Include="Utilities\TestHelper.cs" />
   </ItemGroup>
   <ItemGroup>

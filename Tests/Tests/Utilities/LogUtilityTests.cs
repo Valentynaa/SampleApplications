@@ -9,7 +9,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Tests.Utilities
 {
 	[TestClass]
-	public class LogWriterTests
+	public class LogUtilityTests
 	{
 		//Private variables go here
 
@@ -26,8 +26,8 @@ namespace Tests.Utilities
 		[TestMethod]
 		public void LogWriter_Write()
 		{
-			LogWriter.Write("Test", Log.Sync);
-			LogWriter.Write("Test", Log.Error);
+			LogUtility.Write(Log.ProductSync, "Test");
+			LogUtility.Write(Log.Error, "Test");
 		}
 
 		/// <summary>
@@ -36,9 +36,9 @@ namespace Tests.Utilities
 		[TestMethod]
 		public void LogWriter_TryGetLastLog()
 		{
-			LogWriter.Write("Test", Log.Sync);
+			LogUtility.Write(Log.OrderSync, "Test");
 			DateTime result;
-			Assert.IsTrue(LogWriter.TryGetLastLog(Log.Sync, out result));
+			Assert.IsTrue(LogUtility.TryGetLastLog(Log.OrderSync, out result));
 			Assert.IsTrue(result.AddMinutes(-1) < result);
 		}
 	}
