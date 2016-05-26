@@ -42,26 +42,34 @@ See [Getting Started Guide](https://github.com/iQmetrix/MagentoConnect/blob/mast
 ## How it Works
 
 The App works according to the following logic:
-
+* Product Sync
 * All products created or updated in Magento since the last sync, or the last **hour** (this value can be changed) if no sync data is found, are fetched
-* Each product is checked for the `{MappingCode}` attribute
-* If the product is mapped, an update is performed. If the product is **not** mapped, a create is performed
-* The product is checked for type (simple/virtual/configurable)
-    * Configurable products are created as Master Products with Variations in EA
-    * Simple or Virtual products are created as Master Products in EA
-* Each field specified in `{FieldMapping}` is created or updated
-* Each image is checked, if there are new images (only names are compared), they are uploaded to EA 
-* The Magento **base** image is set to the product's **hero shot** image
-* The product is checked for a valid mapped category and manufacturer
-* The Product is created or updated in EA
-* For NEW products
-    * A [CatalogItem](http://developers.iqmetrix.com/api/catalog/#catalogitem) is created
-    * [Inventory Availability](http://developers.iqmetrix.com/api/availability/#availability) is set (non serialized, Quantity of 1) at `{EA_LocationId}` 
-    * The [Slug](http://developers.iqmetrix.com/api/catalog/#product-slug) of the new product is calculated
-    * The Slug is added to the magento product in the `{MappingCode}` attribute
-* If the Magento product has a color, it is created or updated as a ColorDefinition on the product
-* If the Magento product has a quantity, it is created or updated as an [Availability](/api/availability/#availability) resource
-* If the Magento product has a price, it is created or updated as a [Pricing](/api/pricing/#pricing) resource
+    * Each product is checked for the `{MappingCode}` attribute
+    * If the product is mapped, an update is performed. If the product is **not** mapped, a create is performed
+    * The product is checked for type (simple/virtual/configurable)
+        * Configurable products are created as Master Products with Variations in EA
+        * Simple or Virtual products are created as Master Products in EA
+    * Each field specified in `{FieldMapping}` is created or updated
+    * Each image is checked, if there are new images (only names are compared), they are uploaded to EA 
+    * The Magento **base** image is set to the product's **hero shot** image
+    * The product is checked for a valid mapped category and manufacturer
+    * The Product is created or updated in EA
+    * For NEW products
+        * A [CatalogItem](http://developers.iqmetrix.com/api/catalog/#catalogitem) is created
+        * [Inventory Availability](http://developers.iqmetrix.com/api/availability/#availability) is set (non serialized, Quantity of 1) at `{EA_LocationId}` 
+        * The [Slug](http://developers.iqmetrix.com/api/catalog/#product-slug) of the new product is calculated
+        * The Slug is added to the magento product in the `{MappingCode}` attribute
+    * If the Magento product has a color, it is created or updated as a ColorDefinition on the product
+    * If the Magento product has a quantity, it is created or updated as an [Availability](/api/availability/#availability) resource
+    * If the Magento product has a price, it is created or updated as a [Pricing](/api/pricing/#pricing) resource
+* Order Sync
+    * Each [Order](http://developers.iqmetrix.com/api/orders/#order) created in Endless Aisle since the last sync, or the last **hour** (this value can be changed) if no sync data is found, are fetched
+    * For each order, a cart is created in Magento for `{Magento_CustomerId}` specified in the config file
+    * For each [OrderItem](http://developers.iqmetrix.com/api/orders/#item), the corresponding [CatalogItem](http://developers.iqmetrix.com/api/catalog/#catalogitem) is found
+    * From the [CatalogItem](http://developers.iqmetrix.com/api/catalog/#catalogitem) the Magento product with the same `{MappingCode}` is added to the cart
+    * The `{Magento_ShippingCode}` and other shipping information is set for the cart are then set based on the `{EA_LocationId}`
+    * The `{Magento_PaymentMethod}` is then set for the cart
+    * An order is then created from the cart
 
 ## Limitations
 
