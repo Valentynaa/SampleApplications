@@ -21,7 +21,7 @@ namespace MagentoConnect.Controllers.Magento
 		/// <summary>
 		/// Creates a cart / quote for the customer specified in Magento and returns that cart's ID
 		/// </summary>
-		/// <param name="customerId">Customer to create cart for</param>
+		/// <param name="customerId">Identifier of customer to create cart for</param>
 		/// <returns>Cart ID for cart created</returns>
 		public int CreateCart(int customerId)
 		{
@@ -43,15 +43,21 @@ namespace MagentoConnect.Controllers.Magento
 
 		/// <summary>
 		/// Adds an item to a cart in Magento and returns the CartItemResource created
-		/// Throws exception if invalid CartAddItemResource is passed in
+		/// 
+		/// NOTE:
+		///		Throws exception if invalid CartAddItemResource is passed in. CartAddItemResource is invalid 
+		///		if the qoute_id or cart item sku are not set.
 		/// </summary>
 		/// <param name="cartId">Cart to add item to</param>
 		/// <param name="item">Item to add to cart</param>
 		/// <returns>Cart Item that was added</returns>
 		public CartItemResource AddItemToCart(int cartId, CartAddItemResource item)
 		{
-			if(item.cartItem.quote_id == null || string.IsNullOrEmpty(item.cartItem.sku))
-				throw new Exception("Ensure that the body of the CartAddItemResource used is properly initialized.");
+			if(item == null)
+				throw new ArgumentNullException(nameof(item));
+
+			if(string.IsNullOrEmpty(item.cartItem.quote_id) || string.IsNullOrEmpty(item.cartItem.sku))
+				throw new Exception("Ensure that the body of the CartAddItemResource used is properly initialized. qoute_id and cart item sku must both be not empty");
 
 			var endpoint = UrlFormatter.MagentoAddItemToCartUrl(cartId);
 
@@ -79,6 +85,9 @@ namespace MagentoConnect.Controllers.Magento
 		/// <returns>Response from setting information. Includes billing and shipping information</returns>
 		public CartShippingResponseResource SetShippingInformation(int cartId, CartSetShippingInformationResource shippingInformation)
 		{
+			if (shippingInformation == null)
+				throw new ArgumentNullException(nameof(shippingInformation));
+
 			var endpoint = UrlFormatter.MagentoSetShippingInformationUrl(cartId);
 
 			var client = new RestClient(endpoint);
@@ -151,6 +160,9 @@ namespace MagentoConnect.Controllers.Magento
 		/// <returns>Cart ID of modified cart</returns>
 		public int AddPaymentMethod(int cartId, CartAddPaymentMethodResource paymentMethod)
 		{
+			if (paymentMethod == null)
+				throw new ArgumentNullException(nameof(paymentMethod));
+
 			var endpoint = UrlFormatter.MagentoAddPaymentMethodUrl(cartId);
 
 			var client = new RestClient(endpoint);
@@ -177,6 +189,9 @@ namespace MagentoConnect.Controllers.Magento
 		/// <returns>Order ID of order created</returns>
 		public int CreateOrder(int cartId, CartAddPaymentMethodResource paymentMethod)
 		{
+			if (paymentMethod == null)
+				throw new ArgumentNullException(nameof(paymentMethod));
+
 			var endpoint = UrlFormatter.MagentoCreateAnOrderUrl(cartId);
 
 			var client = new RestClient(endpoint);

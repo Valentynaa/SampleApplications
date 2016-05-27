@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using MagentoConnect;
 using MagentoConnect.Controllers.EndlessAisle;
-using MagentoConnect.Models.EndlessAisle.Order;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Controllers.EndlessAisle
@@ -15,14 +14,14 @@ namespace Tests.Controllers.EndlessAisle
 	public class OrderControllerTests
 	{
 		//Private variables go here
-		private OrderController _orderController;
+		private OrdersController _orderController;
 		private const string OrderId = "cdd26b8f-4ed1-409d-9984-982e081c425e";
 
 		[TestInitialize]
 		public void SetUp()
 		{
 			string eaAuthToken = App.GetEaAuthToken();
-			_orderController = new OrderController(eaAuthToken);
+			_orderController = new OrdersController(eaAuthToken);
 		}
 
 		//Tests go here
@@ -33,7 +32,7 @@ namespace Tests.Controllers.EndlessAisle
 		[TestMethod]
 		public void OrderController_GetOrders()
 		{
-			IEnumerable<OrderResource> orders = _orderController.GetOrders();
+			Assert.IsNotNull(_orderController.GetOrders());
 		}
 
 		/// <summary>
@@ -42,7 +41,7 @@ namespace Tests.Controllers.EndlessAisle
 		[TestMethod]
 		public void OrderController_GetOrderItems()
 		{
-			IEnumerable<OrderItemResource> orderItems = _orderController.GetOrderItems(OrderId);
+			Assert.IsNotNull(_orderController.GetOrderItems(OrderId));
 		}
 	}
 }

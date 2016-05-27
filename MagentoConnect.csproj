@@ -68,7 +68,7 @@
   <ItemGroup>
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\EndlessAisle\ClassificationController.cs" />
-    <Compile Include="Controllers\EndlessAisle\OrderController.cs" />
+    <Compile Include="Controllers\EndlessAisle\OrdersController.cs" />
     <Compile Include="Controllers\EndlessAisle\PricingController.cs" />
     <Compile Include="Controllers\Magento\CartController.cs" />
     <Compile Include="Controllers\Magento\CustomerController.cs" />
@@ -106,9 +106,9 @@
     <Compile Include="Models\EndlessAisle\Entities\EntityResource.cs" />
     <Compile Include="Models\EndlessAisle\Entities\StoreHoursResource.cs" />
     <Compile Include="Models\EndlessAisle\Entities\TimeResource.cs" />
-    <Compile Include="Models\EndlessAisle\Order\OrderItemResource.cs" />
-    <Compile Include="Models\EndlessAisle\Order\OrderResource.cs" />
-    <Compile Include="Models\EndlessAisle\Order\TrackingInformationResource.cs" />
+    <Compile Include="Models\EndlessAisle\Orders\OrderItemResource.cs" />
+    <Compile Include="Models\EndlessAisle\Orders\OrderResource.cs" />
+    <Compile Include="Models\EndlessAisle\Orders\TrackingInformationResource.cs" />
     <Compile Include="Models\EndlessAisle\Pricing\PricingResource.cs" />
     <Compile Include="Models\EndlessAisle\ProductLibrary\AssetResource.cs" />
     <Compile Include="Models\EndlessAisle\ProductLibrary\ColorTagsResource.cs" />

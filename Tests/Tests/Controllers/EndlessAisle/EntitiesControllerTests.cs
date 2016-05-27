@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using MagentoConnect;
 using MagentoConnect.Controllers.EndlessAisle;
-using MagentoConnect.Models.EndlessAisle.Entities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Controllers.EndlessAisle
@@ -31,7 +30,7 @@ namespace Tests.Controllers.EndlessAisle
 		[TestMethod]
 		public void EntitiesController_GetLocation()
 		{
-			LocationResource location = _entityController.GetLocation();
+			Assert.IsNotNull(_entityController.GetLocation());
 		}
 
 		/// <summary>
@@ -40,7 +39,7 @@ namespace Tests.Controllers.EndlessAisle
 		[TestMethod]
 		public void EntitiesController_GetAllManufacturers()
 		{
-			List<ManufacturerResource> manufacturers = _entityController.GetAllManufacturers();
+			Assert.IsNotNull(_entityController.GetAllManufacturers());
 		}
 	}
 }

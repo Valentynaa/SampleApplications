@@ -65,7 +65,10 @@ namespace MagentoConnect.Models.Magento.Cart
 		{
 		}
 
-		public string region { get; set; }// Region name,
+		/// <summary>
+		/// Region name,
+		/// </summary>
+		public string region { get; set; }
 		public int regionId { get; set; }// Region id,
 		public string regionCode { get; set; }// Region code,
 		public string countryId { get; set; }// Country id,

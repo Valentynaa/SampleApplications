@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MagentoConnect.Models.EndlessAisle.Order
+namespace MagentoConnect.Models.EndlessAisle.Orders
 {
 	[Serializable]
 	public class TrackingInformationResource

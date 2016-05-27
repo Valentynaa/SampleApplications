@@ -21,7 +21,7 @@ namespace MagentoConnect.Controllers.Magento
 		/// <summary>
 		/// Gets the Magento Customer specified
 		/// </summary>
-		/// <param name="customerId">Customer to return</param>
+		/// <param name="customerId">Customer identifier</param>
 		/// <returns>Magento Customer</returns>
 		public CustomerResource GetCustomer(int customerId)
 		{

@@ -21,7 +21,13 @@ namespace MagentoConnect.Mappers
 			_magentoRegionController = new RegionController(magentoAuthToken);
 		}
 
-		//Magento Region from the config file
+		//
+		/// <summary>
+		/// Magento Region from the config file.
+		/// 
+		/// Region is determined by matching the EA location's country to the Magento  country then 
+		/// matching the region code in the magento country to the EA StateCode or StateName
+		/// </summary>
 		public RegionResource MagentoRegion
 		{
 			get

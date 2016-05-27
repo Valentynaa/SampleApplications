@@ -5,7 +5,7 @@ using MagentoConnect.Controllers.EndlessAisle;
 using MagentoConnect.Controllers.Magento;
 using MagentoConnect.Models.EndlessAisle.Catalog;
 using MagentoConnect.Models.EndlessAisle.Entities;
-using MagentoConnect.Models.EndlessAisle.Order;
+using MagentoConnect.Models.EndlessAisle.Orders;
 using MagentoConnect.Models.Magento.Cart;
 using MagentoConnect.Models.Magento.Country;
 using MagentoConnect.Models.Magento.Customer;
@@ -17,15 +17,17 @@ namespace MagentoConnect.Mappers
 {
 	public class OrderMapper : BaseMapper
 	{
-		private readonly OrderController _eaOrderController;
+		private readonly OrdersController _eaOrderController;
 		private readonly CatalogsController _eaCatalogsController;
 
 		private readonly CartController _magentoCartController;
 		private readonly ProductController _magentoProductController;
 
+		public const string CreatedDate = "CreatedDateUtc";
+
 		public OrderMapper(string magentoAuthToken, string eaAuthToken) : base(magentoAuthToken, eaAuthToken)
 		{
-			_eaOrderController = new OrderController(eaAuthToken);
+			_eaOrderController = new OrdersController(eaAuthToken);
 			_eaCatalogsController = new CatalogsController(eaAuthToken);
 
 			_magentoCartController = new CartController(magentoAuthToken);
@@ -42,7 +44,7 @@ namespace MagentoConnect.Mappers
 			if (createdAfter > DateTime.UtcNow)
 				throw new ArgumentOutOfRangeException(nameof(createdAfter));
 
-			var createdOrders = _eaOrderController.GetOrders(new Filter("CreatedDateUtc", createdAfter, FilterCondition.GreaterThan));
+			var createdOrders = _eaOrderController.GetOrders(new Filter(CreatedDate, createdAfter, FilterCondition.GreaterThan));
 			return createdOrders;
 		}
 
@@ -83,9 +85,9 @@ namespace MagentoConnect.Mappers
 		/// Shipping address used is based on the EA location unless the data needed is not available. In this case, data is pulled from the customer.
 		/// Shipping method used will be the one set in App.config. If that shipping method cannot be used for the cart specified, an exception will occur.
 		/// </summary>
-		/// <param name="cartId">Cart to set information on.</param>
-		/// <param name="magentoRegion"></param>
-		/// <param name="eaLocation"></param>
+		/// <param name="cartId">Identifier for cart to set information on.</param>
+		/// <param name="magentoRegion">Region information for address</param>
+		/// <param name="eaLocation">Location information for address</param>
 		/// <param name="customer">Customer for address information</param>
 		public void SetShippingAndBillingInformationForCart(int cartId, RegionResource magentoRegion, LocationResource eaLocation, CustomerResource customer)
 		{
@@ -119,7 +121,7 @@ namespace MagentoConnect.Mappers
 			}
 			else
 			{
-				throw new Exception(string.Format("Unable to create Order for cart {0}. No payment method mtching {1} found for cart.", cartId, ConfigReader.MagentoPaymentMethod));
+				throw new Exception(string.Format("Unable to create Order for cart {0}. No payment method matching {1} found for cart. Ensure that Magento_PaymentMethod is valid in App.config", cartId, ConfigReader.MagentoPaymentMethod));
 			}
 		}
 	}

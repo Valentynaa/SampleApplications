@@ -5,8 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using MagentoConnect;
 using MagentoConnect.Controllers.Magento;
-using MagentoConnect.Models.Magento.Country;
-using MagentoConnect.Models.Magento.Customer;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Controllers.Magento
@@ -32,7 +30,7 @@ namespace Tests.Controllers.Magento
 		[TestMethod]
 		public void RegionController_GetCountries()
 		{
-			IEnumerable<CountryResource> countries = _regionController.GetCountries();
+			Assert.IsNotNull(_regionController.GetCountries());
 		}
 	}
 }

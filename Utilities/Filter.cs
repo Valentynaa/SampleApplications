@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace MagentoConnect.Utilities
@@ -21,6 +19,8 @@ namespace MagentoConnect.Utilities
 	}
 	public class Filter
 	{
+		private const string JsonDateTimeString = "datetime";
+
 		public string Property { get; set; }
 		public object Value { get; set; }
 		public FilterCondition Condition { get; set; }
@@ -47,7 +47,7 @@ namespace MagentoConnect.Utilities
 			else if (Value is DateTime)
 			{
 				//Trim the " at the start and end of the serialized object
-				valueString = string.Format("datetime\'{0}\'", JsonConvert.SerializeObject(Value).Substring(1, JsonConvert.SerializeObject(Value).Length - 2));
+				valueString = string.Format("{0}\'{1}\'", JsonDateTimeString, JsonConvert.SerializeObject(Value).Substring(1, JsonConvert.SerializeObject(Value).Length - 2));
 			}
 			else
 			{

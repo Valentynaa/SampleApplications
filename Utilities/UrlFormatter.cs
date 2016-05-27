@@ -34,6 +34,9 @@ namespace MagentoConnect.Utilities
 		public readonly string EaPricingUrl;
 		public readonly string EaOrderUrl;
 
+		private const string HypermediaFilterQuery = "?$filter=";
+		private const string HypermediaAndSeparator = "and";
+
 		public UrlFormatter ()
 		{
 			//Read in values from App.config
@@ -548,28 +551,30 @@ namespace MagentoConnect.Utilities
 		#endregion
 
 		/// <summary>
+		/// Appends the filters to the URL passed in.
 		/// 
-		/// http://some.api.com/Location?$filter=City eq 'Berlin' and Created ge datetime'2014-06-21' and Created le datetime'2014-09-22'
+		/// ex. http://some.api.com/Location?$filter=City eq 'Berlin' and Created ge datetime'2014-06-21' and Created le datetime'2014-09-22'
 		/// </summary>
-		/// <param name="url"></param>
-		/// <param name="filters"></param>
-		/// <returns></returns>
+		/// <param name="url">Base URL to append to</param>
+		/// <param name="filters">Filters to add to request</param>
+		/// <returns>Base URL with filters appended</returns>
 		public string HypermediaFilterUrl(string url, params Filter[] filters)
 		{
 			if (filters.Length == 0)
 				return url;
 
 			StringBuilder result = new StringBuilder(url);
-			result.Append("?$filter=");
+			result.Append(HypermediaFilterQuery);
 
 			var filterList = filters.ToList();
 
+			//Append the first filter as is. Successive filters need to be delimited by a separator
 			result.Append(filterList.First());
 			filterList.RemoveAt(0);
 
 			foreach (var filter in filterList)
 			{
-				result.Append(string.Format(" and {0}", filter));
+				result.Append(string.Format(" {0} {1}", HypermediaAndSeparator, filter));	//Separator and filter
 			}
 			return result.ToString();
 		}

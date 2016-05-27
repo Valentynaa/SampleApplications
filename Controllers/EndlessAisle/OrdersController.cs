@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MagentoConnect.Models.EndlessAisle.Order;
+using MagentoConnect.Models.EndlessAisle.Orders;
 using MagentoConnect.Utilities;
 using Newtonsoft.Json;
 using RestSharp;
 
 namespace MagentoConnect.Controllers.EndlessAisle
 {
-	public class OrderController : BaseController
+	public class OrdersController : BaseController
 	{
 		public static string EndlessAisleAuthToken;
-		public OrderController(string eaAuthToken)
+		public OrdersController(string eaAuthToken)
 		{
 			EndlessAisleAuthToken = eaAuthToken;
 		}

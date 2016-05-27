@@ -4,9 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MagentoConnect;
-using MagentoConnect.Controllers.EndlessAisle;
 using MagentoConnect.Controllers.Magento;
-using MagentoConnect.Models.Magento.Customer;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Controllers.Magento
@@ -33,7 +31,7 @@ namespace Tests.Controllers.Magento
 		[TestMethod]
 		public void CustomerController_GetCustomer()
 		{
-			CustomerResource customer = _customerController.GetCustomer(CustomerId);
+			Assert.IsNotNull(_customerController.GetCustomer(CustomerId));
 		}
 	}
 }

@@ -13,6 +13,8 @@ namespace MagentoConnect.Utilities
 {
 	public static class LogUtility
 	{
+		private const string LogSeparator = "-------------------------------";
+
 		/// <summary>
 		/// Writes the message to a log file.
 		/// </summary>
@@ -24,7 +26,7 @@ namespace MagentoConnect.Utilities
 			{
 				using (StreamWriter streamWriter = File.AppendText(Enums.GetPath(logType)))
 				{
-					streamWriter.WriteLine("-------------------------------");
+					streamWriter.WriteLine(LogSeparator);
 					streamWriter.WriteLine("{0}| {1}", DateTime.Now.ToString(CultureInfo.CreateSpecificCulture("en-US")), message);
 				}
 			}

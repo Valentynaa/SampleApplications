@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MagentoConnect.Utilities;
 
-namespace MagentoConnect.Models.EndlessAisle.Order
+namespace MagentoConnect.Models.EndlessAisle.Orders
 {
 	[Serializable]
 	public class OrderResource

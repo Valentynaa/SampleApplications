@@ -61,7 +61,28 @@ namespace Tests.Controllers.Magento
 		[TestMethod]
 		public void CartController_AddItemToCart()
 		{
-			CartItemResource item = _cartController.AddItemToCart(CartId, _itemToAdd);
+			Assert.IsNotNull(_cartController.AddItemToCart(CartId, _itemToAdd));
+		}
+
+		/// <summary>
+		/// This test ensures that an error occurs when null is attempted to be added to the cart
+		/// </summary>
+		[TestMethod]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void CartController_AddItemToCart_NullItem()
+		{
+			Assert.IsNotNull(_cartController.AddItemToCart(CartId, null));
+		}
+
+		/// <summary>
+		/// This test ensures that an error occurs when the item is not properly populated
+		/// </summary>
+		[TestMethod]
+		[ExpectedException(typeof(Exception))]
+		public void CartController_AddItemToCart_InvalidItem()
+		{
+			_itemToAdd.cartItem.sku = null;
+			Assert.IsNotNull(_cartController.AddItemToCart(CartId, _itemToAdd));
 		}
 
 		/// <summary>
@@ -80,7 +101,7 @@ namespace Tests.Controllers.Magento
 		[TestMethod]
 		public void CartController_CreateCart()
 		{
-			int cartCreatedId = _cartController.CreateCart(CustomerId);
+			Assert.IsNotNull(_cartController.CreateCart(CustomerId));
 		}
 
 		/// <summary>
@@ -89,7 +110,7 @@ namespace Tests.Controllers.Magento
 		[TestMethod]
 		public void CartController_SetShippingInformation()
 		{
-			CartShippingResponseResource shippingResponse = _cartController.SetShippingInformation(CartId, _shippingToSet);
+			Assert.IsNotNull(_cartController.SetShippingInformation(CartId, _shippingToSet));
 		}
 
 		/// <summary>
@@ -98,7 +119,7 @@ namespace Tests.Controllers.Magento
 		[TestMethod]
 		public void CartController_GetCart()
 		{
-			CartResource cart = _cartController.GetCart(CartId);
+			Assert.AreEqual(CartId, _cartController.GetCart(CartId).id);
 		}
 
 		/// <summary>
@@ -107,7 +128,8 @@ namespace Tests.Controllers.Magento
 		[TestMethod]
 		public void CartController_GetCartItems()
 		{
-			IEnumerable<CartItemResource> cartItems = _cartController.GetCartItems(CartId);
+			_cartController.AddItemToCart(CartId, _itemToAdd);
+			Assert.IsTrue(_cartController.GetCartItems(CartId).Any());
 		}
 
 		/// <summary>
@@ -116,7 +138,7 @@ namespace Tests.Controllers.Magento
 		[TestMethod]
 		public void CartController_GetPaymentMethods()
 		{
-			IEnumerable<PaymentMethodResource> paymentMethods = _cartController.GetPaymenMethods(CartId);
+			Assert.IsNotNull(_cartController.GetPaymenMethods(CartId));
 		}
 
 		/// <summary>
@@ -125,7 +147,7 @@ namespace Tests.Controllers.Magento
 		[TestMethod]
 		public void CartController_GetShippingMethods()
 		{
-			IEnumerable<ShippingMethodResource> shippingMethods = _cartController.GetShippingMethods(CartId);
+			Assert.IsNotNull(_cartController.GetShippingMethods(CartId));
 		}
 
 		/// <summary>
@@ -154,7 +176,7 @@ namespace Tests.Controllers.Magento
 
 			_cartController.AddPaymentMethod(cartIdForOrder, _methodToAdd);
 
-			int orderCreatedId = _cartController.CreateOrder(cartIdForOrder, _methodToAdd);
+			Assert.IsNotNull(_cartController.CreateOrder(cartIdForOrder, _methodToAdd));
 		}
 	}
 }

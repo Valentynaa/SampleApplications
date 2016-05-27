@@ -16,9 +16,9 @@ namespace MagentoConnect.Controllers.EndlessAisle
 		}
 
 		/// <summary>
-		/// Gets information about all manufacturers
+		/// Gets information about all supported manufacturers in EA
 		/// </summary>
-		/// <returns>Returns a list of manufacturers</returns>
+		/// <returns>List of supported Manufacturers in EA</returns>
 		public List<ManufacturerResource> GetAllManufacturers()
 		{
 			var endpoint = UrlFormatter.EndlessAisleEntitiesManufacturersUrl();
@@ -38,9 +38,9 @@ namespace MagentoConnect.Controllers.EndlessAisle
 		}
 
 		/// <summary>
-		/// Gets the EA location set in the App.config file
+		/// Gets the EA location the device is at (from App.config)
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>EA Location device is at</returns>
 		public LocationResource GetLocation()
 		{
 			var endpoint = UrlFormatter.EndlessAisleGetLocationUrl();

@@ -5,12 +5,14 @@ using MagentoConnect.Models.Magento.Products;
 using MagentoConnect.Utilities;
 using MagentoConnect.Models.EndlessAisle.ProductLibrary;
 using MagentoConnect.Mappers;
-using MagentoConnect.Models.EndlessAisle.Order;
+using MagentoConnect.Models.EndlessAisle.Orders;
 
 namespace MagentoConnect
 {
 	public class App
 	{
+		private const string UserAffirmativeString = "y";
+
 		//Caching to make things a bit faster
 		private static string _cachedEaAuthToken;
 		private static string _cachedMagentoAuthToken;
@@ -54,7 +56,7 @@ namespace MagentoConnect
 			{
 				Console.WriteLine("An error occurred while syncing products to Endless Aisle. Check errorLog.txt for more details.");
 				Console.WriteLine("Continue on to synchronizing Orders to Magento?");
-				doOrderSync = Console.ReadKey().ToString().Equals("y", StringComparison.OrdinalIgnoreCase);
+				doOrderSync = Console.ReadKey().ToString().Equals(UserAffirmativeString, StringComparison.OrdinalIgnoreCase);
 			}
 
 			//Order syncing
@@ -94,7 +96,7 @@ namespace MagentoConnect
 			try
 			{
 				DateTime lastSync = GetTimeForSync(Log.OrderSync);
-				IEnumerable<OrderResource> ordersToCreate = _orderMapper.GetEaOrdersCreatedAfter(lastSync);
+				List<OrderResource> ordersToCreate = _orderMapper.GetEaOrdersCreatedAfter(lastSync).ToList();
 
 				if (!ordersToCreate.Any())
 				{
@@ -109,7 +111,7 @@ namespace MagentoConnect
 						_orderMapper.AddOrderItemsToCart(order.Id.ToString(), cartId);
 						_orderMapper.SetShippingAndBillingInformationForCart(cartId, _entityMapper.MagentoRegion, _entityMapper.EaLocation, _customerMapper.MagentoCustomer);
 						int orderCreatedId = _orderMapper.CreateOrderForCart(cartId);
-						Console.WriteLine(string.Format("Order with ID {0} in Magento has been created from order {1} in Endless Aisle.", orderCreatedId, order.Id));
+						Console.WriteLine("Order with ID {0} in Magento has been created from order {1} in Endless Aisle.", orderCreatedId, order.Id);
 					}
 					LogUtility.Write(Log.OrderSync, string.Format("Orders successfully synced. Last order synced was created at {0}", lastSync));
 				}
@@ -135,7 +137,7 @@ namespace MagentoConnect
 			try
 			{
 				DateTime lastSync = GetTimeForSync(Log.ProductSync);
-				IEnumerable<ProductResource> productsToUpdate = _productMapper.GetMagentoProductsUpdatedAfter(lastSync);
+				List<ProductResource> productsToUpdate = _productMapper.GetMagentoProductsUpdatedAfter(lastSync).ToList();
 				
 				if (!productsToUpdate.Any())
 				{
@@ -210,21 +212,20 @@ namespace MagentoConnect
 			}
 		}
 
-		/**
-		 * This function provides an example of how to create a product in EA given a Magento SKU
-		 * This function specifically creates a Master Product from a *SIMPLE* Magento Product
-		 *
-		 * NOTES: that this function requires you prepare the product by ensuring it has:
-		 * Assigned Manufacturer that matches one in EA
-		 * The first category must also be one defined in EA
-		 * If there are multiple Categories or Manufacturers, the first one will be used
-		 * When the product is sucessfully created, an attribute (MappingCode) will be added to each Magento product
-		 * If MULTIPLE images are provided, the BASE Magento image will be used as the hero shot
-		 * 
-		 * @param   magentoProduct      Magento product object
-		 *  
-		 * @return  ProductDocumentId   Identifier of created Product Document
-		 */
+		/// <summary>
+		/// This function provides an example of how to create a product in EA given a Magento SKU
+		/// This function specifically creates a Master Product from a *SIMPLE* Magento Product
+		/// 
+		/// NOTE: 
+		///		This function requires you prepare the product by ensuring it has:
+		///		- Assigned Manufacturer that matches one in EA
+		///		- The first category must also be one defined in EA
+		///		- If there are multiple Categories or Manufacturers, the first one will be used
+		///		- When the product is sucessfully created, an attribute (MappingCode) will be added to each Magento product
+		///		- If MULTIPLE images are provided, the BASE Magento image will be used as the hero shot
+		/// </summary>
+		/// <param name="magentoProduct">Magento product object</param>
+		/// <returns>ProductDocumentId Identifier of created Product Document</returns>
 		private static int UpsertSimpleMagentoProductToEa(ProductResource magentoProduct)
 		{
 			//Get fields and assets
@@ -283,19 +284,21 @@ namespace MagentoConnect
 			return productDocumentId;
 		}
 
-		/**
-		 * This function provides an example of how to create a product structure in EA given a Magento SKU
-		 * This function specifically creates a Master Product with Variations from a *CONFIGURABLE* Magento Product
-		 *
-		 * NOTE: that this function requires you prepare the product by ensuring it has an
-		 * assigned Manufacturer that matches one in EA
-		 * The first category must also be one defined in EA
-		 * If there are multiple Categories or Manufacturers, the first one will be used
-		 * When the product is sucessfully created, an attribute (MappingCode) will be added to each Magento product
-		 * LIMITATION: This app CANNOT remove child products from a variation if they are removed from a configurable product
-		 * 
-		 * @param   magentoProduct      Magento product object
-		 */
+		/// <summary>
+		/// This function provides an example of how to create a product structure in EA given a Magento SKU
+		/// This function specifically creates a Master Product with Variations from a *CONFIGURABLE* Magento Product
+		///
+		/// NOTE: 
+		///		This function requires you prepare the product by ensuring it has an
+		///		assigned Manufacturer that matches one in EA
+		///		The first category must also be one defined in EA
+		///		If there are multiple Categories or Manufacturers, the first one will be used
+		///		When the product is sucessfully created, an attribute (MappingCode) will be added to each Magento product
+		/// 
+		/// LIMITATION: 
+		///		This app CANNOT remove child products from a variation if they are removed from a configurable product
+		/// </summary>
+		/// <param name="magentoProduct">Magento product object</param>
 		private static void UpsertConfigurableMagentoProductToEa(ProductResource magentoProduct)
 		{
 			string colorDefinitionId = null;

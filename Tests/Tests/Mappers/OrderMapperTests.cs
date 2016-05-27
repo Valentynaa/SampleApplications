@@ -5,10 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using MagentoConnect;
 using MagentoConnect.Mappers;
-using MagentoConnect.Models.EndlessAisle.Entities;
-using MagentoConnect.Models.EndlessAisle.Order;
-using MagentoConnect.Models.Magento.Country;
-using MagentoConnect.Models.Magento.Customer;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Mappers
