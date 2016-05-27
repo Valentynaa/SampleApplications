@@ -25,6 +25,10 @@ namespace Tests.Controllers.Magento
 		private CartSetShippingInformationResource _shippingToSet;
 		private AddressResource _address;
 
+		/// <summary>
+		/// NOTE:
+		///		Make sure you have enough stock of the item used for testing in magento or tests may fail
+		/// </summary>
 		[TestInitialize]
 		public void SetUp()
 		{
