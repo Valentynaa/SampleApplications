@@ -1,37 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using MagentoConnect;
-using MagentoConnect.Controllers.Magento;
 using MagentoConnect.Mappers;
 using MagentoConnect.Models.EndlessAisle.ProductLibrary;
 using MagentoConnect.Models.Magento.Products;
-using MagentoConnect.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json.Linq;
 using Tests.Utilities;
 
 namespace Tests.Mappers
 {
+    /// <summary>
+    /// This suite ensures the ColorMapper is working correctly
+    /// </summary>
 	[TestClass]
 	public class ColorMapperTests
 	{
-		//Private variables go here
-		private ColorMapper _colorMapper;
+        //IMPORTANT: Before you can run these tests, ensure the values below are replaced with ones from Endless Aisle
+        private const int EaProductDocumentId = 2039;
+        private const int MappedColorId = 49;
+
+        private ColorMapper _colorMapper;
 		private ProductResource _magentoTestProduct;
-		private const int EAProductDocumentId = 2039;
-		private const int MappedColorId = 49;
 
 		[TestInitialize]
 		public void SetUp()
 		{
-			string eaAuthToken = App.GetEaAuthToken();
-			string magentoAuthToken = App.GetMagentoAuthToken();
+			var eaAuthToken = App.GetEaAuthToken();
+			var magentoAuthToken = App.GetMagentoAuthToken();
 			_colorMapper = new ColorMapper(magentoAuthToken, eaAuthToken);
 			_magentoTestProduct = TestHelper.TestProduct;
 		}
-
-		//Tests go here
 
 		/// <summary>
 		/// This test ensures that the UpsertColorDefinitions function returns null when the color ID is not mapped
@@ -43,8 +41,8 @@ namespace Tests.Mappers
 		public void ColorMapper_UpsertColorDefinitions()
 		{
 			//Color ID 0 is not mapped and color ID 1 is black
-			Assert.IsNull(_colorMapper.UpsertColorDefinitions(EAProductDocumentId, 0));
-			Assert.IsNotNull(_colorMapper.UpsertColorDefinitions(EAProductDocumentId, MappedColorId));
+			Assert.IsNull(_colorMapper.UpsertColorDefinitions(EaProductDocumentId, 0));
+			Assert.IsNotNull(_colorMapper.UpsertColorDefinitions(EaProductDocumentId, MappedColorId));
 		}
 
 		/// <summary>
@@ -55,7 +53,7 @@ namespace Tests.Mappers
 		[ExpectedException(typeof(Exception))]
 		public void ColorMapper_CreateColorDefinition_InvalidProductDocumentId()
 		{
-			_colorMapper.CreateColorDefinition(Int32.MaxValue,
+			_colorMapper.CreateColorDefinition(int.MaxValue,
 				 new ColorDefinitionResource
 				 {
 					 ColorTagIds = new List<int>(),

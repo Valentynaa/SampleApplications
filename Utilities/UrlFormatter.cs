@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace MagentoConnect.Utilities
@@ -8,6 +10,7 @@ namespace MagentoConnect.Utilities
 		public readonly string Environment;
 		public readonly string MagentoUrl;
 		public readonly int CompanyId;
+		public readonly int LocationId;
 
 		public readonly string EaProductLibraryTemplate = "https://productlibrary{UrlSuffix}.iqmetrix.net/v1";
 		public readonly string EaCatalogsTemplate = "https://catalogs{UrlSuffix}.iqmetrix.net/v1";
@@ -17,6 +20,7 @@ namespace MagentoConnect.Utilities
 		public readonly string EaAvailabilityTemplate = "https://availability{UrlSuffix}.iqmetrix.net/v1";
 		public readonly string EaProductManagerTemplate = "https://productlibrary{UrlSuffix}.iqmetrix.net/ProductManager";
 		public readonly string EaPricingTemplate = "https://pricing{UrlSuffix}.iqmetrix.net/v1";
+		public readonly string EaOrderTemplate = "https://order{UrlSuffix}.iqmetrix.net/v1";
 
 
 		public readonly string EaProductLibraryUrl;
@@ -27,6 +31,10 @@ namespace MagentoConnect.Utilities
 		public readonly string EaAvailabilityUrl;
 		public readonly string EaProductManagerUrl;
 		public readonly string EaPricingUrl;
+		public readonly string EaOrderUrl;
+
+		private const string HypermediaFilterQuery = "?$filter=";
+		private const string HypermediaAndSeparator = "and";
 
 		public UrlFormatter ()
 		{
@@ -34,6 +42,7 @@ namespace MagentoConnect.Utilities
 			Environment = ConfigReader.EaEnviornment;
 			MagentoUrl = ConfigReader.MagentoUrl;
 			CompanyId = ConfigReader.EaCompanyId;
+			LocationId = ConfigReader.EaLocationId;
 
 			//Replace {UrlSuffix} with enviornment, for applicable endpoints
 			EaProductLibraryUrl = ReplaceEnviornment(EaProductLibraryTemplate);
@@ -44,6 +53,7 @@ namespace MagentoConnect.Utilities
 			EaAvailabilityUrl = ReplaceEnviornment(EaAvailabilityTemplate);
 			EaProductManagerUrl = ReplaceEnviornment(EaProductManagerTemplate);
 			EaPricingUrl = ReplaceEnviornment(EaPricingTemplate);
+			EaOrderUrl = ReplaceEnviornment(EaOrderTemplate);
 		}
 
 		/**
@@ -57,6 +67,7 @@ namespace MagentoConnect.Utilities
 			return url.Replace("{UrlSuffix}", Environment);
 		}
 
+	#region Magento URLs
 		/**
 		 * Gets location of Magento assets
 		 * 
@@ -189,7 +200,119 @@ namespace MagentoConnect.Utilities
 			return string.Format("{0}rest/V1/stockItems/{1}", MagentoUrl, sku);
 		}
 
-		/**
+		/// <summary>
+		/// Returns the URL for getting a Magento customer associated with the customer ID provided
+		/// </summary>
+		/// <param name="customerId">Customer ID to search for</param>
+		/// <returns>URL for getting Magento customer</returns>
+		public string MagentoGetCustomerByIdUrl(int customerId)
+		{
+			return string.Format("{0}rest/V1/customers/{1}", MagentoUrl, customerId);
+		}
+
+		/// <summary>
+		/// Returns the URL for making a Magento customer a cart
+		/// </summary>
+		/// <param name="customerId">Customer ID to create cart for</param>
+		/// <returns>URL for creating Magento customer's cart</returns>
+		public string MagentoCreateCartUrl(int customerId)
+		{
+			return string.Format("{0}rest/V1/customers/{1}/carts", MagentoUrl, customerId);
+		}
+		
+		/// <summary>
+		/// Returns the URL for adding a products to a cart
+		/// </summary>
+		/// <param name="cartId">Cart to add items to</param>
+		/// <returns>URL for adding a products to a cart</returns>
+		public string MagentoAddItemToCartUrl(int cartId)
+		{
+			return string.Format("{0}rest/V1/carts/{1}/items", MagentoUrl, cartId);
+		}
+
+		/// <summary>
+		/// Returns the URL for getting a cart's shipping methods
+		/// </summary>
+		/// <param name="cartId">Cart to get shipping methods for</param>
+		/// <returns>URL for getting a cart's shipping methods</returns>
+		public string MagentoGetShippingMethodsForCartUrl(int cartId)
+		{
+			return string.Format("{0}rest/V1/carts/{1}/shipping-methods", MagentoUrl, cartId);
+		}
+
+		/// <summary>
+		/// Returns the URL for getting Magento Countries
+		/// </summary>
+		/// <returns>URL for getting Magento Countries</returns>
+		public string MagentoGetCountriesUrl()
+		{
+			return string.Format("{0}rest/V1/directory/countries", MagentoUrl);
+		}
+
+		/// <summary>
+		/// Returns the URL for setting a cart's shipping and billing information
+		/// </summary>
+		/// <param name="cartId">Cart to set information for</param>
+		/// <returns>URL for setting a cart's shipping and billing information</returns>
+		public string MagentoSetShippingInformationUrl(int cartId)
+		{
+			return string.Format("{0}rest/V1/carts/{1}/shipping-information", MagentoUrl, cartId);
+		}
+
+		/// <summary>
+		/// Returns the URL for getting a cart's payment methods
+		/// </summary>
+		/// <param name="cartId">Cart to get payment methods for</param>
+		/// <returns>URL for getting a cart's payment methods</returns>
+		public string MagentoGetPaymentMethodsUrl(int cartId)
+		{
+			return string.Format("{0}rest/V1/carts/{1}/payment-methods", MagentoUrl, cartId);
+		}
+
+		/// <summary>
+		/// Returns the URL for adding a payment method to a cart
+		/// </summary>
+		/// <param name="cartId">Cart to add payment method to</param>
+		/// <returns>URL for adding a payment method to a cart</returns>
+		public string MagentoAddPaymentMethodUrl(int cartId)
+		{
+			return string.Format("{0}rest/V1/carts/{1}/selected-payment-method", MagentoUrl, cartId);
+		}
+
+		/// <summary>
+		/// Returns the URL for creating an order for a cart
+		/// </summary>
+		/// <param name="cartId">Cart to create order for</param>
+		/// <returns>URL for creating an order for a cart</returns>
+		public string MagentoCreateAnOrderUrl(int cartId)
+		{
+			return string.Format("{0}rest/V1/carts/{1}/order", MagentoUrl, cartId);
+		}
+
+		/// <summary>
+		/// Returns the URL getting a cart
+		/// </summary>
+		/// <param name="cartId">Cart to get</param>
+		/// <returns>URL getting a cart</returns>
+		public string MagentoGetCartUrl(int cartId)
+		{
+			return string.Format("{0}rest/V1/carts/{1}", MagentoUrl, cartId);
+		}
+
+		/// <summary>
+		/// Returns the URL for getting a cart's items
+		/// </summary>
+		/// <param name="cartId">Cart to get items for</param>
+		/// <returns>URL for getting a cart's items</returns>
+		public string MagentoGetItemsInCartUrl(int cartId)
+		{
+			return string.Format("{0}rest/V1/carts/{1}/items", MagentoUrl, cartId);
+		}
+	#endregion
+
+	#region EA URLs
+		
+		 /**
 		 * @return  string  Url needed to authenticate with EA
 		 */
 		public string EndlessAisleAuthUrl()
@@ -376,6 +499,83 @@ namespace MagentoConnect.Utilities
 		public string EndlessAisleCreatePricingUrl()
 		{
 			return string.Format("{0}/companies({1})/Pricing", EaPricingUrl, CompanyId);
+		}
+
+		/// <summary>
+		/// Returns the URL for getting company's orders in EA
+		/// </summary>
+		/// <returns>URL for getting company's orders in EA</returns>
+		public string EndlessAisleGetOrdersUrl()
+		{
+			return string.Format("{0}/Companies({1})/Orders", EaOrderUrl, CompanyId);
+		}
+
+		/// <summary>
+		/// Returns the URL for getting company's orders in EA
+		/// </summary>
+		/// <returns>URL for getting company's orders in EA</returns>
+		public string EndlessAisleGetOrdersByTimeUrl()
+		{
+			return string.Format("{0}/Companies({1})/Orders", EaOrderUrl, CompanyId);
+		}
+
+		/// <summary>
+		/// Returns the URL for getting an order's items in EA
+		/// </summary>
+		/// <param name="orderId">Order to get items for</param>
+		/// <returns>URL for getting an order's items in EA</returns>
+		public string EndlessAisleGetOrderItemsUrl(string orderId)
+		{
+			return string.Format("{0}/Companies({1})/Orders({2})/Items", EaOrderUrl, CompanyId, orderId);
+		}
+
+		/// <summary>
+		/// Returns the URL for getting a catalog item in EA
+		/// </summary>
+		/// <param name="catalogItemId">Catalog item to get</param>
+		/// <returns>URL for getting a catalog item in EA</returns>
+		public string EndlessAisleGetCatalogItemUrl(string catalogItemId)
+		{
+			return string.Format("{0}/companies({1})/catalog/items({2})", EaCatalogsUrl, CompanyId, catalogItemId);
+		}
+
+		/// <summary>
+		/// Returns the URL for getting the location in EA
+		/// </summary>
+		/// <returns>URL for getting the location in EA</returns>
+		public string EndlessAisleGetLocationUrl()
+		{
+			return string.Format("{0}/Companies({1})/Locations({2})", EaEntitiesUrl, CompanyId, LocationId);
+		}
+		#endregion
+
+		/// <summary>
+		/// Appends the filters to the URL passed in.
+		/// 
+		/// ex. http://some.api.com/Location?$filter=City eq 'Berlin' and Created ge datetime'2014-06-21' and Created le datetime'2014-09-22'
+		/// </summary>
+		/// <param name="url">Base URL to append to</param>
+		/// <param name="filters">Filters to add to request</param>
+		/// <returns>Base URL with filters appended</returns>
+		public string HypermediaFilterUrl(string url, params Filter[] filters)
+		{
+			if (filters.Length == 0)
+				return url;
+
+			StringBuilder result = new StringBuilder(url);
+			result.Append(HypermediaFilterQuery);
+
+			var filterList = filters.ToList();
+
+			//Append the first filter as is. Successive filters need to be delimited by a separator
+			result.Append(filterList.First());
+			filterList.RemoveAt(0);
+
+			foreach (var filter in filterList)
+			{
+				result.Append(string.Format(" {0} {1}", HypermediaAndSeparator, filter));	//Separator and filter
+			}
+			return result.ToString();
 		}
 	}
 }

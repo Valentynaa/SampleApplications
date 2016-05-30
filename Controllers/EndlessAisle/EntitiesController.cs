@@ -6,36 +6,57 @@ using RestSharp;
 
 namespace MagentoConnect.Controllers.EndlessAisle
 {
-    public class EntitiesController : BaseController
-    {
-        public static string EndlessAisleAuthToken;
+	public class EntitiesController : BaseController
+	{
+		public static string EndlessAisleAuthToken;
 
-        public EntitiesController(string eaAuthToken)
-        {
-            EndlessAisleAuthToken = eaAuthToken;
-        }
+		public EntitiesController(string eaAuthToken)
+		{
+			EndlessAisleAuthToken = eaAuthToken;
+		}
 
-        /**
-         * Gets information about all manufacturers
-         *
-         * @return  List<ManufacturerResource>     Returns a list of manufacturers
-         */
-        public List<ManufacturerResource> GetAllManufacturers()
-        {
-            var endpoint = UrlFormatter.EndlessAisleEntitiesManufacturersUrl();
+		/// <summary>
+		/// Gets information about all supported manufacturers in EA
+		/// </summary>
+		/// <returns>List of supported Manufacturers in EA</returns>
+		public List<ManufacturerResource> GetAllManufacturers()
+		{
+			var endpoint = UrlFormatter.EndlessAisleEntitiesManufacturersUrl();
 
-            var client = new RestClient(endpoint);
-            var request = new RestRequest(Method.GET);
+			var client = new RestClient(endpoint);
+			var request = new RestRequest(Method.GET);
 
-            request.AddHeader("Authorization", string.Format("Bearer {0}", EndlessAisleAuthToken));
-            request.AddHeader("Accept", "application/json");
+			request.AddHeader("Authorization", string.Format("Bearer {0}", EndlessAisleAuthToken));
+			request.AddHeader("Accept", "application/json");
 
-            var response = client.Execute(request);
+			var response = client.Execute(request);
 
-            //Ensure we get the right code
-            CheckStatusCode(response.StatusCode);
+			//Ensure we get the right code
+			CheckStatusCode(response.StatusCode);
 
-            return JsonConvert.DeserializeObject<List<ManufacturerResource>>(response.Content);
-        }
-    }
+			return JsonConvert.DeserializeObject<List<ManufacturerResource>>(response.Content);
+		}
+
+		/// <summary>
+		/// Gets the EA location the device is at (from App.config)
+		/// </summary>
+		/// <returns>EA Location device is at</returns>
+		public LocationResource GetLocation()
+		{
+			var endpoint = UrlFormatter.EndlessAisleGetLocationUrl();
+
+			var client = new RestClient(endpoint);
+			var request = new RestRequest(Method.GET);
+
+			request.AddHeader("Authorization", string.Format("Bearer {0}", EndlessAisleAuthToken));
+			request.AddHeader("Accept", "application/json");
+
+			var response = client.Execute(request);
+
+			//Ensure we get the right code
+			CheckStatusCode(response.StatusCode);
+
+			return JsonConvert.DeserializeObject<LocationResource>(response.Content);
+		}
+	}
 }

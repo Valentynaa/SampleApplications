@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MagentoConnect.Utilities
 {
@@ -13,10 +10,50 @@ namespace MagentoConnect.Utilities
 	/// </summary>
 	public enum Log
 	{
-		[PathValue("\\syncLog.txt")]
-		Sync,
+		[PathValue("\\productSyncLog.txt")]
+		ProductSync,
+		[PathValue("\\orderSyncLog.txt")]
+		OrderSync,
 		[PathValue("\\errorLog.txt")]
 		Error
+	}
+
+	public enum OrderState
+	{
+		/// <summary>
+		/// New Order created.
+		/// links/actions:
+		///     AddItems -> /Orders(123)/Items
+		///     DeleteOrder -> /Orders(123)/Delete
+		///     UpdateOrder -> /Orders(123)
+		/// </summary>
+		Created,
+
+		/// <summary>
+		/// links/actions:
+		///     AddItems -> /Orders(123)/Items
+		///     RemoveItems -> /Orders(123)/Items
+		///     ProcessOrder -> /Orders(123)/Process
+		///     CancelOrder -> /Orders(123)/Cancel
+		///     DeleteOrder -> /Orders(123)/Delete
+		///     UpdateOrder -> /Orders(123)
+		/// </summary>
+		Pending,
+
+		/// <summary>
+		/// Order processed, no action links.
+		/// </summary>
+		Processed,
+
+		/// <summary>
+		/// Order cancelled, no action links.
+		/// </summary>
+		Cancelled,
+
+		/// <summary>
+		/// Order completed, no action links.
+		/// </summary>
+		Completed
 	}
 
 	#region Enum Attributes
@@ -53,6 +90,19 @@ namespace MagentoConnect.Utilities
 
 			if (attributes != null && attributes.Length > 0)
 				return attributes[0].Value;
+			else
+				return value.ToString();
+		}
+
+		public static string GetDescription(Enum value)
+		{
+			FieldInfo fi = value.GetType().GetField(value.ToString());
+
+			DescriptionAttribute[] attributes =
+				(DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
+
+			if (attributes != null && attributes.Length > 0)
+				return attributes[0].Description;
 			else
 				return value.ToString();
 		}

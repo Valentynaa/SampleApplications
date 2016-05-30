@@ -3,7 +3,6 @@
 obj/Debug/*
 bin/Debug/*
 packages/*
-App.config
 TestingApp.config
 Tests/Tests/obj/Debug/*
 Tests/Tests/bin/Debug/

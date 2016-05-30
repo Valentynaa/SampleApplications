@@ -1,37 +1,31 @@
-﻿using System.Linq;
-using MagentoConnect;
-using MagentoConnect.Controllers.Magento;
-using MagentoConnect.Models.Magento.Products;
-using MagentoConnect.Utilities;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json.Linq;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 //Adjust Namespace Accordingly
 namespace Tests
 {
+    /// <summary>
+    /// Purpose of this test suite
+    /// </summary>
 	[TestClass]
 	//Classname: "Class Tested" + Tests
 	public class TemplateTests
 	{
-		//Private variables go here
-		private bool _test = true;
+	    private const bool Test = true;
 
-		[TestInitialize]
+	    [TestInitialize]
 		public void SetUp()
 		{
 
 		}
 
-		//Tests go here
-
 		/// <summary>
-		/// Test Description
+		/// Test Description. This test should describe the situation you are attempting to detect or resolve
 		/// ex. If this test fails, your product does not have an image
 		/// </summary>
 		[TestMethod]
 		public void TestName()
 		{
-			Assert.IsTrue(_test);
+			Assert.IsTrue(Test);
 		}
 	}
 }

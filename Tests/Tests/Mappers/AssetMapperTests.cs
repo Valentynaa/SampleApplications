@@ -1,33 +1,29 @@
 ﻿using System;
-using System.Linq;
 using MagentoConnect;
-using MagentoConnect.Controllers.Magento;
 using MagentoConnect.Mappers;
 using MagentoConnect.Models.Magento.Products;
-using MagentoConnect.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json.Linq;
 using Tests.Utilities;
 
 namespace Tests.Mappers
 {
+    /// <summary>
+    /// This suite diagnoses problems with adding images to a product
+    /// </summary>
 	[TestClass]
 	public class AssetMapperTests
 	{
-		//Private variables go here
 		private AssetMapper _assetMapper;
 		private ProductResource _magentoTestProduct;
 
 		[TestInitialize]
 		public void SetUp()
 		{
-			string eaAuthToken = App.GetEaAuthToken();
-			string magentoAuthToken = App.GetMagentoAuthToken();
+			var eaAuthToken = App.GetEaAuthToken();
+			var magentoAuthToken = App.GetMagentoAuthToken();
 			_assetMapper = new AssetMapper(magentoAuthToken, eaAuthToken);
 			_magentoTestProduct = TestHelper.TestProduct;
 		}
-
-		//Tests go here
 
 		/// <summary>
 		/// If this test fails, the the GetHeroShot function is not behaving as intended or the

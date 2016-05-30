@@ -60,20 +60,28 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Configuration.cs" />
+    <Compile Include="Configuration\Configuration.cs" />
     <Compile Include="Controllers\EndlessAisle\CatalogsControllerTests.cs" />
+    <Compile Include="Controllers\EndlessAisle\EntitiesControllerTests.cs" />
+    <Compile Include="Controllers\EndlessAisle\OrderControllerTests.cs" />
     <Compile Include="Controllers\EndlessAisle\PricingControllerTests.cs" />
+    <Compile Include="Controllers\Magento\CartControllerTests.cs" />
+    <Compile Include="Controllers\Magento\CustomerControllerTests.cs" />
+    <Compile Include="Controllers\Magento\RegionControllerTests.cs" />
     <Compile Include="Mappers\AssetMapperTests.cs" />
     <Compile Include="Mappers\AvailabilityMapperTests.cs" />
     <Compile Include="Mappers\BaseMapperTests.cs" />
     <Compile Include="Mappers\ColorMapperTests.cs" />
+    <Compile Include="Mappers\CustomerMapperTests.cs" />
+    <Compile Include="Mappers\EntityMapperTests.cs" />
     <Compile Include="Mappers\FieldMapperTests.cs" />
     <Compile Include="Mappers\PricingMapperTests.cs" />
     <Compile Include="Mappers\ProductMapperTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ProductValid.cs" />
+    <Compile Include="ProductSync\ProductValid.cs" />
     <Compile Include="TemplateTests.cs" />
-    <Compile Include="Utilities\LogWriterTests.cs" />
+    <Compile Include="Utilities\FilterTests.cs" />
+    <Compile Include="Utilities\LogUtilityTests.cs" />
     <Compile Include="Utilities\TestHelper.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -83,6 +91,7 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+    <Compile Include="Mappers\OrderMapperTests.cs" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

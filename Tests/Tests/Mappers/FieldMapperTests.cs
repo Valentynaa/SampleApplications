@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using MagentoConnect;
-using MagentoConnect.Controllers.Magento;
 using MagentoConnect.Mappers;
 using MagentoConnect.Models.Magento.Products;
 using MagentoConnect.Utilities;
@@ -13,25 +10,25 @@ using Tests.Utilities;
 
 namespace Tests.Mappers
 {
+    /// <summary>
+    /// This suite ensures the FieldMapper is working correctly
+    /// </summary>
 	[TestClass]
 	public class FieldMapperTests
 	{
-		//Private variables go here
-		//Configure test variables to match a product in your Magento system
-		private const int EAManufacturerId = 9829;
+        //IMPORTANT: Before you can run these tests, ensure the values below are replaced with values from Endless Aisle
+        private const int EaManufacturerId = 9829;
 		private FieldMapper _fieldMapper;
 		private ProductResource _magentoTestProduct;
 
 		[TestInitialize]
 		public void SetUp()
 		{
-			string eaAuthToken = App.GetEaAuthToken();
-			string magentoAuthToken = App.GetMagentoAuthToken();
+			var eaAuthToken = App.GetEaAuthToken();
+			var magentoAuthToken = App.GetMagentoAuthToken();
 			_fieldMapper = new FieldMapper(magentoAuthToken, eaAuthToken);
 			_magentoTestProduct = TestHelper.TestProduct;
 		}
-
-		//Tests go here
 
 		/// <summary>
 		/// The test ensures that trying to match to an invalid magento category will throw an exception.
@@ -41,7 +38,7 @@ namespace Tests.Mappers
 		[ExpectedException(typeof(Exception))]
 		public void FieldMapper_GetMatchingCategory_GetInvalidEntry()
 		{
-			List<CustomAttributeRefResource> attributes = new List<CustomAttributeRefResource>
+			var attributes = new List<CustomAttributeRefResource>
 			{
 				new CustomAttributeRefResource { attribute_code = ConfigReader.MagentoCategoryCode, value = new JArray { -1 } }
 			};
@@ -55,7 +52,7 @@ namespace Tests.Mappers
 		[ExpectedException(typeof(Exception))]
 		public void FieldMapper_GetMatchingCategory_GetEmptyCategory()
 		{
-			List<CustomAttributeRefResource> attributes = new List<CustomAttributeRefResource>
+			var attributes = new List<CustomAttributeRefResource>
 			{
 				new CustomAttributeRefResource { attribute_code = ConfigReader.MagentoCategoryCode, value = new JArray() }
 			};
@@ -69,7 +66,7 @@ namespace Tests.Mappers
 		[TestMethod]
 		public void FieldMapper_GetMatchingManufacturer_VerfiyManufacturer()
 		{
-			Assert.IsTrue(_fieldMapper.GetMatchingManufacturer(_magentoTestProduct.custom_attributes) == EAManufacturerId);
+			Assert.IsTrue(_fieldMapper.GetMatchingManufacturer(_magentoTestProduct.custom_attributes) == EaManufacturerId);
 		}
 
 		/// <summary>

@@ -5,6 +5,7 @@ This project is intended to accompany the [Endless Aisle Integration Guide](http
 Specifically, this project will demonstrate how to:
 * Add a Product to Endless Aisle when a Product is created in Magento
 * Update a Product in Endless Aisle when a Product is modified in Magento
+* Add an Order to Magento when it is created in Endless Aisle
 
 ## Table Of Contents
 
@@ -42,26 +43,34 @@ See [Getting Started Guide](https://github.com/iQmetrix/MagentoConnect/blob/mast
 ## How it Works
 
 The App works according to the following logic:
-
+* Product Sync
 * All products created or updated in Magento since the last sync, or the last **hour** (this value can be changed) if no sync data is found, are fetched
-* Each product is checked for the `{MappingCode}` attribute
-* If the product is mapped, an update is performed. If the product is **not** mapped, a create is performed
-* The product is checked for type (simple/virtual/configurable)
-    * Configurable products are created as Master Products with Variations in EA
-    * Simple or Virtual products are created as Master Products in EA
-* Each field specified in `{FieldMapping}` is created or updated
-* Each image is checked, if there are new images (only names are compared), they are uploaded to EA 
-* The Magento **base** image is set to the product's **hero shot** image
-* The product is checked for a valid mapped category and manufacturer
-* The Product is created or updated in EA
-* For NEW products
-    * A [CatalogItem](http://developers.iqmetrix.com/api/catalog/#catalogitem) is created
-    * [Inventory Availability](http://developers.iqmetrix.com/api/availability/#availability) is set (non serialized, Quantity of 1) at `{EA_LocationId}` 
-    * The [Slug](http://developers.iqmetrix.com/api/catalog/#product-slug) of the new product is calculated
-    * The Slug is added to the magento product in the `{MappingCode}` attribute
-* If the Magento product has a color, it is created or updated as a ColorDefinition on the product
-* If the Magento product has a quantity, it is created or updated as an [Availability](/api/availability/#availability) resource
-* If the Magento product has a price, it is created or updated as a [Pricing](/api/pricing/#pricing) resource
+    * Each product is checked for the `{MappingCode}` attribute
+    * If the product is mapped, an update is performed. If the product is **not** mapped, a create is performed
+    * The product is checked for type (simple/virtual/configurable)
+        * Configurable products are created as Master Products with Variations in EA
+        * Simple or Virtual products are created as Master Products in EA
+    * Each field specified in `{FieldMapping}` is created or updated
+    * Each image is checked, if there are new images (only names are compared), they are uploaded to EA 
+    * The Magento **base** image is set to the product's **hero shot** image
+    * The product is checked for a valid mapped category and manufacturer
+    * The Product is created or updated in EA
+    * For NEW products
+        * A [CatalogItem](http://developers.iqmetrix.com/api/catalog/#catalogitem) is created
+        * [Inventory Availability](http://developers.iqmetrix.com/api/availability/#availability) is set (non serialized, Quantity of 1) at `{EA_LocationId}` 
+        * The [Slug](http://developers.iqmetrix.com/api/catalog/#product-slug) of the new product is calculated
+        * The Slug is added to the magento product in the `{MappingCode}` attribute
+    * If the Magento product has a color, it is created or updated as a ColorDefinition on the product
+    * If the Magento product has a quantity, it is created or updated as an [Availability](/api/availability/#availability) resource
+    * If the Magento product has a price, it is created or updated as a [Pricing](/api/pricing/#pricing) resource
+* Order Sync (after product sync)
+    * Each [Order](http://developers.iqmetrix.com/api/orders/#order) created in Endless Aisle since the last sync, or the last **hour** (this value can be changed) if no sync data is found, are fetched
+    * For each order, a cart is created in Magento for `{Magento_CustomerId}` specified in the config file
+    * For each [OrderItem](http://developers.iqmetrix.com/api/orders/#item), the corresponding [CatalogItem](http://developers.iqmetrix.com/api/catalog/#catalogitem) is found
+    * From the [CatalogItem](http://developers.iqmetrix.com/api/catalog/#catalogitem) the Magento product with the same `{MappingCode}` is added to the cart
+    * The `{Magento_ShippingCode}` and other shipping information is set for the cart are then set based on the `{EA_LocationId}`
+    * The `{Magento_PaymentMethod}` is then set for the cart
+    * An order is then created from the cart
 
 ## Limitations
 
@@ -181,16 +190,20 @@ EndlessAisle:
 * **AvailabilityController** - Allows you to create inventory availability, see [Inventory Availability](http://developers.iqmetrix.com/api/availability/)
 * **CatalogsController** - Allows you to manage your Catalog, see [Catalog](http://developers.iqmetrix.com/api/catalog/)
 * **ClassificationController** - Controller used by Tests, see [ClassificationTree](http://developers.iqmetrix.com/api/classification-tree/)
-* **EntitiesController** - Allows you to get Manufacturer information, see [Entities](http://developers.iqmetrix.com/api/entity-store/)
+* **EntitiesController** - Allows you to get Manufacturer and Location information, see [Entities](http://developers.iqmetrix.com/api/entity-store/)
 * **FieldDefinitionController** - Allows you to get Field Definitions, see [FieldDefinitions](http://developers.iqmetrix.com/api/field-definitions/)
-* **PricingController* - Allows you to set Prices, see [Pricing](http://developers.iqmetrix.com/api/pricing/)
+* **OrdersController** - Allows you to get Order information, see [Orders](http://developers.iqmetrix.com/api/orders/)
+* **PricingController** - Allows you to set Prices, see [Pricing](http://developers.iqmetrix.com/api/pricing/)
 * **ProductLibraryController** - Allows you to create Master Products, Variations and Revisions, see [Product Structure ](http://developers.iqmetrix.com/api/product-structure/)
 
 Magento:
 * **AuthController** - Allows you to get an Auth Token, needed to call Magento APIs
+* **CartController** - Allows you to create, manage, and create an Order for a Cart
 * **CategoryController** - Allows you to get details about Categories
 * **CustomAttributesController** - Allows you to get details about Custom Attributes on a Product
+* **CustomerController** - Allows you to get details about a Customer
 * **ProductController** - Allows you to get Magento products by SKU
+* **RegionController** - Allows you to get Country and Region information for Magento
 
 ### Models
 
@@ -210,12 +223,17 @@ The table below lists each folder and the relevant API reference.
 | | ClassificationTree | [Classification Tree](http://developers.iqmetrix.com/api/classification-tree/) |
 | | Entities | [Entities](http://developers.iqmetrix.com/api/entity-store/) |
 | | FieldDefinitions | [FieldDefinitions](http://developers.iqmetrix.com/api/field-definitions/) |
-| | ProductLibrary | [Product Structure](http://developers.iqmetrix.com/api/product-structure/) |
+| | Orders | [Orders](http://developers.iqmetrix.com/api/orders/) |
 | | Pricing | [Pricing](http://developers.iqmetrix.com/api/pricing/) |
+| | ProductLibrary | [Product Structure](http://developers.iqmetrix.com/api/product-structure/) |
 | Magento | | |
 | | Authentication | [Magento REST API Reference](http://devdocs.magento.com/swagger/index.html#/) |
+| | Cart | [Magento REST API Reference](http://devdocs.magento.com/swagger/index.html#/) |
 | | Category | [Magento REST API Reference](http://devdocs.magento.com/swagger/index.html#/)  |
+| | Country | [Magento REST API Reference](http://devdocs.magento.com/swagger/index.html#/) |
 | | CustomAttributes | [Magento REST API Reference](http://devdocs.magento.com/swagger/index.html#/)  |
+| | Customer | [Magento REST API Reference](http://devdocs.magento.com/swagger/index.html#/) |
+| | Inventory | [Magento REST API Reference](http://devdocs.magento.com/swagger/index.html#/) |
 | | Products | [Magento REST API Reference](http://devdocs.magento.com/swagger/index.html#/)  | 
 | Mapping | | |
 | | MagentoEaMapping | |
@@ -225,9 +243,10 @@ The table below lists each folder and the relevant API reference.
 The following utilities are included in the project,
 
 * **ConfigReager** - Reads values from App.config, used for reading authentication information and Environment value
-* **LogWriter.cs** - Creates logs 
-* **RegexPatterns** - Holds a list of Regex patterns used for validation
+* **LogUtility.cs** - Used for operations involved with logging such as writing logs or retrieving log data
+* **RegexPatterns** - Holds Regex patterns used for validation
 * **UrlFormatter** - Formats and returns endpoint URLs as strings given URL variables. This is useful because Endless Aisle endpoints differ between [Enviornments](http://developers.iqmetrix.com/api/environments/). 
+* **Filter** - Allows the ability to filter results from services built on the Hypermedia API framework such as Orders, and Pricing
 
 ### App.config
 
@@ -251,7 +270,8 @@ The following constants must be filled out in the App.config file for the projec
 The following values are constants in Magento and will only need to be changed if your Magento system is highly customized.
 
 * `Magento_ManufacturerCode` - Attribute code for Magento manufacturer property
-* `Magento_GreaterThanCondition` - Magento constant for comparing dates
+* `Magento_GreaterThanCondition` - Magento constant used for filtering
+* `Magento_EqualsCondition` - Magento constant used for filtering
 * `Magento_SearchDateString` - Magento constant for date format when searching
 * `Magento_ConfigurableTypeId` - Magento constant for configurable type
 * `Magento_CategoryCode` - Magento attribute code for category
@@ -262,24 +282,29 @@ The following values are constants in Magento and will only need to be changed i
 * `Magento_ColorCode` - Magento attribute code for color
 * `Magento_MaterialCode` - Magento attribute code for material
 * `Magento_ImageCode` - Magento attribute code for image
+* `Magento_CustomerId` - Magento customer used for creating orders
+* `Magento_ShippingCode` - Magento shipping option used for creating orders
+* `Magento_PaymentMethod` - Magento payment option used for creating orders
 
 ## Tests
 
 The App solution includes a series of unit tests which are intended to help figure out problems with the App.
 
-| File | Uses |
-|:-----|:-----|
-| Configuration.cs | These tests will debug problems with App.config |
-| ProductValid.cs | Given a magento product SKU, these tests will determine if there are any missing required fields and if the mapping values are valid |
-| TemplateTests.cs | Template that can be used to create more tests |
-| TestHelper.cs | Utility file for test classes | 
-| LogWriter.cs | Tests for Logging |
+Many of these files have defined constants. These will need to be replaced with values from your Magento or Endless Aisle system before the tests can be run.
+
+| Test Folder | Uses |
+|:------------|:-----|
+| Configuration | Diagnose problems related to App.config entries |
+| Controllers | Ensure Controllers are working correctly |
+| Mappers | Ensure the Mappers are working correctly |
+| ProductSync | Diagnose problems with the Product sync |
+| Utilities | Determine if there are any problems with the Utility classes |
 
 ## Logging
 
-When Magento Connect runs it creates a log file in the same location as the executable. Using Visual Studio, this is generally bin/Debug or bin/Release.
+When Magento Connect runs it creates log files in the same location as the executable. Using Visual Studio, this is generally bin/Debug or bin/Release.
 
-Successful syncs are logged in `syncLog.txt`, errors are logged in `errorLog.txt`.
+Product syncs are logged in `productSyncLog.txt`, order syncs are logged in`orderSyncLog.txt`, errors are logged in `errorLog.txt`.
 
 Additional logging can be added by extending `Enums.cs`.
 
