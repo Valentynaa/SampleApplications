@@ -1,25 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MagentoConnect.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Utilities
 {
-	[TestClass]
+    /// <summary>
+    /// This test suite ensures the Logging utility is working
+    /// </summary>
+    [TestClass]
 	public class LogUtilityTests
 	{
-		//Private variables go here
-
-		[TestInitialize]
-		public void SetUp()
-		{
-		}
-
-		//Tests go here
-
 		/// <summary>
 		/// If this test fails, the message was unable to be written to the log files specified
 		/// </summary>

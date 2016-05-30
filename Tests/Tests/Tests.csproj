@@ -60,7 +60,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Configuration.cs" />
+    <Compile Include="Configuration\Configuration.cs" />
     <Compile Include="Controllers\EndlessAisle\CatalogsControllerTests.cs" />
     <Compile Include="Controllers\EndlessAisle\EntitiesControllerTests.cs" />
     <Compile Include="Controllers\EndlessAisle\OrderControllerTests.cs" />
@@ -78,7 +78,7 @@
     <Compile Include="Mappers\PricingMapperTests.cs" />
     <Compile Include="Mappers\ProductMapperTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ProductValid.cs" />
+    <Compile Include="ProductSync\ProductValid.cs" />
     <Compile Include="TemplateTests.cs" />
     <Compile Include="Utilities\FilterTests.cs" />
     <Compile Include="Utilities\LogUtilityTests.cs" />

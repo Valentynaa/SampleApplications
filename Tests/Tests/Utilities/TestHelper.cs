@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using MagentoConnect;
 using MagentoConnect.Controllers;
 using MagentoConnect.Controllers.Magento;
@@ -12,21 +8,22 @@ using RestSharp;
 
 namespace Tests.Utilities
 {
-	class TestHelper
+    internal class TestHelper
 	{
-		//Configure test variables to match a product in your Magento system
+		//To troubleshoot issues with a specific Magento product, replace this value with a SKU from your Magento system
 		private const string MagentoProductSku = "Configurable Product";
-		
-		/// <summary>
-		/// Creates a product update to ensure tests run correctly.
-		/// </summary>
-		/// <param name="productId">Magento ID for test product</param>
-		/// <param name="productSku">Magento SKU for test product</param>
-		/// <param name="categoryIds"> Magento category IDs test product is in</param>
-		/// <param name="magentoAuthToken"></param>
-		public static void CreateTestUpdate(string magentoAuthToken, int productId, string productSku, List<int> categoryIds)
+        private static ProductResource _testProduct;
+
+        /// <summary>
+        /// Creates a product update to ensure tests run correctly.
+        /// </summary>
+        /// <param name="productId">Magento ID for test product</param>
+        /// <param name="productSku">Magento SKU for test product</param>
+        /// <param name="categoryIds"> Magento category IDs test product is in</param>
+        /// <param name="magentoAuthToken"></param>
+        public static void CreateTestUpdate(string magentoAuthToken, int productId, string productSku, List<int> categoryIds)
 		{
-			UrlFormatter urlFormatter = new UrlFormatter();
+			var urlFormatter = new UrlFormatter();
 			var endpoint = urlFormatter.MagentoCreateProductUrl();
 
 			var client = new RestClient(endpoint);
@@ -56,8 +53,6 @@ namespace Tests.Utilities
 			//Ensure we get the right code
 			new BaseController().CheckStatusCode(response.StatusCode);
 		}
-
-		private static ProductResource _testProduct;
 		public static ProductResource TestProduct
 		{
 			get

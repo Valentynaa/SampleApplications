@@ -290,13 +290,15 @@ The following values are constants in Magento and will only need to be changed i
 
 The App solution includes a series of unit tests which are intended to help figure out problems with the App.
 
-| File | Uses |
-|:-----|:-----|
-| Configuration.cs | These tests will debug problems with App.config |
-| ProductValid.cs | Given a magento product SKU, these tests will determine if there are any missing required fields and if the mapping values are valid |
-| TemplateTests.cs | Template that can be used to create more tests |
-| TestHelper.cs | Utility file for test classes | 
-| LogUtilityTests.cs | Tests for Logging |
+Many of these files have defined constants. These will need to be replaced with values from your Magento or Endless Aisle system before the tests can be run.
+
+| Test Folder | Uses |
+|:------------|:-----|
+| Configuration | Diagnose problems related to App.config entries |
+| Controllers | Ensure Controllers are working correctly |
+| Mappers | Ensure the Mappers are working correctly |
+| ProductSync | Diagnose problems with the Product sync |
+| Utilities | Determine if there are any problems with the Utility classes |
 
 ## Logging
 

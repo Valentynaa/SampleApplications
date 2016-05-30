@@ -2,39 +2,34 @@
 using System.Collections.Generic;
 using System.Linq;
 using MagentoConnect;
-using MagentoConnect.Controllers;
-using MagentoConnect.Controllers.Magento;
-using MagentoConnect.Models.Magento.Products;
-using MagentoConnect.Utilities;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json.Linq;
 using MagentoConnect.Mappers;
-using MagentoConnect.Models.Magento.CustomAttributes;
-using RestSharp;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Tests.Utilities;
 
 namespace Tests.Mappers
 {
+    /// <summary>
+    /// This suite ensures the ProductMapper is working correctly
+    /// </summary>
 	[TestClass]
 	public class ProductMapperTests
 	{
-		//Private variables go here
-		private ProductMapper _productMapper;
-		private const int MagentoProductId = 1;
-		private const string MagentoProductSku = "24-MB01";
-		private const int MagentoCategoryId = 4;
-		private const int MagentoProductQuantity = 100;
+        //IMPORTANT: Before you can run these tests, ensure the values below are replaced with ones from your Magento system
+        private const int MagentoProductId = 1;
+        private const string MagentoProductSku = "24-MB01";
+        private const int MagentoCategoryId = 4;
+        private const int MagentoProductQuantity = 100;
 
-		[TestInitialize]
+        private ProductMapper _productMapper;
+
+        [TestInitialize]
 		public void SetUp()
 		{
-			string eaAuthToken = App.GetEaAuthToken();
-			string magentoAuthToken = App.GetMagentoAuthToken();
+			var eaAuthToken = App.GetEaAuthToken();
+			var magentoAuthToken = App.GetMagentoAuthToken();
 			_productMapper = new ProductMapper(magentoAuthToken, eaAuthToken);
 			TestHelper.CreateTestUpdate(magentoAuthToken, MagentoProductId, MagentoProductSku, new List<int> { MagentoCategoryId });
 		}
-
-		//Tests go here
 
 		/// <summary>
 		/// This test to ensures that the ProductMapper will not check updates from the future.
@@ -52,7 +47,7 @@ namespace Tests.Mappers
 		[TestMethod]
 		public void ProductMapper_GetMagentoProductsUpdatedAfter_WithValidUpdate()
 		{
-			int count = _productMapper.GetMagentoProductsUpdatedAfter(DateTime.Now.AddHours(-1)).Count();
+			var count = _productMapper.GetMagentoProductsUpdatedAfter(DateTime.Now.AddHours(-1)).Count();
 			Assert.IsTrue(count > 0);
 		}
 
@@ -73,7 +68,7 @@ namespace Tests.Mappers
 		[ExpectedException(typeof(Exception))]
 		public void ProductMapper_AddProductToEndlessAisle_AddEmptySlugToEndlessAisle()
 		{
-			_productMapper.AddProductToEndlessAisle(String.Empty);
+			_productMapper.AddProductToEndlessAisle(string.Empty);
 		}
 
 		/// <summary>
@@ -83,7 +78,7 @@ namespace Tests.Mappers
 		[ExpectedException(typeof(Exception))]
 		public void ProductMapper_AddProductHierarchyToEndlessAisle_InvalidDocumentId()
 		{
-			_productMapper.AddProductHierarchyToEndlessAisle(Int32.MaxValue);
+			_productMapper.AddProductHierarchyToEndlessAisle(int.MaxValue);
 		}
 
 		/// <summary>

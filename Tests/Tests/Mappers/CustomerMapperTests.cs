@@ -1,31 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MagentoConnect;
+﻿using MagentoConnect;
 using MagentoConnect.Mappers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Mappers
 {
+    /// <summary>
+    /// This suite ensures the CustomerMapper is working correctly
+    /// </summary>
 	[TestClass]
 	public class CustomerMapperTests
 	{
-		//Private variables go here
-		private CustomerMapper _customerMapper;
-		private const string FirstName = "Joe";
-		private const int CustomerId = 2;
+        //IMPORTANT: Before you can run these tests, ensure the values below are replaced with ones from your Magento system
+        private const string FirstName = "Joe";
+        private const int CustomerId = 2;
+
+        private CustomerMapper _customerMapper;
 
 		[TestInitialize]
 		public void SetUp()
 		{
-			string eaAuthToken = App.GetEaAuthToken();
-			string magentoAuthToken = App.GetMagentoAuthToken();
+			var eaAuthToken = App.GetEaAuthToken();
+			var magentoAuthToken = App.GetMagentoAuthToken();
 			_customerMapper = new CustomerMapper(magentoAuthToken, eaAuthToken);
 		}
-
-		//Tests go here
 
 		/// <summary>
 		/// This test ensures that the correct data is returned on the first and successive calls to the MagentoCustomer property

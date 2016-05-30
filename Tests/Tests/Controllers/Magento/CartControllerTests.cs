@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MagentoConnect;
 using MagentoConnect.Controllers.Magento;
 using MagentoConnect.Models.Magento.Cart;
@@ -10,16 +8,21 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Controllers.Magento
 {
-	[TestClass]
+    /// <summary>
+    /// This suite ensures the CartController is working correctly
+    /// </summary>
+    [TestClass]
 	public class CartControllerTests
 	{
-		//Private variables go here
-		private CartController _cartController;
-		private const int CartId = 3;
-		private const string ItemSku = "Configurable Product";
-		private const string PaymentMethod = "checkmo";
-		private const string ShippingMethod = "flatrate";
-		private const int CustomerId = 2;
+        //IMPORTANT: Before you can run these tests, ensure the values below are replaced with ones from your Magento system
+        private const int CartId = 3;
+        private const string ItemSku = "Configurable Product";
+        private const string PaymentMethod = "checkmo";
+        private const string ShippingMethod = "flatrate";
+        private const int CustomerId = 2;
+        private const int SaskRegionId = 77;
+
+        private CartController _cartController;
 		private CartAddItemResource _itemToAdd;
 		private CartAddPaymentMethodResource _methodToAdd;
 		private CartSetShippingInformationResource _shippingToSet;
@@ -32,7 +35,7 @@ namespace Tests.Controllers.Magento
 		[TestInitialize]
 		public void SetUp()
 		{
-			string magentoAuthToken = App.GetMagentoAuthToken();
+			var magentoAuthToken = App.GetMagentoAuthToken();
 			_cartController = new CartController(magentoAuthToken);
 
 			_itemToAdd = new CartAddItemResource(CartId, ItemSku, 1);
@@ -42,7 +45,7 @@ namespace Tests.Controllers.Magento
 			_address = new AddressResource
 			{
 				region = "Saskatchewan",
-				regionId = 77,
+				regionId = SaskRegionId,
 				regionCode = "SK",
 				countryId = "CA",
 				street = new List<string> {"123 Fake Street"},
@@ -56,8 +59,6 @@ namespace Tests.Controllers.Magento
 
 			_shippingToSet = new CartSetShippingInformationResource(ShippingMethod, _address);
 		}
-
-		//Tests go here
 
 		/// <summary>
 		/// This test ensures the request does not error. If this test fails, either the test variables provided are invalid or the request errored 
@@ -95,7 +96,7 @@ namespace Tests.Controllers.Magento
 		[TestMethod]
 		public void CartController_AddPaymentMethod()
 		{
-			int cartModifiedId = _cartController.AddPaymentMethod(CartId, _methodToAdd);
+			var cartModifiedId = _cartController.AddPaymentMethod(CartId, _methodToAdd);
 			Assert.AreEqual(CartId, cartModifiedId);
 		}
 
@@ -167,7 +168,7 @@ namespace Tests.Controllers.Magento
 		[TestMethod]
 		public void CartController_CreateOrder()
 		{
-			int cartIdForOrder = _cartController.CreateCart(CustomerId);
+			var cartIdForOrder = _cartController.CreateCart(CustomerId);
 
 			//Adjust quote id since this will be a new cart
 			_itemToAdd.cartItem.quote_id = cartIdForOrder.ToString();

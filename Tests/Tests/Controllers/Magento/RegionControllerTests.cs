@@ -1,28 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MagentoConnect;
+﻿using MagentoConnect;
 using MagentoConnect.Controllers.Magento;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Controllers.Magento
 {
-	[TestClass]
+    /// <summary>
+    /// This suite ensures the RegionController is working correctly
+    /// </summary>
+    [TestClass]
 	public class RegionControllerTests
 	{
-		//Private variables go here
 		private RegionController _regionController;
 
 		[TestInitialize]
 		public void SetUp()
 		{
-			string magentoAuthToken = App.GetMagentoAuthToken();
+			var magentoAuthToken = App.GetMagentoAuthToken();
 			_regionController = new RegionController(magentoAuthToken);
 		}
-
-		//Tests go here
 
 		/// <summary>
 		/// This test ensures the request does not error.

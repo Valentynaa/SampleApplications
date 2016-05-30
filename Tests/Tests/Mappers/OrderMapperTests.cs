@@ -1,37 +1,39 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MagentoConnect;
 using MagentoConnect.Mappers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Mappers
 {
-	[TestClass]
+
+    /// <summary>
+    /// This suite ensures the OrderMapper is working correctly
+    /// </summary>
+    [TestClass]
 	public class OrderMapperTests
 	{
-		//Private variables go here
-		private OrderMapper _orderMapper;
+        //IMPORTANT: Before you can run these tests, ensure the values below are replaced with ones from your Magento system
+        private const int CartId = 3;
+
+        //IMPORTANT: Before you can run these tests, ensure the values below are replaced with ones from Endless Aisle
+        private const string OrderId = "2f471f62-411a-412a-89c9-5a5f4d9184be";
+
+        private OrderMapper _orderMapper;
 		private CustomerMapper _customerMapper;
 		private EntityMapper _entityMapper;
 		private DateTime _filterDate;
-		private const int CartId = 3;
-		private const string OrderId = "2f471f62-411a-412a-89c9-5a5f4d9184be";
 
 		[TestInitialize]
 		public void SetUp()
 		{
-			string eaAuthToken = App.GetEaAuthToken();
-			string magentoAuthToken = App.GetMagentoAuthToken();
+			var eaAuthToken = App.GetEaAuthToken();
+			var magentoAuthToken = App.GetMagentoAuthToken();
 			_orderMapper = new OrderMapper(magentoAuthToken, eaAuthToken);
 			_customerMapper = new CustomerMapper(magentoAuthToken, eaAuthToken);
 			_entityMapper = new EntityMapper(magentoAuthToken, eaAuthToken);
 			_filterDate = new DateTime(2015, 12, 13);
 		}
-
-		//Tests go here
 
 		/// <summary>
 		/// This test ensures that a customer cart can be created
@@ -80,7 +82,7 @@ namespace Tests.Mappers
 		[ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void OrderMapper_GetEaOrdersCreatedAfter_InvalidTime()
 		{
-			var orders = _orderMapper.GetEaOrdersCreatedAfter(DateTime.MaxValue);
+			_orderMapper.GetEaOrdersCreatedAfter(DateTime.MaxValue);
 		}
 
 		/// <summary>
@@ -108,7 +110,7 @@ namespace Tests.Mappers
 		[TestMethod]
 		public void OrderMapper_CreateOrderForCart()
 		{
-			int cartIdForOrder = _orderMapper.CreateCustomerCart();
+			var cartIdForOrder = _orderMapper.CreateCustomerCart();
 
 			_orderMapper.AddOrderItemsToCart(OrderId, cartIdForOrder);
 			_orderMapper.SetShippingAndBillingInformationForCart(cartIdForOrder, _entityMapper.MagentoRegion, _entityMapper.EaLocation, _customerMapper.MagentoCustomer);

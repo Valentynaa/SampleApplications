@@ -1,29 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MagentoConnect;
+﻿using MagentoConnect;
 using MagentoConnect.Controllers.Magento;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Controllers.Magento
 {
-	[TestClass]
+    /// <summary>
+    /// This suite ensures the CustomerController is working correctly
+    /// </summary>
+    [TestClass]
 	public class CustomerControllerTests
 	{
-		//Private variables go here
-		private CustomerController _customerController;
-		private const int CustomerId = 1;
+        //IMPORTANT: Before you can run these tests, ensure the values below are replaced with ones from your Magento system
+        private const int CustomerId = 1;
+
+        private CustomerController _customerController;
 
 		[TestInitialize]
 		public void SetUp()
 		{
-			string magentoAuthToken = App.GetMagentoAuthToken();
+			var magentoAuthToken = App.GetMagentoAuthToken();
 			_customerController = new CustomerController(magentoAuthToken);
 		}
-
-		//Tests go here
 
 		/// <summary>
 		/// This test ensures the request does not error. If this test fails, either the CustomerId provided is invalid or the request errored 

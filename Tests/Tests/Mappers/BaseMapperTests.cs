@@ -1,33 +1,29 @@
 ﻿using System;
-using System.Linq;
 using MagentoConnect;
-using MagentoConnect.Controllers.Magento;
 using MagentoConnect.Mappers;
 using MagentoConnect.Models.Magento.Products;
-using MagentoConnect.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json.Linq;
 using Tests.Utilities;
 
 namespace Tests.Mappers
 {
+    /// <summary>
+    /// This suite diagnoses problems with mapping values
+    /// </summary>
 	[TestClass]
 	public class BaseMapperTests
 	{
-		//Private variables go here
 		private BaseMapper _baseMapper;
 		private ProductResource _magentoTestProduct;
 
 		[TestInitialize]
 		public void SetUp()
 		{
-			string eaAuthToken = App.GetEaAuthToken();
-			string magentoAuthToken = App.GetMagentoAuthToken();
+			var eaAuthToken = App.GetEaAuthToken();
+			var magentoAuthToken = App.GetMagentoAuthToken();
 			_baseMapper = new BaseMapper(magentoAuthToken, eaAuthToken);
 			_magentoTestProduct = TestHelper.TestProduct;
 		}
-
-		//Tests go here
 
 		/// <summary>
 		/// If this test fails, your product does not have a mapping code

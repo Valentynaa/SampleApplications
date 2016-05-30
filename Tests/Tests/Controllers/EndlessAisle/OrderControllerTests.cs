@@ -1,30 +1,26 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MagentoConnect;
+﻿using MagentoConnect;
 using MagentoConnect.Controllers.EndlessAisle;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Controllers.EndlessAisle
 {
-	[TestClass]
+    /// <summary>
+    /// This suite ensures the OrderController is working correctly
+    /// </summary>
+    [TestClass]
 	public class OrderControllerTests
 	{
-		//Private variables go here
-		private OrdersController _orderController;
+        //IMPORTANT: Before you can run these tests, ensure the values below are replaced with ones from Endless Aisle
 		private const string OrderId = "cdd26b8f-4ed1-409d-9984-982e081c425e";
 
-		[TestInitialize]
+        private OrdersController _orderController;
+
+        [TestInitialize]
 		public void SetUp()
 		{
-			string eaAuthToken = App.GetEaAuthToken();
+			var eaAuthToken = App.GetEaAuthToken();
 			_orderController = new OrdersController(eaAuthToken);
 		}
-
-		//Tests go here
 
 		/// <summary>
 		/// This test ensures the request does not error

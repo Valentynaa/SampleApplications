@@ -1,45 +1,48 @@
 ﻿using System.Linq;
-using MagentoConnect;
-using MagentoConnect.Controllers.Magento;
 using MagentoConnect.Models.Magento.Products;
 using MagentoConnect.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
 using Tests.Utilities;
 
-namespace Tests
+namespace Tests.ProductSync
 {
+    /// <summary>
+    /// This test suite diagnoses possible problems with a Magento SKU, defined in TestHelper.cs
+    /// </summary>
 	[TestClass]
 	public class ProductValid
 	{
-		private ProductController _magentoProductController;
 		private ProductResource _magentoProduct;
 
 		[TestInitialize]
 		public void SetUp()
 		{
-			var magentoAuthToken = App.GetMagentoAuthToken();
-			_magentoProductController = new ProductController(magentoAuthToken);
-
 			_magentoProduct = TestHelper.TestProduct;
 		}
 
-		//If this test fails, your Magento product sku may be invalid
+        /// <summary>
+        /// If this test fails, your Magento product sku may be invalid
+        /// </summary>
 		[TestMethod]
 		public void MagentoProduct_Exists()
 		{
 			Assert.IsNotNull(_magentoProduct);
 		}
 
-		//If this test fails, your product does not have an image
+        /// <summary>
+        /// If this test fails, your product does not have an image
+        /// </summary>
 		[TestMethod]
 		public void MagentoProduct_HasImages()
 		{
 			Assert.IsTrue(_magentoProduct.media_gallery_entries.Count > 0);
 		}
 
-		//If this test fails, your product does not have a "base" image assigned
-		[TestMethod]
+        /// <summary>
+        /// If this test fails, your product does not have a "base" image assigned
+        /// </summary>
+        [TestMethod]
 		public void MagentoProduct_HasBaseImage()
 		{
 			object imageAttr = null;
@@ -53,8 +56,10 @@ namespace Tests
 			Assert.IsFalse(string.IsNullOrEmpty(imageAttr.ToString()));
 		}
 
-		//If this test fails, your product does not have a category
-		[TestMethod]
+        /// <summary>
+        /// If this test fails, your product does not have a category
+        /// </summary>
+        [TestMethod]
 		public void MagentoProduct_HasCategory()
 		{
 			object categoryAttr = null;
@@ -67,8 +72,10 @@ namespace Tests
 			Assert.IsNotNull(categoryAttr);
 		}
 
-		//If this test fails, your product's category is not mapped in App.config
-		[TestMethod]
+        /// <summary>
+        /// If this test fails, your product's category is not mapped in App.config
+        /// </summary>
+        [TestMethod]
 		public void MagentoProduct_HasMappedCategory()
 		{
 			JArray categoryAttr = null;
@@ -86,8 +93,10 @@ namespace Tests
 			Assert.IsTrue(ConfigReader.GetMatchingEndlessAisleCategory(magentoCategoryId) != -1);
 		}
 
-		//If this test fails, your product does not have a manufacturer
-		[TestMethod]
+        /// <summary>
+        /// If this test fails, your product does not have a manufacturer
+        /// </summary>
+        [TestMethod]
 		public void MagentoProduct_HasManufacturer()
 		{
 			object magentoAttr = null;
@@ -100,8 +109,10 @@ namespace Tests
 			Assert.IsNotNull(magentoAttr);
 		}
 
-		//If this test fails, your product's manufacturer is not mapped in App.config
-		[TestMethod]
+        /// <summary>
+        /// If this test fails, your product's manufacturer is not mapped in App.config
+        /// </summary>
+        [TestMethod]
 		public void MagentoProduct_HasMappedManufacturer()
 		{
 			object manufacturerAttr = null;

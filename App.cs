@@ -5,7 +5,6 @@ using MagentoConnect.Models.Magento.Products;
 using MagentoConnect.Utilities;
 using MagentoConnect.Models.EndlessAisle.ProductLibrary;
 using MagentoConnect.Mappers;
-using MagentoConnect.Models.EndlessAisle.Orders;
 
 namespace MagentoConnect
 {
@@ -46,7 +45,7 @@ namespace MagentoConnect
 			_customerMapper = new CustomerMapper(_cachedMagentoAuthToken, _cachedEaAuthToken);
 
 			bool doOrderSync;
-			bool productsSynced = ProductSync();
+			var productsSynced = ProductSync();
 			if (productsSynced)
 			{
 				Console.WriteLine("Products successfully synced");
@@ -62,17 +61,12 @@ namespace MagentoConnect
 			//Order syncing
 			if (doOrderSync)
 			{
-				bool ordersSynced = OrderSync();
-				if (ordersSynced)
-				{
-					Console.WriteLine("Orders successfully synced");
-				}
-				else
-				{
-					Console.WriteLine("An error occurred while syncing orders to Magento. Check errorLog.txt for more details.");
-				}
+			    var ordersSynced = OrderSync();
+			    Console.WriteLine(ordersSynced
+			        ? "Orders successfully synced"
+			        : "An error occurred while syncing orders to Magento. Check errorLog.txt for more details.");
 			}
-			Console.WriteLine("Press enter to exit...");
+		    Console.WriteLine("Press enter to exit...");
 			Console.ReadLine();
 		}
 
@@ -95,8 +89,8 @@ namespace MagentoConnect
 		{
 			try
 			{
-				DateTime lastSync = GetTimeForSync(Log.OrderSync);
-				List<OrderResource> ordersToCreate = _orderMapper.GetEaOrdersCreatedAfter(lastSync).ToList();
+				var lastSync = GetTimeForSync(Log.OrderSync);
+				var ordersToCreate = _orderMapper.GetEaOrdersCreatedAfter(lastSync).ToList();
 
 				if (!ordersToCreate.Any())
 				{
@@ -107,10 +101,10 @@ namespace MagentoConnect
 					foreach (var order in ordersToCreate)
 					{
 						lastSync = order.CreatedDateUtc > lastSync ? order.CreatedDateUtc : lastSync;
-						int cartId = _orderMapper.CreateCustomerCart();
+						var cartId = _orderMapper.CreateCustomerCart();
 						_orderMapper.AddOrderItemsToCart(order.Id.ToString(), cartId);
 						_orderMapper.SetShippingAndBillingInformationForCart(cartId, _entityMapper.MagentoRegion, _entityMapper.EaLocation, _customerMapper.MagentoCustomer);
-						int orderCreatedId = _orderMapper.CreateOrderForCart(cartId);
+						var orderCreatedId = _orderMapper.CreateOrderForCart(cartId);
 						Console.WriteLine("Order with ID {0} in Magento has been created from order {1} in Endless Aisle.", orderCreatedId, order.Id);
 					}
 					LogUtility.Write(Log.OrderSync, string.Format("Orders successfully synced. Last order synced was created at {0}", lastSync));
@@ -136,8 +130,8 @@ namespace MagentoConnect
 		{
 			try
 			{
-				DateTime lastSync = GetTimeForSync(Log.ProductSync);
-				List<ProductResource> productsToUpdate = _productMapper.GetMagentoProductsUpdatedAfter(lastSync).ToList();
+				var lastSync = GetTimeForSync(Log.ProductSync);
+				var productsToUpdate = _productMapper.GetMagentoProductsUpdatedAfter(lastSync).ToList();
 				
 				if (!productsToUpdate.Any())
 				{

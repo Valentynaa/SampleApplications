@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace MagentoConnect.Utilities
 {
@@ -24,7 +19,7 @@ namespace MagentoConnect.Utilities
 		{
 			try
 			{
-				using (StreamWriter streamWriter = File.AppendText(Enums.GetPath(logType)))
+				using (var streamWriter = File.AppendText(Enums.GetPath(logType)))
 				{
 					streamWriter.WriteLine(LogSeparator);
 					streamWriter.WriteLine("{0}| {1}", DateTime.Now.ToString(CultureInfo.CreateSpecificCulture("en-US")), message);
@@ -56,14 +51,14 @@ namespace MagentoConnect.Utilities
 				stream.Close();
 			}
 
-			string lastLog = File.ReadLines(Enums.GetPath(logType)).LastOrDefault();
+			var lastLog = File.ReadLines(Enums.GetPath(logType)).LastOrDefault();
 
 			if (string.IsNullOrEmpty(lastLog))
 			{
 				lastLogTime = DateTime.MinValue;
 				return false;
 			}
-			bool result = DateTime.TryParse(lastLog.Substring(0, lastLog.IndexOf("|", StringComparison.Ordinal)), out lastLogTime);
+			var result = DateTime.TryParse(lastLog.Substring(0, lastLog.IndexOf("|", StringComparison.Ordinal)), out lastLogTime);
 
 			//Don't convert to UTC if the result was false because DateTime.MinValue is changed when you call ToUniversalTime()
 			if (result == false)
@@ -91,19 +86,17 @@ namespace MagentoConnect.Utilities
 				stream.Close();
 			}
 
-			List<string> logs = File.ReadLines(Enums.GetPath(logType)).ToList();
-			Regex regex = new Regex(RegexPatterns.TimeStampPattern);
+			var logs = File.ReadLines(Enums.GetPath(logType)).ToList();
+			var regex = new Regex(RegexPatterns.TimeStampPattern);
 			
 			foreach (var log in logs)
 			{
-				MatchCollection matches = regex.Matches(log);
+				var matches = regex.Matches(log);
 
 				//Ensure that there is a timestamp match in the log message
-				if (matches.Count > 1 && DateTime.Parse(matches[0].Value) == logTime)
-				{
-					timeInformation = DateTime.Parse(matches[1].Value);
-					return true;
-				}
+			    if (matches.Count <= 1 || DateTime.Parse(matches[0].Value) != logTime) continue;
+			    timeInformation = DateTime.Parse(matches[1].Value);
+			    return true;
 			}
 			timeInformation = DateTime.MinValue;
 			return false;

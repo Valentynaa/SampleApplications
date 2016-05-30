@@ -1,33 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MagentoConnect;
+﻿using MagentoConnect;
 using MagentoConnect.Mappers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Mappers
 {
+    /// <summary>
+    /// This suite ensures the EntityMapper is working correctly
+    /// </summary>
 	[TestClass]
 	public class EntityMapperTests
 	{
-		//Private variables go here
-		private EntityMapper _entityMapper;
-		private const string Country = "United States";
-		private const string RegionCode = "IL";
-		private const string City = "Chicago";
-		private const int RegionId = 23;
+        //IMPORTANT: Before you can run these tests, ensure the values below are replaced with ones from your Magento system
+        private const int RegionId = 23;
+
+        private const string Country = "United States";
+        private const string RegionCode = "IL";
+        private const string City = "Chicago";
+
+        private EntityMapper _entityMapper;
 
 		[TestInitialize]
 		public void SetUp()
 		{
-			string eaAuthToken = App.GetEaAuthToken();
-			string magentoAuthToken = App.GetMagentoAuthToken();
+			var eaAuthToken = App.GetEaAuthToken();
+			var magentoAuthToken = App.GetMagentoAuthToken();
 			_entityMapper = new EntityMapper(magentoAuthToken, eaAuthToken);
 		}
-
-		//Tests go here
 
 		/// <summary>
 		/// This test ensures that the correct data is returned on the first and successive calls to the EaLocation property

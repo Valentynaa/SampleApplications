@@ -1,29 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MagentoConnect;
 using MagentoConnect.Controllers.EndlessAisle;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Controllers.EndlessAisle
 {
+    /// <summary>
+    /// This suite ensures the CatalogsController is working correctly
+    /// </summary>
 	[TestClass]
 	public class CatalogsControllerTests
 	{
-		//Private variables go here
-		private CatalogsController _catalogsController;
-		private const string Slug = "M2039";
+        //IMPORTANT: Before you can run these tests, ensure the values below are replaced with ones from Endless Aisle
+        private const string Slug = "M2039";
+
+        private CatalogsController _catalogsController;
 
 		[TestInitialize]
 		public void SetUp()
 		{
-			string eaAuthToken = App.GetEaAuthToken();
+			var eaAuthToken = App.GetEaAuthToken();
 			_catalogsController = new CatalogsController(eaAuthToken);
 		}
-
-		//Tests go here
 
 		/// <summary>
 		/// If this test fails, the GetCatalogItemsBySlug did not return any items.

@@ -1,17 +1,18 @@
 ﻿using System.Collections.Specialized;
 using System.Configuration;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using MagentoConnect;
 using MagentoConnect.Controllers.EndlessAisle;
 using MagentoConnect.Controllers.Magento;
 using MagentoConnect.Utilities;
-using MagentoConnect.Models.Magento.Products;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Tests
+namespace Tests.Configuration
 {
+    /// <summary>
+    /// This test suite ensures the values in your App.config are configured properly
+    /// </summary>
     [TestClass]
     public class Configuration
     {
@@ -37,7 +38,9 @@ namespace Tests
             _magentoCategoryController = new CategoryController(magentoAuthToken);
         }
 
-        //If this test fails, you have a value missing from App.config
+        /// <summary>
+        /// If this test fails, you have a value missing from App.config
+        /// </summary>
         [TestMethod]
         public void RequiredValuesAreNotNull()
         {
@@ -73,7 +76,9 @@ namespace Tests
             Assert.IsNotNull(ConfigurationManager.GetSection("CategoryMapping")); 
         }
 
-        //If this test fails, the mapping attribute code provided is invalid
+        /// <summary>
+        /// If this test fails, the mapping attribute code provided is invalid
+        /// </summary>
         [TestMethod]
         public void MappingAttributeExists()
         {
@@ -83,14 +88,18 @@ namespace Tests
             Assert.IsNotNull(_magentoCustomAttributeController.GetCustomAttributeIfExists(mappingAttrCode));
         }
 
-        //If this test fails, the specified file path in App.config does not exist
+        /// <summary>
+        /// If this test fails, the specified file path in App.config does not exist
+        /// </summary>
         [TestMethod]
         public void FilePathIsValid()
         {
             Assert.IsTrue(Directory.Exists(new UrlFormatter().MagentoCatalogAssetPath(ConfigReader.MagentoServerPath)));
         }
 
-        //If this test fails, there is a problem with FieldMappings in App.config
+        /// <summary>
+        /// If this test fails, there is a problem with FieldMappings in App.config
+        /// </summary>
         [TestMethod]
         public void FieldMappings_AreValid()
         {
@@ -109,7 +118,9 @@ namespace Tests
             }
         }
 
-        //If this test fails, there is a problem with ManufacturerMappings in App.config
+        /// <summary>
+        /// If this test fails, there is a problem with ManufacturerMappings in App.config
+        /// </summary>
         [TestMethod]
         public void ManufacturerMappings_AreValid()
         {
@@ -133,7 +144,9 @@ namespace Tests
             }
         }
 
-        //If this test fails, there is a problem with CategoryMappings in App.config
+        /// <summary>
+        /// If this test fails, there is a problem with CategoryMappings in App.config
+        /// </summary>
         [TestMethod]
         public void CategoryMappings_AreValid()
         {
@@ -152,7 +165,9 @@ namespace Tests
             }      
         }
 
-        //If this test fails, there is a problem with ColorMappings in App.config
+        /// <summary>
+        /// If this test fails, there is a problem with ColorMappings in App.config
+        /// </summary>
         [TestMethod]
         public void ColorMappings_AreValid()
         {
