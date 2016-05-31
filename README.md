@@ -44,14 +44,14 @@ See [Getting Started Guide](https://github.com/iQmetrix/MagentoConnect/blob/mast
 
 The App works according to the following logic:
 * Product Sync
-* All products created or updated in Magento since the last sync, or the last **hour** (this value can be changed) if no sync data is found, are fetched
+    * All products created or updated in Magento since the last sync, or the last **hour** (this value can be changed) if no sync data is found, are fetched
     * Each product is checked for the `{MappingCode}` attribute
     * If the product is mapped, an update is performed. If the product is **not** mapped, a create is performed
     * The product is checked for type (simple/virtual/configurable)
         * Configurable products are created as Master Products with Variations in EA
         * Simple or Virtual products are created as Master Products in EA
     * Each field specified in `{FieldMapping}` is created or updated
-    * Each image is checked, if there are new images (only names are compared), they are uploaded to EA 
+    * Each image is checked, if there are new images they are uploaded to EA 
     * The Magento **base** image is set to the product's **hero shot** image
     * The product is checked for a valid mapped category and manufacturer
     * The Product is created or updated in EA
