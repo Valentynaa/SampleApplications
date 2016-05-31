@@ -4,6 +4,7 @@ using System.Linq;
 using MagentoConnect.Controllers.EndlessAisle;
 using MagentoConnect.Models.EndlessAisle.ProductLibrary;
 using System.Collections.Generic;
+using MagentoConnect.Exceptions;
 using MagentoConnect.Models.EndlessAisle.ProductLibrary.Projections;
 using MagentoConnect.Models.Magento.Products;
 using MagentoConnect.Utilities;
@@ -67,7 +68,7 @@ namespace MagentoConnect.Mappers
 								Id = eaAsset.Id,
 								Name = eaAsset.Name,
 								IsHidden = eaAsset.IsHidden,
-								MimeType = eaAsset.Type
+								MimeType = _eaAssetsController.GetAsset(eaAsset.Id.ToString()).MimeType
 							});
 
 							hasChanged = false;
@@ -124,6 +125,22 @@ namespace MagentoConnect.Mappers
 			var imageAttr = GetAttributeByCode(magentoProduct.custom_attributes, ConfigReader.MagentoImageCode);
 
 			return imageAttr == null ? null : magentoProduct.media_gallery_entries.FirstOrDefault(asset => asset.file == imageAttr.ToString());
+		}
+
+		/// <summary>
+		/// Gets the Image associated with the specified asset on the EA product with the slug provided.
+		/// </summary>
+		/// <param name="slug">Identifier for EA product to get image for</param>
+		/// <param name="asset">Asset to get</param>
+		/// <returns>Image associated with asset and slug</returns>
+		public Image GetAssetImage(string slug, AssetResource asset)
+		{
+			var matches = _eaProductController.GetProductBySlug(slug).Assets.Where(x => x.Id == asset.Id).ToList();
+			if (!matches.Any())
+			{
+				throw new NotFoundException(string.Format("No asset with ID \"{0}\" found for EA product with slug \"{1}\".", asset.Id, slug));
+			}
+			return ImageUtility.GetImageFromUri(matches.First().Uri);
 		}
 	}
 }

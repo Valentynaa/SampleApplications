@@ -6,16 +6,16 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Controllers.EndlessAisle
 {
-    /// <summary>
-    /// This suite ensures the CatalogsController is working correctly
-    /// </summary>
+	/// <summary>
+	/// This suite ensures the CatalogsController is working correctly
+	/// </summary>
 	[TestClass]
 	public class CatalogsControllerTests
 	{
-        //IMPORTANT: Before you can run these tests, ensure the values below are replaced with ones from Endless Aisle
-        private const string Slug = "M2039";
+		//IMPORTANT: Before you can run these tests, ensure the values below are replaced with ones from Endless Aisle
+		private const string Slug = "M2039";
 
-        private CatalogsController _catalogsController;
+		private CatalogsController _catalogsController;
 
 		[TestInitialize]
 		public void SetUp()

@@ -469,7 +469,7 @@ namespace MagentoConnect.Utilities
 		/**
 		 * @return  string  URL needed to get assets in EA
 		 */
-		public string EndlessAisleCreateAssetUrl(string assetId)
+		public string EndlessAisleGetAssetUrl(string assetId)
 		{
 			return string.Format("{0}/assets/{1}", EaAssetsUrl, assetId);
 		}

@@ -118,6 +118,7 @@
     <Compile Include="Controllers\Magento\CartController.cs" />
     <Compile Include="Controllers\Magento\CustomerController.cs" />
     <Compile Include="Controllers\Magento\RegionController.cs" />
+    <Compile Include="Exceptions\NotFoundException.cs" />
     <Compile Include="Mappers\BaseMapper.cs" />
     <Compile Include="Controllers\EndlessAisle\AssetsController.cs" />
     <Compile Include="Controllers\EndlessAisle\AuthController.cs" />
