@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Linq;
 using MagentoConnect.Controllers.EndlessAisle;
 using MagentoConnect.Models.EndlessAisle.ProductLibrary;
@@ -53,10 +54,12 @@ namespace MagentoConnect.Mappers
 				{
 					var hasChanged = true;
 
+					Image magentoImage = Image.FromFile(magentoPath + magentoAsset.file);
+
 					//Is there a matching asset in the EA product? Only compare name
 					foreach (var eaAsset in eaAssets)
 					{
-						if (eaAsset.Name == magentoAsset.file.Substring(magentoAsset.file.LastIndexOf('/') + 1))
+						if (eaAsset.Name == magentoAsset.file.Substring(magentoAsset.file.LastIndexOf('/') + 1) && ImageUtility.AreEqual(magentoImage, ImageUtility.GetImageFromUri(eaAsset.Uri)))
 						{
 							//Add asset, no further processing
 							assets.Add(new AssetResource

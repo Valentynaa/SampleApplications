@@ -41,7 +41,7 @@ namespace MagentoConnect.Controllers.EndlessAisle
             CheckStatusCode(response.StatusCode, System.Net.HttpStatusCode.Created);
 
             return JsonConvert.DeserializeObject<AssetResource>(response.Content);
-        }        
+        }
         
         /**
          * Sets the hero shot for a product

@@ -45,7 +45,7 @@ namespace MagentoConnect
 			_customerMapper = new CustomerMapper(_cachedMagentoAuthToken, _cachedEaAuthToken);
 
 			bool doOrderSync;
-			var productsSynced = ProductSync();
+			bool productsSynced = ProductSync();
 			if (productsSynced)
 			{
 				Console.WriteLine("Products successfully synced");
@@ -61,7 +61,7 @@ namespace MagentoConnect
 			//Order syncing
 			if (doOrderSync)
 			{
-			    var ordersSynced = OrderSync();
+				bool ordersSynced = OrderSync();
 			    Console.WriteLine(ordersSynced
 			        ? "Orders successfully synced"
 			        : "An error occurred while syncing orders to Magento. Check errorLog.txt for more details.");
@@ -153,7 +153,7 @@ namespace MagentoConnect
 				LogException(ex);
 
 				//Uncomment if you want exceptions thrown at runtime.
-				//throw;
+				throw;
 			}
 			return false;
 		}
