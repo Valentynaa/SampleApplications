@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using MagentoConnect.Models.Magento.Products;
 using MagentoConnect.Utilities;
@@ -45,7 +46,7 @@ namespace MagentoConnect
 			_customerMapper = new CustomerMapper(_cachedMagentoAuthToken, _cachedEaAuthToken);
 
 			bool doOrderSync;
-			var productsSynced = ProductSync();
+			bool productsSynced = ProductSync();
 			if (productsSynced)
 			{
 				Console.WriteLine("Products successfully synced");
@@ -61,7 +62,7 @@ namespace MagentoConnect
 			//Order syncing
 			if (doOrderSync)
 			{
-			    var ordersSynced = OrderSync();
+				bool ordersSynced = OrderSync();
 			    Console.WriteLine(ordersSynced
 			        ? "Orders successfully synced"
 			        : "An error occurred while syncing orders to Magento. Check errorLog.txt for more details.");
@@ -153,7 +154,7 @@ namespace MagentoConnect
 				LogException(ex);
 
 				//Uncomment if you want exceptions thrown at runtime.
-				//throw;
+				throw;
 			}
 			return false;
 		}
@@ -371,14 +372,14 @@ namespace MagentoConnect
 			var heroShot = _assetMapper.GetHeroShot(magentoProduct);
 
 			if (magentoProduct.media_gallery_entries == null || eaAssets == null || heroShot == null) return;
-
-			//Get the appropriate asset by matching, lists were created in sync so position of one is position of other
-			//Not a fantastic way of doing this, I know
-			for (var i = 0; i < magentoProduct.media_gallery_entries.Count; i++)
+			
+			var magentoPath = new UrlFormatter().MagentoCatalogAssetPath(ConfigReader.MagentoServerPath);
+			var heroShotImage = Image.FromFile(magentoPath + heroShot.file);
+			foreach (var asset in eaAssets)
 			{
-				if (magentoProduct.media_gallery_entries[i] == heroShot)
+				if (ImageUtility.AreEqual(heroShotImage, _assetMapper.GetAssetImage(slug, asset)))
 				{
-					_assetMapper.SetHeroShot(slug, eaAssets[i].Id);
+					_assetMapper.SetHeroShot(slug, asset.Id);
 				}
 			}
 		}

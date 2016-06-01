@@ -5,16 +5,16 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Controllers.EndlessAisle
 {
-    /// <summary>
-    /// This suite ensures the PricingController is working correctly
-    /// </summary>
-    [TestClass]
+	/// <summary>
+	/// This suite ensures the PricingController is working correctly
+	/// </summary>
+	[TestClass]
 	public class PricingControllerTests
 	{
-        //IMPORTANT: Before you can run these tests, ensure the values below are replaced with ones from Endless Aisle
-        private const string CatalogItemId = "d4c4e5c7-0ce7-4e58-bf5c-8664b41b54de";
+		//IMPORTANT: Before you can run these tests, ensure the values below are replaced with ones from Endless Aisle
+		private const string CatalogItemId = "d4c4e5c7-0ce7-4e58-bf5c-8664b41b54de";
 
-        private PricingController _pricingController;
+		private PricingController _pricingController;
 		private const double Price = 4.50d;
 
 		[TestInitialize]

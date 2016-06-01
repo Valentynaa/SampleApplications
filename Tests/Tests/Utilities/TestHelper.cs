@@ -8,20 +8,20 @@ using RestSharp;
 
 namespace Tests.Utilities
 {
-    internal class TestHelper
+	internal class TestHelper
 	{
 		//To troubleshoot issues with a specific Magento product, replace this value with a SKU from your Magento system
 		private const string MagentoProductSku = "Configurable Product";
-        private static ProductResource _testProduct;
+		private static ProductResource _testProduct;
 
-        /// <summary>
-        /// Creates a product update to ensure tests run correctly.
-        /// </summary>
-        /// <param name="productId">Magento ID for test product</param>
-        /// <param name="productSku">Magento SKU for test product</param>
-        /// <param name="categoryIds"> Magento category IDs test product is in</param>
-        /// <param name="magentoAuthToken"></param>
-        public static void CreateTestUpdate(string magentoAuthToken, int productId, string productSku, List<int> categoryIds)
+		/// <summary>
+		/// Creates a product update to ensure tests run correctly.
+		/// </summary>
+		/// <param name="productId">Magento ID for test product</param>
+		/// <param name="productSku">Magento SKU for test product</param>
+		/// <param name="categoryIds"> Magento category IDs test product is in</param>
+		/// <param name="magentoAuthToken"></param>
+		public static void CreateTestUpdate(string magentoAuthToken, int productId, string productSku, List<int> categoryIds)
 		{
 			var urlFormatter = new UrlFormatter();
 			var endpoint = urlFormatter.MagentoCreateProductUrl();

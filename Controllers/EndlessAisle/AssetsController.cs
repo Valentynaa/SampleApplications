@@ -1,4 +1,5 @@
-﻿using MagentoConnect.Models.EndlessAisle.ProductLibrary;
+﻿using System;
+using MagentoConnect.Models.EndlessAisle.ProductLibrary;
 using MagentoConnect.Models.EndlessAisle.ProductLibrary.Projections;
 using Newtonsoft.Json;
 using RestSharp;
@@ -6,70 +7,94 @@ using System.IO;
 
 namespace MagentoConnect.Controllers.EndlessAisle
 {
-    public class AssetsController : BaseController
-    {
-        public static string EndlessAisleAuthToken;
+	public class AssetsController : BaseController
+	{
+		public static string EndlessAisleAuthToken;
 
-        public AssetsController(string eaAuthToken)
-        {
-            EndlessAisleAuthToken = eaAuthToken;
-        }
+		public AssetsController(string eaAuthToken)
+		{
+			EndlessAisleAuthToken = eaAuthToken;
+		}
 
-        /**
-         * Creates an Asset by uploading an image
-         * 
-         * @param   string          Location of image
-         *
-         * @return  AssetResource   Created asset
-         */
-        public AssetResource CreateAsset(string path)
-        {
-            var endpoint = UrlFormatter.EndlessAisleCreateAssetUrl();
+		/**
+		 * Creates an Asset by uploading an image
+		 * 
+		 * @param   string          Location of image
+		 *
+		 * @return  AssetResource   Created asset
+		 */
+		public AssetResource CreateAsset(string path)
+		{
+			var endpoint = UrlFormatter.EndlessAisleCreateAssetUrl();
 
-            var client = new RestClient(endpoint);
-            var request = new RestRequest(Method.POST);
+			var client = new RestClient(endpoint);
+			var request = new RestRequest(Method.POST);
 
-            request.AddHeader("Authorization", string.Format("Bearer {0}", EndlessAisleAuthToken));
-            request.AddHeader("Accept", "application/json");
-            request.AddHeader("Content-Type", "multipart/form-data");
+			request.AddHeader("Authorization", string.Format("Bearer {0}", EndlessAisleAuthToken));
+			request.AddHeader("Accept", "application/json");
+			request.AddHeader("Content-Type", "multipart/form-data");
 
-            request.AddFile("Filename", File.ReadAllBytes(path), Path.GetFileName(path));
+			request.AddFile("Filename", File.ReadAllBytes(path), Path.GetFileName(path));
 
-            var response = client.Execute(request);
+			var response = client.Execute(request);
 
-            //Ensure we get the right code
-            CheckStatusCode(response.StatusCode, System.Net.HttpStatusCode.Created);
+			//Ensure we get the right code
+			CheckStatusCode(response.StatusCode, System.Net.HttpStatusCode.Created);
 
-            return JsonConvert.DeserializeObject<AssetResource>(response.Content);
-        }        
-        
-        /**
-         * Sets the hero shot for a product
-         * 
-         * @param   slug            Identifier for a product in EA
-         * @param   heroShotAsset   Object representing asset to become to new hero shot for the product  
-         *
-         * @return  AssetResource   Created asset
-         */
-        public AssetResponse SetHeroShot(string slug, AssetResponse heroShotAsset)
-        {
-            var endpoint = UrlFormatter.EndlessAisleSetHeroShotUrl(slug);
+			return JsonConvert.DeserializeObject<AssetResource>(response.Content);
+		}
+		
+		/**
+		 * Sets the hero shot for a product
+		 * 
+		 * @param   slug            Identifier for a product in EA
+		 * @param   heroShotAsset   Object representing asset to become to new hero shot for the product  
+		 *
+		 * @return  AssetResource   Created asset
+		 */
+		public AssetResponse SetHeroShot(string slug, AssetResponse heroShotAsset)
+		{
+			var endpoint = UrlFormatter.EndlessAisleSetHeroShotUrl(slug);
 
-            var client = new RestClient(endpoint);
-            var request = new RestRequest(Method.PUT);
+			var client = new RestClient(endpoint);
+			var request = new RestRequest(Method.PUT);
 
-            request.AddHeader("Authorization", string.Format("Bearer {0}", EndlessAisleAuthToken));
-            request.AddHeader("Accept", "application/json");
-            request.AddHeader("Content-Type", "application/json");
+			request.AddHeader("Authorization", string.Format("Bearer {0}", EndlessAisleAuthToken));
+			request.AddHeader("Accept", "application/json");
+			request.AddHeader("Content-Type", "application/json");
 
-            request.AddJsonBody(heroShotAsset);
+			request.AddJsonBody(heroShotAsset);
 
-            var response = client.Execute(request);
+			var response = client.Execute(request);
 
-            //Ensure we get the right code
-            //CheckStatusCode(response.StatusCode); <-- commented out for now because the API has a bug
+			//Ensure we get the right code
+			//CheckStatusCode(response.StatusCode); <-- commented out for now because the API has a bug
 
-            return JsonConvert.DeserializeObject<AssetResponse>(response.Content);
-        }
-    }
+			return JsonConvert.DeserializeObject<AssetResponse>(response.Content);
+		}
+
+		/// <summary>
+		/// Gets an EA asset for an asset identifier
+		/// </summary>
+		/// <param name="assetId">Asset identifier</param>
+		/// <returns>AssetResource with specified identifier</returns>
+		public AssetResource GetAsset(string assetId)
+		{
+			var endpoint = UrlFormatter.EndlessAisleGetAssetUrl(assetId);
+
+			var client = new RestClient(endpoint);
+			var request = new RestRequest(Method.GET);
+
+			request.AddHeader("Authorization", string.Format("Bearer {0}", EndlessAisleAuthToken));
+			request.AddHeader("Accept", "application/json");
+			request.AddHeader("Content-Type", "application/json");
+			
+			var response = client.Execute(request);
+
+			//Ensure we get the right code
+			CheckStatusCode(response.StatusCode); 
+
+			return JsonConvert.DeserializeObject<AssetResource>(response.Content);
+		}
+	}
 }
