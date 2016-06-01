@@ -243,10 +243,11 @@ The table below lists each folder and the relevant API reference.
 The following utilities are included in the project,
 
 * **ConfigReager** - Reads values from App.config, used for reading authentication information and Environment value
-* **LogUtility.cs** - Used for operations involved with logging such as writing logs or retrieving log data
+* **Filter** - Allows the ability to filter results from services built on the Hypermedia API framework such as Orders, and Pricing
+* **ImageUtility** - Allows the ability to compare images and build them from URIs 
+* **LogUtility** - Used for operations involved with logging such as writing logs or retrieving log data
 * **RegexPatterns** - Holds Regex patterns used for validation
 * **UrlFormatter** - Formats and returns endpoint URLs as strings given URL variables. This is useful because Endless Aisle endpoints differ between [Enviornments](http://developers.iqmetrix.com/api/environments/). 
-* **Filter** - Allows the ability to filter results from services built on the Hypermedia API framework such as Orders, and Pricing
 
 ### App.config
 
