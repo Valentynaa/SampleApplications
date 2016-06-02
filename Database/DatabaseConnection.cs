@@ -10,6 +10,10 @@ using MySql.Data.MySqlClient;
 
 namespace MagentoConnect.Database
 {
+	/// <summary>
+	/// Singleton for database connection to Magento Database
+	/// Conection pool not used because only one user will be using application at a time
+	/// </summary>
 	public class DatabaseConnection
 	{
 		public const int DefaultPort = 3306;
@@ -19,9 +23,25 @@ namespace MagentoConnect.Database
 		private MySqlConnection _connection;
 
 		/// <summary>
+		/// Only object for the database connection
+		/// </summary>
+		private static DatabaseConnection _instance;
+		public static DatabaseConnection Instance
+		{
+			get
+			{
+				if (_instance == null)
+				{
+					_instance = new DatabaseConnection();
+				}
+				return _instance;
+			}
+		}
+
+		/// <summary>
 		/// Creates a database connection based on the values in App.config
 		/// </summary>
-		public DatabaseConnection()
+		private DatabaseConnection()
 		{
 			ConfigReader.MagentoDatabasePort = GetValidPort(ConfigReader.MagentoDatabasePort);
 
@@ -38,7 +58,7 @@ namespace MagentoConnect.Database
 		/// <param name="userId">User ID for database</param>
 		/// <param name="password">Password for user</param>
 		/// <param name="port">(optional) port for database connection</param>
-		public DatabaseConnection(string server, string database, string userId, string password, int port = DefaultPort)
+		private DatabaseConnection(string server, string database, string userId, string password, int port = DefaultPort)
 		{
 			port = GetValidPort(port);
 			
@@ -112,6 +132,9 @@ namespace MagentoConnect.Database
 		/// <returns>Byte data for medie entry</returns>
 		public byte[] GetMediaGalleryEntryFile(MediaGalleryEntryResource mediaEntry)
 		{
+			if (mediaEntry == null)
+				throw new ArgumentNullException(nameof(mediaEntry));
+
 			string mediaFile = mediaEntry.file;
 
 			string mediaDirectory = mediaFile.Substring(0, mediaFile.LastIndexOf("/", StringComparison.Ordinal));
@@ -141,6 +164,10 @@ namespace MagentoConnect.Database
 			return null;
 		}
 
+		/// <summary>
+		/// Finds the media storage configuration setting in the database and returns the result
+		/// </summary>
+		/// <returns>Media storage setting in database</returns>
 		public MediaStorageConfiguration GetMediaStorageConfiguration()
 		{
 			string query =
@@ -152,14 +179,14 @@ namespace MagentoConnect.Database
 				MySqlCommand command = new MySqlCommand(query, _connection);
 				command.Parameters.AddWithValue("@mediaStorageSettingPath", MediaStorageSettingPath);
 
-				
-				var result = command.ExecuteScalar();
+
+				var result = command.ExecuteScalar().ToString();
 
 				//close Connection
 				CloseConnection();
 
 				//value is 0 or 1 which gives the correct enumeration
-				return (MediaStorageConfiguration) result;
+				return (MediaStorageConfiguration)int.Parse(result);
 			}
 			return MediaStorageConfiguration.FileSystem;
 		}

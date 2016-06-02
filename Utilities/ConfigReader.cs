@@ -93,8 +93,7 @@ namespace MagentoConnect.Utilities
 				MagentoDatabaseUserId = ReadFromConfig("Magento_DatabaseUserId");
 				MagentoDatabasePassword = ReadFromConfig("Magento_DatabasePassword");
 				MagentoDatabasePort = int.Parse(ReadFromConfig("Magento_DatabasePort"));
-				DatabaseConnection db = new DatabaseConnection();
-				if (db.GetMediaStorageConfiguration() != MediaStorageConfiguration.Database)
+				if (DatabaseConnection.Instance.GetMediaStorageConfiguration() != MediaStorageConfiguration.Database)
 				{
 					MagentoStorageConfiguration = MediaStorageConfiguration.FileSystem;
 					Console.WriteLine("Database storage configuration is set to \"true\" in App.config " +
@@ -193,15 +192,6 @@ namespace MagentoConnect.Utilities
 				ManufacturerMapping.Add(new MagentoEaMapping(213, 9827));
 				ColorMapping.Add(new MagentoEaMapping(49, 1));
 			}
-		}
-
-		/// <summary>
-		/// Determines if the magento server is using database media storage or not.
-		/// </summary>
-		/// <returns></returns>
-		private static bool UsingDatabaseMediaStorage()
-		{
-			throw new NotImplementedException();
 		}
 
 		/**

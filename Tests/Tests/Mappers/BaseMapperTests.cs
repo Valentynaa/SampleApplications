@@ -7,9 +7,9 @@ using Tests.Utilities;
 
 namespace Tests.Mappers
 {
-    /// <summary>
-    /// This suite diagnoses problems with mapping values
-    /// </summary>
+	/// <summary>
+	/// This suite diagnoses problems with mapping values
+	/// </summary>
 	[TestClass]
 	public class BaseMapperTests
 	{

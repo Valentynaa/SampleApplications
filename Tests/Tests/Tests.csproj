@@ -70,6 +70,7 @@
     <Compile Include="Controllers\Magento\CartControllerTests.cs" />
     <Compile Include="Controllers\Magento\CustomerControllerTests.cs" />
     <Compile Include="Controllers\Magento\RegionControllerTests.cs" />
+    <Compile Include="Database\DatabaseConnectionTests.cs" />
     <Compile Include="Mappers\AssetMapperTests.cs" />
     <Compile Include="Mappers\AvailabilityMapperTests.cs" />
     <Compile Include="Mappers\BaseMapperTests.cs" />
