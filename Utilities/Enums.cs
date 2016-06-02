@@ -56,6 +56,15 @@ namespace MagentoConnect.Utilities
 		Completed
 	}
 
+	/// <summary>
+	/// Enum for storage mode used for Magento media resources
+	/// </summary>
+	public enum MediaStorageConfiguration
+	{
+		FileSystem,
+		Database
+	}
+
 	#region Enum Attributes
 	//Add new enum attributes here
 

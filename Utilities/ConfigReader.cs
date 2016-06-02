@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration;
+using MagentoConnect.Database;
 
 namespace MagentoConnect.Utilities
 {
@@ -40,6 +41,12 @@ namespace MagentoConnect.Utilities
 		public static int MagentoCustomerId { get; set; }
 		public static string MagentoShippingCode { get; set; }
 		public static string MagentoPaymentMethod { get; set; }
+		public static MediaStorageConfiguration MagentoStorageConfiguration { get; set; }
+		public static string MagentoDatabaseServer { get; set; }
+		public static string MagentoDatabaseName { get; set; }
+		public static string MagentoDatabaseUserId { get; set; }
+		public static string MagentoDatabasePassword { get; set; }
+		public static int MagentoDatabasePort { get; set; }
 
 		//EA values
 		public static int EaClassificationTreeId { get; set; }
@@ -74,6 +81,27 @@ namespace MagentoConnect.Utilities
 			CategoryMapping = new List<MagentoEaMapping>();
 			ManufacturerMapping = new List<MagentoEaMapping>();
 			ColorMapping = new List<MagentoEaMapping>();
+
+			MagentoStorageConfiguration = bool.Parse(ReadFromConfig("Magento_DatabaseStorageConfiguration"))
+				? MediaStorageConfiguration.Database
+				: MediaStorageConfiguration.FileSystem;
+
+			if (MagentoStorageConfiguration == MediaStorageConfiguration.Database)
+			{
+				MagentoDatabaseServer = ReadFromConfig("Magento_DatabaseServer");
+				MagentoDatabaseName = ReadFromConfig("Magento_DatabaseName");
+				MagentoDatabaseUserId = ReadFromConfig("Magento_DatabaseUserId");
+				MagentoDatabasePassword = ReadFromConfig("Magento_DatabasePassword");
+				MagentoDatabasePort = int.Parse(ReadFromConfig("Magento_DatabasePort"));
+				DatabaseConnection db = new DatabaseConnection();
+				if (db.GetMediaStorageConfiguration() != MediaStorageConfiguration.Database)
+				{
+					MagentoStorageConfiguration = MediaStorageConfiguration.FileSystem;
+					Console.WriteLine("Database storage configuration is set to \"true\" in App.config " +
+					                  "\n however the database is not set to this configuration type." +
+					                  "\n File System media storage configuration will be used instead.");
+				}
+			}
 
 			//Override defaults with values from config
 			if (readFromConfig)
@@ -165,6 +193,15 @@ namespace MagentoConnect.Utilities
 				ManufacturerMapping.Add(new MagentoEaMapping(213, 9827));
 				ColorMapping.Add(new MagentoEaMapping(49, 1));
 			}
+		}
+
+		/// <summary>
+		/// Determines if the magento server is using database media storage or not.
+		/// </summary>
+		/// <returns></returns>
+		private static bool UsingDatabaseMediaStorage()
+		{
+			throw new NotImplementedException();
 		}
 
 		/**
