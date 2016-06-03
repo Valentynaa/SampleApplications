@@ -191,6 +191,14 @@ namespace MagentoConnect.Database
 			return MediaStorageConfiguration.FileSystem;
 		}
 
+		/// <summary>
+		/// Ensures that value is between the min and max port values:
+		/// 1 => 2^16 - 1
+		/// 
+		/// If the port is invalid the default of 3306 is used.
+		/// </summary>
+		/// <param name="port">value to check</param>
+		/// <returns>Valid port number</returns>
 		private int GetValidPort(int port)
 		{
 			if (port < 1 || port > 65535)
