@@ -259,6 +259,7 @@ The following constants must be filled out in the App.config file for the projec
 * `Magento_Username` - The username you use to log into the Magento admin portal
 * `Magento_Password` - The password you use to log into the Magento admin portal
 * `Magento_ServerPath` - Location of Magento on your server
+* `Magento_CustomerId` - Magento customer used for creating orders
 
 The following values are constants in Magento and will only need to be changed if your Magento system is highly customized.
 
@@ -275,9 +276,17 @@ The following values are constants in Magento and will only need to be changed i
 * `Magento_ColorCode` - Magento attribute code for color
 * `Magento_MaterialCode` - Magento attribute code for material
 * `Magento_ImageCode` - Magento attribute code for image
-* `Magento_CustomerId` - Magento customer used for creating orders
 * `Magento_ShippingCode` - Magento shipping option used for creating orders
 * `Magento_PaymentMethod` - Magento payment option used for creating orders
+
+The following values only need to be set if your Magento system is using the Database (File System is default) setting for Media Storage
+
+* `Magento_DatabaseStorageConfiguration` - Set to "true" if you are using Database Media Storage. Otherwise "false"
+* `Magento_DatabaseServer` - Magento Database Server eg. "localhost"
+* `Magento_DatabaseName` - Name of database (default is "magento")
+* `Magento_DatabaseUserId` - User ID for connection to database
+* `Magento_DatabasePassword` - Password for User ID
+* `Magento_DatabasePort` - Port used for database (default is "3306")
 
 ## Tests
 
