@@ -4,6 +4,7 @@ using System.Linq;
 using MagentoConnect.Controllers.EndlessAisle;
 using MagentoConnect.Models.EndlessAisle.ProductLibrary;
 using System.Collections.Generic;
+using MagentoConnect.Database;
 using MagentoConnect.Exceptions;
 using MagentoConnect.Models.EndlessAisle.ProductLibrary.Projections;
 using MagentoConnect.Models.Magento.Products;
@@ -32,7 +33,7 @@ namespace MagentoConnect.Mappers
 		*
 		* @return  List<AssetResource>     Assets
 		*/
-		public List<AssetResource> ParseAssetsFromProduct(ProductResource magentoProduct)
+		public List<AssetResource> ParseAssetsFromProduct(ProductResource magentoProduct, MediaStorageConfiguration configuration)
 		{
 			var assets = new List<AssetResource>();
 
@@ -48,19 +49,28 @@ namespace MagentoConnect.Mappers
 				var mappingSlug =
 					GetAttributeByCode(magentoProduct.custom_attributes, ConfigReader.MappingCode).ToString();
 
-				var eaAssets = _eaProductController.GetProductBySlug(mappingSlug).Assets;
+				var eaAssets = _eaProductController.GetProductBySlug(mappingSlug).Assets.ToList();
 
 				//Loop through magento product assets. This update can only ADD assets, not remove or change
 				foreach (var magentoAsset in magentoAssets)
 				{
-					var hasChanged = true;
+					bool hasChanged = true;
+					Image magentoImage = null;
 
-					Image magentoImage = Image.FromFile(magentoPath + magentoAsset.file);
-
+					switch (configuration)
+					{
+						case MediaStorageConfiguration.FileSystem:
+							magentoImage = Image.FromFile(magentoPath + magentoAsset.file);
+							break;
+						case MediaStorageConfiguration.Database:
+							magentoImage = ImageUtility.ImageFromBytes(DatabaseConnection.Instance.GetMediaGalleryEntryFile(magentoAsset));
+							break;
+					}
+					
 					//Is there a matching asset in the EA product? Only compare name
 					foreach (var eaAsset in eaAssets)
 					{
-						if (eaAsset.Name == magentoAsset.file.Substring(magentoAsset.file.LastIndexOf('/') + 1) && ImageUtility.AreEqual(magentoImage, ImageUtility.GetImageFromUri(eaAsset.Uri)))
+						if (eaAsset.Name == magentoAsset.file.Substring(magentoAsset.file.LastIndexOf('/') + 1) && ImageUtility.AreEqual(magentoImage, ImageUtility.ImageFromUri(eaAsset.Uri)))
 						{
 							//Add asset, no further processing
 							assets.Add(new AssetResource
@@ -140,7 +150,7 @@ namespace MagentoConnect.Mappers
 			{
 				throw new NotFoundException(string.Format("No asset with ID \"{0}\" found for EA product with slug \"{1}\".", asset.Id, slug));
 			}
-			return ImageUtility.GetImageFromUri(matches.First().Uri);
+			return ImageUtility.ImageFromUri(matches.First().Uri);
 		}
 	}
 }

@@ -2,14 +2,15 @@
 using MagentoConnect;
 using MagentoConnect.Mappers;
 using MagentoConnect.Models.Magento.Products;
+using MagentoConnect.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Tests.Utilities;
 
 namespace Tests.Mappers
 {
-    /// <summary>
-    /// This suite diagnoses problems with adding images to a product
-    /// </summary>
+	/// <summary>
+	/// This suite diagnoses problems with adding images to a product
+	/// </summary>
 	[TestClass]
 	public class AssetMapperTests
 	{
@@ -44,7 +45,7 @@ namespace Tests.Mappers
 		[TestMethod]
 		public void AssetMapper()
 		{
-			Assert.IsNotNull(_assetMapper.ParseAssetsFromProduct(_magentoTestProduct));
+			Assert.IsNotNull(_assetMapper.ParseAssetsFromProduct(_magentoTestProduct, ConfigReader.MagentoStorageConfiguration));
 		}
 	}
 }

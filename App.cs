@@ -225,7 +225,7 @@ namespace MagentoConnect
 		{
 			//Get fields and assets
 			var fields = _fieldMapper.ParseFieldsFromProduct(magentoProduct);
-			var assets = _assetMapper.ParseAssetsFromProduct(magentoProduct);
+			var assets = _assetMapper.ParseAssetsFromProduct(magentoProduct, ConfigReader.MagentoStorageConfiguration);
 
 			var eaCategoryId = _fieldMapper.GetMatchingCategory(magentoProduct.custom_attributes);
 			var eaManufacturerId = _fieldMapper.GetMatchingManufacturer(magentoProduct.custom_attributes);
@@ -311,7 +311,7 @@ namespace MagentoConnect
 
 				//Get fields + assets for child
 				var fields = _fieldMapper.ParseFieldsFromProduct(childProduct);
-				var assets = _assetMapper.ParseAssetsFromProduct(childProductObj);
+				var assets = _assetMapper.ParseAssetsFromProduct(childProductObj, ConfigReader.MagentoStorageConfiguration);
 
 				//If we have colors defined, add it as a color definition (if its not already added)
 				var colorId = _colorMapper.GetMagentoColorAttribute(childProduct);

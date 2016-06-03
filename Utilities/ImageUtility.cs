@@ -20,9 +20,9 @@ namespace MagentoConnect.Utilities
 		/// </summary>
 		/// <param name="uri">String representing URI to get image from </param>
 		/// <returns>Image created from data at URI</returns>
-		public static Image GetImageFromUri(string uri)
+		public static Image ImageFromUri(string uri)
 		{
-			return GetImageFromUri(new Uri(uri));
+			return ImageFromUri(new Uri(uri));
 		}
 
 		/// <summary>
@@ -34,16 +34,29 @@ namespace MagentoConnect.Utilities
 		/// </summary>
 		/// <param name="uri">URI to get image from </param>
 		/// <returns>Image created from data at URI</returns>
-		public static Image GetImageFromUri(Uri uri)
+		public static Image ImageFromUri(Uri uri)
 		{
 			using (WebClient client = new WebClient())
 			{
 				byte[] imageBytes = client.DownloadData(uri);
-
-				//NOTE: Do not dispose this memory stream as that no longer allows you to use the Image properly
-				MemoryStream stream = new MemoryStream(imageBytes);
-				return Image.FromStream(stream);
+				return ImageFromBytes(imageBytes);
 			}
+		}
+
+		/// <summary>
+		/// Creates an image from bytes provided
+		/// 
+		/// NOTE: 
+		///		This method does not dispose the memory stream used to create the Image as that would no longer allow you to use the Image properly
+		///		http://stackoverflow.com/questions/336387/image-save-throws-a-gdi-exception-because-the-memory-stream-is-closed
+		/// </summary>
+		/// <param name="bytes">Bytes to create image from </param>
+		/// <returns>Image created from bytes</returns>
+		public static Image ImageFromBytes(byte[] bytes)
+		{
+			//NOTE: Do not dispose this memory stream as that no longer allows you to use the Image properly
+			MemoryStream stream = new MemoryStream(bytes);
+			return Image.FromStream(stream);
 		}
 
 		/// <summary>
