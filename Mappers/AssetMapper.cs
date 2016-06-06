@@ -14,13 +14,13 @@ namespace MagentoConnect.Mappers
 {
 	public class AssetMapper : BaseMapper
 	{
-		private readonly AssetsController _eaAssetsController;
-		private readonly ProductLibraryController _eaProductController;
+		private readonly IAssetsController _eaAssetsController;
+		private readonly IProductLibraryController _eaProductController;
 
-		public AssetMapper(string magentoAuthToken, string eaAuthToken) : base(magentoAuthToken, eaAuthToken)
+		public AssetMapper(IAssetsController assetsController, IProductLibraryController productLibraryController)
 		{
-			_eaAssetsController = new AssetsController(eaAuthToken);
-			_eaProductController = new ProductLibraryController(eaAuthToken);
+			_eaAssetsController = assetsController;
+			_eaProductController = productLibraryController;
 		}
 
 		/**

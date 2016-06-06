@@ -8,13 +8,13 @@ using MagentoConnect.Utilities;
 
 namespace MagentoConnect.Controllers.Magento
 {
-	public class ProductController : BaseController
+	public class ProductController : BaseController, IProductController
 	{
-		public static string MagentoAuthToken;
+		public string AuthToken { get; }
 
 		public ProductController(string magentoAuthToken)
 		{
-			MagentoAuthToken = magentoAuthToken;
+			AuthToken = magentoAuthToken;
 		}
 
 		/**
@@ -30,7 +30,7 @@ namespace MagentoConnect.Controllers.Magento
 			var client = new RestClient(endpoint);
 			var request = new RestRequest(Method.GET);
 
-			request.AddHeader("Authorization", string.Format("Bearer {0}", MagentoAuthToken));
+			request.AddHeader("Authorization", string.Format("Bearer {0}", AuthToken));
 		  
 			var response = client.Execute(request);
 
@@ -53,7 +53,7 @@ namespace MagentoConnect.Controllers.Magento
 			var client = new RestClient(endpoint);
 			var request = new RestRequest(Method.GET);
 
-			request.AddHeader("Authorization", string.Format("Bearer {0}", MagentoAuthToken));
+			request.AddHeader("Authorization", string.Format("Bearer {0}", AuthToken));
 
 			var response = client.Execute(request);
 
@@ -76,7 +76,7 @@ namespace MagentoConnect.Controllers.Magento
 			var client = new RestClient(endpoint);
 			var request = new RestRequest(Method.GET);
 
-			request.AddHeader("Authorization", string.Format("Bearer {0}", MagentoAuthToken));
+			request.AddHeader("Authorization", string.Format("Bearer {0}", AuthToken));
 
 			var response = client.Execute(request);
 
@@ -103,7 +103,7 @@ namespace MagentoConnect.Controllers.Magento
 			var client = new RestClient(endpoint);
 			var request = new RestRequest(Method.GET);
 
-			request.AddHeader("Authorization", string.Format("Bearer {0}", MagentoAuthToken));
+			request.AddHeader("Authorization", string.Format("Bearer {0}", AuthToken));
 
 			var response = client.Execute(request);
 
@@ -129,7 +129,7 @@ namespace MagentoConnect.Controllers.Magento
 			var client = new RestClient(endpoint);
 			var request = new RestRequest(Method.POST);
 
-			request.AddHeader("Authorization", string.Format("Bearer {0}", MagentoAuthToken));
+			request.AddHeader("Authorization", string.Format("Bearer {0}", AuthToken));
 			request.AddHeader("Content-Type", "application/json");
 
 			var customAttributes = new List<CustomAttributeRefResource>
@@ -169,7 +169,7 @@ namespace MagentoConnect.Controllers.Magento
 			var client = new RestClient(endpoint);
 			var request = new RestRequest(Method.GET);
 
-			request.AddHeader("Authorization", string.Format("Bearer {0}", MagentoAuthToken));
+			request.AddHeader("Authorization", string.Format("Bearer {0}", AuthToken));
 
 			var response = client.Execute(request);
 

@@ -1,21 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MagentoConnect.Models.Magento.Customer;
 using Newtonsoft.Json;
 using RestSharp;
 
 namespace MagentoConnect.Controllers.Magento
 {
-	public class CustomerController : BaseController
+	public class CustomerController : BaseController, ICustomerController
 	{
-		public static string MagentoAuthToken;
+		public string AuthToken { get; }
 
 		public CustomerController(string magentoAuthToken)
 		{
-			MagentoAuthToken = magentoAuthToken;
+			AuthToken = magentoAuthToken;
 		}
 
 		/// <summary>
@@ -30,7 +26,7 @@ namespace MagentoConnect.Controllers.Magento
 			var client = new RestClient(endpoint);
 			var request = new RestRequest(Method.GET);
 
-			request.AddHeader("Authorization", string.Format("Bearer {0}", MagentoAuthToken));
+			request.AddHeader("Authorization", string.Format("Bearer {0}", AuthToken));
 			request.AddHeader("Content-Type", "application/json");
 
 			var response = client.Execute(request);

@@ -11,10 +11,10 @@ namespace MagentoConnect.Mappers
 {
 	public class CustomerMapper : BaseMapper
 	{
-		private readonly CustomerController _magentoCustomerController;
-		public CustomerMapper(string magentoAuthToken, string eaAuthToken) : base(magentoAuthToken, eaAuthToken)
+		private readonly ICustomerController _magentoCustomerController;
+		public CustomerMapper(ICustomerController customerController)
 		{
-			_magentoCustomerController = new CustomerController(magentoAuthToken);
+			_magentoCustomerController = customerController;
 		}
 
 		//Magento customer from customer ID in App.config

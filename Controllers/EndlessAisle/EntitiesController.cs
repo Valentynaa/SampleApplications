@@ -6,13 +6,13 @@ using RestSharp;
 
 namespace MagentoConnect.Controllers.EndlessAisle
 {
-	public class EntitiesController : BaseController
+	public class EntitiesController : BaseController, IEntitiesController
 	{
-		public static string EndlessAisleAuthToken;
+		public string AuthToken { get; }
 
 		public EntitiesController(string eaAuthToken)
 		{
-			EndlessAisleAuthToken = eaAuthToken;
+			AuthToken = eaAuthToken;
 		}
 
 		/// <summary>
@@ -26,7 +26,7 @@ namespace MagentoConnect.Controllers.EndlessAisle
 			var client = new RestClient(endpoint);
 			var request = new RestRequest(Method.GET);
 
-			request.AddHeader("Authorization", string.Format("Bearer {0}", EndlessAisleAuthToken));
+			request.AddHeader("Authorization", string.Format("Bearer {0}", AuthToken));
 			request.AddHeader("Accept", "application/json");
 
 			var response = client.Execute(request);
@@ -48,7 +48,7 @@ namespace MagentoConnect.Controllers.EndlessAisle
 			var client = new RestClient(endpoint);
 			var request = new RestRequest(Method.GET);
 
-			request.AddHeader("Authorization", string.Format("Bearer {0}", EndlessAisleAuthToken));
+			request.AddHeader("Authorization", string.Format("Bearer {0}", AuthToken));
 			request.AddHeader("Accept", "application/json");
 
 			var response = client.Execute(request);

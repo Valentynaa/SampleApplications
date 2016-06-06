@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MagentoConnect.Models.EndlessAisle.Pricing;
 using MagentoConnect.Utilities;
 using Newtonsoft.Json;
@@ -9,13 +6,13 @@ using RestSharp;
 
 namespace MagentoConnect.Controllers.EndlessAisle
 {
-	public class PricingController : BaseController
+	public class PricingController : BaseController, IPricingController
 	{
-		public static string EndlessAisleAuthToken;
+		public string AuthToken { get; }
 
 		public PricingController(string eaAuthToken)
 		{
-			EndlessAisleAuthToken = eaAuthToken;
+			AuthToken = eaAuthToken;
 		}
 
 		/// <summary>
@@ -40,7 +37,7 @@ namespace MagentoConnect.Controllers.EndlessAisle
 			var client = new RestClient(endpoint);
 			var request = new RestRequest(Method.POST);
 
-			request.AddHeader("Authorization", string.Format("Bearer {0}", EndlessAisleAuthToken));
+			request.AddHeader("Authorization", string.Format("Bearer {0}", AuthToken));
 			request.AddHeader("Accept", "application/json");
 			request.AddHeader("Content-Type", "application/json");
 

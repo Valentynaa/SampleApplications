@@ -4,21 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using MagentoConnect.Controllers;
 
 namespace MagentoConnect.Mappers
 {
 	public class BaseMapper
 	{
-		//Cached values
-		protected static string EaAuthToken;
-		protected static string MagentoAuthToken;
-
-		public BaseMapper(string magentoAuthToken, string eaAuthToken)
-		{
-			EaAuthToken = eaAuthToken;
-			MagentoAuthToken = magentoAuthToken;
-		}
-
 		/**
 		 * Given a slug, parse out the product document Id
 		 * 

@@ -17,21 +17,21 @@ namespace MagentoConnect.Mappers
 {
 	public class OrderMapper : BaseMapper
 	{
-		private readonly OrdersController _eaOrderController;
-		private readonly CatalogsController _eaCatalogsController;
-
-		private readonly CartController _magentoCartController;
-		private readonly ProductController _magentoProductController;
+		private readonly IOrdersController _eaOrderController;
+		private readonly ICatalogsController _eaCatalogsController;
+						 
+		private readonly ICartController _magentoCartController;
+		private readonly IProductController _magentoProductController;
 
 		public const string CreatedDate = "CreatedDateUtc";
 
-		public OrderMapper(string magentoAuthToken, string eaAuthToken) : base(magentoAuthToken, eaAuthToken)
+		public OrderMapper(IOrdersController ordersController, ICatalogsController catalogsController, ICartController cartController, IProductController productController)
 		{
-			_eaOrderController = new OrdersController(eaAuthToken);
-			_eaCatalogsController = new CatalogsController(eaAuthToken);
+			_eaOrderController = ordersController;
+			_eaCatalogsController = catalogsController;
 
-			_magentoCartController = new CartController(magentoAuthToken);
-			_magentoProductController = new ProductController(magentoAuthToken);
+			_magentoCartController = cartController;
+			_magentoProductController = productController;
 		}
 
 		/// <summary>

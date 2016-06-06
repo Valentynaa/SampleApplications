@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MagentoConnect.Models.EndlessAisle.Orders;
 using MagentoConnect.Utilities;
 using Newtonsoft.Json;
@@ -10,12 +7,12 @@ using RestSharp;
 
 namespace MagentoConnect.Controllers.EndlessAisle
 {
-	public class OrdersController : BaseController
+	public class OrdersController : BaseController, IOrdersController
 	{
-		public static string EndlessAisleAuthToken;
+		public string AuthToken { get; }
 		public OrdersController(string eaAuthToken)
 		{
-			EndlessAisleAuthToken = eaAuthToken;
+			AuthToken = eaAuthToken;
 		}
 
 		/// <summary>
@@ -33,7 +30,7 @@ namespace MagentoConnect.Controllers.EndlessAisle
 			var client = new RestClient(endpoint);
 			var request = new RestRequest(Method.GET);
 
-			request.AddHeader("Authorization", string.Format("Bearer {0}", EndlessAisleAuthToken));
+			request.AddHeader("Authorization", string.Format("Bearer {0}", AuthToken));
 			request.AddHeader("Accept", "application/json");
 
 			var response = client.Execute(request);
@@ -56,7 +53,7 @@ namespace MagentoConnect.Controllers.EndlessAisle
 			var client = new RestClient(endpoint);
 			var request = new RestRequest(Method.GET);
 
-			request.AddHeader("Authorization", string.Format("Bearer {0}", EndlessAisleAuthToken));
+			request.AddHeader("Authorization", string.Format("Bearer {0}", AuthToken));
 			request.AddHeader("Accept", "application/json");
 
 			var response = client.Execute(request);

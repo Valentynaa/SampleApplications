@@ -113,11 +113,29 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\BaseController.cs" />
-    <Compile Include="Controllers\EndlessAisle\ClassificationController.cs" />
+    <Compile Include="Controllers\ControllerFactory.cs" />
+    <Compile Include="Controllers\EndlessAisle\ClassificationTreeController.cs" />
+    <Compile Include="Controllers\EndlessAisle\IAssetsController.cs" />
+    <Compile Include="Controllers\IAuthController.cs" />
+    <Compile Include="Controllers\EndlessAisle\IAvailabilityController.cs" />
+    <Compile Include="Controllers\EndlessAisle\ICatalogsController.cs" />
+    <Compile Include="Controllers\EndlessAisle\IClassificationTreeController.cs" />
+    <Compile Include="Controllers\EndlessAisle\IEntitiesController.cs" />
+    <Compile Include="Controllers\EndlessAisle\IFieldDefinitionController.cs" />
+    <Compile Include="Controllers\EndlessAisle\IOrdersController.cs" />
+    <Compile Include="Controllers\EndlessAisle\IPricingController.cs" />
+    <Compile Include="Controllers\EndlessAisle\IProductLibraryController.cs" />
     <Compile Include="Controllers\EndlessAisle\OrdersController.cs" />
     <Compile Include="Controllers\EndlessAisle\PricingController.cs" />
     <Compile Include="Controllers\Magento\CartController.cs" />
     <Compile Include="Controllers\Magento\CustomerController.cs" />
+    <Compile Include="Controllers\Magento\ICartController.cs" />
+    <Compile Include="Controllers\Magento\ICategoryController.cs" />
+    <Compile Include="Controllers\IController.cs" />
+    <Compile Include="Controllers\Magento\ICustomAttributesController.cs" />
+    <Compile Include="Controllers\Magento\ICustomerController.cs" />
+    <Compile Include="Controllers\Magento\IProductController.cs" />
+    <Compile Include="Controllers\Magento\IRegionController.cs" />
     <Compile Include="Controllers\Magento\RegionController.cs" />
     <Compile Include="Database\DatabaseConnection.cs" />
     <Compile Include="Exceptions\NotFoundException.cs" />
@@ -139,6 +157,8 @@
     <Compile Include="Mappers\PricingMapper.cs" />
     <Compile Include="Mappers\ProductMapper.cs" />
     <Compile Include="Mappers\EntityMapper.cs" />
+    <Compile Include="Models\EndlessAisle\Authentication\AuthTokenResource.cs" />
+    <Compile Include="Models\IAuthenticationCredentialsResource.cs" />
     <Compile Include="Models\EndlessAisle\Availability\AvailabilityResource.cs" />
     <Compile Include="Models\EndlessAisle\Catalog\CatalogSearchResultResource.cs" />
     <Compile Include="Models\EndlessAisle\Entities\AddressResource.cs" />
@@ -215,12 +235,11 @@
     <Compile Include="Models\Magento\Products\UpdateProductBodyResource.cs" />
     <Compile Include="Models\Magento\Products\UpdateProductResource.cs" />
     <Compile Include="Models\Mapping\MagentoEaMapping.cs" />
-    <Compile Include="Models\EndlessAisle\Authentication\AuthenticationCredentialsResource.cs" />
+    <Compile Include="Models\Authentication\AuthenticationCredentialsResource.cs" />
     <Compile Include="Controllers\Magento\AuthController.cs" />
     <Compile Include="Controllers\Magento\ProductController.cs" />
     <Compile Include="App.cs" />
     <Compile Include="Models\EndlessAisle\Assets\AssetResource.cs" />
-    <Compile Include="Models\EndlessAisle\Authentication\AuthTokenResource.cs" />
     <Compile Include="Models\EndlessAisle\Catalog\CatalogItemResource.cs" />
     <Compile Include="Models\EndlessAisle\ClassificationTree\ClassificationTreeNode.cs" />
     <Compile Include="Models\EndlessAisle\ClassificationTree\ClassificationTreeResourceSummary.cs" />
@@ -252,7 +271,6 @@
     <Compile Include="Models\EndlessAisle\ProductLibrary\RootRevisionResource.cs" />
     <Compile Include="Models\EndlessAisle\ProductLibrary\SwatchResource.cs" />
     <Compile Include="Models\EndlessAisle\ProductLibrary\VariationResource.cs" />
-    <Compile Include="Models\Magento\Authentication\AuthenticationCredentialsResource.cs" />
     <Compile Include="Models\Magento\Category\CategoryResource.cs" />
     <Compile Include="Models\Magento\CustomAttributes\CustomAttributeResource.cs" />
     <Compile Include="Models\Magento\CustomAttributes\OptionResource.cs" />

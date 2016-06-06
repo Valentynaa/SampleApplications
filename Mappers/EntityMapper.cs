@@ -12,13 +12,13 @@ namespace MagentoConnect.Mappers
 {
 	public class EntityMapper : BaseMapper
 	{
-		private readonly EntitiesController _eaEntitiesController;
-		private readonly RegionController _magentoRegionController;
+		private readonly IEntitiesController _eaEntitiesController;
+		private readonly IRegionController _magentoRegionController;
 
-		public EntityMapper(string magentoAuthToken, string eaAuthToken) : base(magentoAuthToken, eaAuthToken)
+		public EntityMapper(IEntitiesController entitiesController, IRegionController regionController)
 		{
-			_eaEntitiesController = new EntitiesController(eaAuthToken);
-			_magentoRegionController = new RegionController(magentoAuthToken);
+			_eaEntitiesController = entitiesController;
+			_magentoRegionController = regionController;
 		}
 
 		//

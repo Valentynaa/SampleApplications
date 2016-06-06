@@ -8,20 +8,21 @@ using System.Globalization;
 using System.Linq;
 using MagentoConnect.Models.EndlessAisle.Catalog;
 using MagentoConnect.Utilities;
+using MagentoConnect.Controllers;
 
 namespace MagentoConnect.Mappers
 {
 	public class ProductMapper : BaseMapper
 	{
-		private readonly CatalogsController _eaCatalogController;
-		private readonly ProductLibraryController _eaProductController;
-		private readonly ProductController _magentoProductController;
+		private readonly ICatalogsController _eaCatalogController;
+		private readonly IProductLibraryController _eaProductController;
+		private readonly IProductController _magentoProductController;
 
-		public ProductMapper(string magentoAuthToken, string eaAuthToken) : base(magentoAuthToken, eaAuthToken)
+		public ProductMapper(ICatalogsController catalogsController, IProductLibraryController produtLibraryController, IProductController productController)
 		{
-			_eaCatalogController = new CatalogsController(eaAuthToken);
-			_eaProductController = new ProductLibraryController(eaAuthToken);
-			_magentoProductController = new ProductController(MagentoAuthToken);
+			_eaCatalogController = catalogsController;
+			_eaProductController = produtLibraryController;
+			_magentoProductController = productController;
 		}
 
 		/// <summary>

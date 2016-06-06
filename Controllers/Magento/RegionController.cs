@@ -6,13 +6,13 @@ using RestSharp;
 
 namespace MagentoConnect.Controllers.Magento
 {
-	public class RegionController : BaseController
+	public class RegionController : BaseController, IRegionController
 	{
-		public static string MagentoAuthToken;
+		public string AuthToken { get; }
 
 		public RegionController(string magentoAuthToken)
 		{
-			MagentoAuthToken = magentoAuthToken;
+			AuthToken = magentoAuthToken;
 		}
 
 		/// <summary>
@@ -26,7 +26,7 @@ namespace MagentoConnect.Controllers.Magento
 			var client = new RestClient(endpoint);
 			var request = new RestRequest(Method.GET);
 
-			request.AddHeader("Authorization", string.Format("Bearer {0}", MagentoAuthToken));
+			request.AddHeader("Authorization", string.Format("Bearer {0}", AuthToken));
 			request.AddHeader("Content-Type", "application/json");
 
 			var response = client.Execute(request);

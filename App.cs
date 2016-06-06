@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using MagentoConnect.Controllers;
+using MagentoConnect.Controllers.EndlessAisle;
+using MagentoConnect.Controllers.Magento;
 using MagentoConnect.Models.Magento.Products;
 using MagentoConnect.Utilities;
 using MagentoConnect.Models.EndlessAisle.ProductLibrary;
 using MagentoConnect.Mappers;
+using MagentoConnect.Models.Authentication;
 
 namespace MagentoConnect
 {
@@ -35,15 +39,34 @@ namespace MagentoConnect
 			_cachedEaAuthToken = GetEaAuthToken();
 			_cachedMagentoAuthToken = GetMagentoAuthToken();
 
-			_productMapper = new ProductMapper(_cachedMagentoAuthToken, _cachedEaAuthToken);
-			_assetMapper = new AssetMapper(_cachedMagentoAuthToken, _cachedEaAuthToken);
-			_availabilityMapper = new AvailabilityMapper(_cachedMagentoAuthToken, _cachedEaAuthToken);
-			_colorMapper = new ColorMapper(_cachedMagentoAuthToken, _cachedEaAuthToken);
-			_fieldMapper = new FieldMapper(_cachedMagentoAuthToken, _cachedEaAuthToken);
-			_pricingMapper = new PricingMapper(_cachedMagentoAuthToken, _cachedEaAuthToken);
-			_orderMapper = new OrderMapper(_cachedMagentoAuthToken, _cachedEaAuthToken);
-			_entityMapper = new EntityMapper(_cachedMagentoAuthToken, _cachedEaAuthToken);
-			_customerMapper = new CustomerMapper(_cachedMagentoAuthToken, _cachedEaAuthToken);
+			ControllerFactory controllerFactory = new ControllerFactory(_cachedMagentoAuthToken, _cachedEaAuthToken);
+
+			var assetsController = controllerFactory.CreateController(ControllerType.Assets) as AssetsController;
+			var availabilityController = controllerFactory.CreateController(ControllerType.Availability) as AvailabilityController;
+			var catalogsController = controllerFactory.CreateController(ControllerType.Catalogs) as CatalogsController;
+			var classificationContoller = controllerFactory.CreateController(ControllerType.ClassificationTree) as ClassificationTreeController;
+			var entitiesController = controllerFactory.CreateController(ControllerType.Entities) as EntitiesController;
+			var fieldController = controllerFactory.CreateController(ControllerType.FieldDefinition) as FieldDefinitionController;
+			var ordersController = controllerFactory.CreateController(ControllerType.Orders) as OrdersController;
+			var pricingController = controllerFactory.CreateController(ControllerType.Pricing) as PricingController;
+			var productLibraryController = controllerFactory.CreateController(ControllerType.ProductLibrary) as ProductLibraryController;
+
+			var cartController = controllerFactory.CreateController(ControllerType.Cart) as CartController;
+			var categoryController = controllerFactory.CreateController(ControllerType.Category) as CategoryController;
+			var attributesController = controllerFactory.CreateController(ControllerType.CustomAttributes) as CustomAttributesController;
+			var customerController = controllerFactory.CreateController(ControllerType.Customer) as CustomerController;
+			var productController = controllerFactory.CreateController(ControllerType.Product) as ProductController;
+			var regionController = controllerFactory.CreateController(ControllerType.Region) as RegionController;
+
+			_productMapper = new ProductMapper(catalogsController, productLibraryController, productController);
+			_assetMapper = new AssetMapper(assetsController, productLibraryController);
+			_availabilityMapper = new AvailabilityMapper(availabilityController);
+			_colorMapper = new ColorMapper(attributesController, productLibraryController);
+			_fieldMapper = new FieldMapper(productLibraryController, productController, fieldController, attributesController);
+			_pricingMapper = new PricingMapper(pricingController);
+			_orderMapper = new OrderMapper(ordersController, catalogsController, cartController, productController);
+			_entityMapper = new EntityMapper(entitiesController, regionController);
+			_customerMapper = new CustomerMapper(customerController);
 
 			bool doOrderSync;
 			bool productsSynced = ProductSync();
@@ -404,7 +427,7 @@ namespace MagentoConnect
 			var magentoUsername = ConfigReader.MagentoUserName;
 			var magentoPassword = ConfigReader.MagentoPassword;
 
-			var magentoCredentials = new Models.Magento.Authentication.AuthenticationCredentialsResource
+			var magentoCredentials = new AuthenticationCredentialsResource
 			{
 				username = magentoUsername,
 				password = magentoPassword
@@ -438,7 +461,7 @@ namespace MagentoConnect
 			var eaPassword = ConfigReader.EaPassword;
 			var eaGrantType = ConfigReader.EaGrantType;
 
-			var eaCredentials = new Models.EndlessAisle.Authentication.AuthenticationCredentialsResource()
+			var eaCredentials = new AuthenticationCredentialsResource()
 			{
 				client_id = eaClientId,
 				client_secret = eaClientSecret,
