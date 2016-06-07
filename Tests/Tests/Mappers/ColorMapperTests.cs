@@ -20,10 +20,10 @@ namespace Tests.Mappers
 	[TestClass]
 	public class ColorMapperTests
 	{
-		//IMPORTANT: Before you can run these tests, ensure the values below are replaced with ones from Endless Aisle
-		private const int EaProductDocumentId = 2039;
-		private const int MappedColorId = 49;
+		//This value only needs to be greater than 0
+		private const int EaProductDocumentId = 1;
 
+		private readonly int _colorId = MockCustomAttributesController.MappedColorId;
 		private ColorMapper _colorMapper;
 		private ProductResource _magentoTestProduct;
 
@@ -45,7 +45,7 @@ namespace Tests.Mappers
 		{
 			//Color ID 0 is not mapped and color ID 1 is black
 			Assert.IsNull(_colorMapper.UpsertColorDefinitions(EaProductDocumentId, 0));
-			Assert.IsNotNull(_colorMapper.UpsertColorDefinitions(EaProductDocumentId, MappedColorId));
+			Assert.IsNotNull(_colorMapper.UpsertColorDefinitions(EaProductDocumentId, _colorId));
 		}
 
 		/// <summary>

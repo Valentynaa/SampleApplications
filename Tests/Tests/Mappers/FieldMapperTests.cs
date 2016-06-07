@@ -23,7 +23,8 @@ namespace Tests.Mappers
 	public class FieldMapperTests
 	{
 		//IMPORTANT: Before you can run these tests, ensure the values below are replaced with values from Endless Aisle
-		private const int EaManufacturerId = 9829;
+		private const int EaManufacturerId = 9829;	//Must match EA manufacturer in App.config
+
 		private FieldMapper _fieldMapper;
 		private ProductResource _magentoTestProduct;
 
@@ -70,7 +71,7 @@ namespace Tests.Mappers
 		[TestMethod]
 		public void FieldMapper_GetMatchingManufacturer_VerfiyManufacturer()
 		{
-			Assert.IsTrue(_fieldMapper.GetMatchingManufacturer(_magentoTestProduct.custom_attributes) == EaManufacturerId);
+			Assert.AreEqual(EaManufacturerId, _fieldMapper.GetMatchingManufacturer(_magentoTestProduct.custom_attributes));
 		}
 
 		/// <summary>

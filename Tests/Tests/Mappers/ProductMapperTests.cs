@@ -19,12 +19,6 @@ namespace Tests.Mappers
 	[TestClass]
 	public class ProductMapperTests
 	{
-		//IMPORTANT: Before you can run these tests, ensure the values below are replaced with ones from your Magento system
-		private const int MagentoProductId = 1;
-		private const string MagentoProductSku = "24-MB01";
-		private const int MagentoCategoryId = 4;
-		private const int MagentoProductQuantity = 100;
-
 		private ProductMapper _productMapper;
 
 		[TestInitialize]

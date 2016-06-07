@@ -18,11 +18,7 @@ namespace Tests.Mappers
 	[TestClass]
 	public class OrderMapperTests
 	{
-		//IMPORTANT: Before you can run these tests, ensure the values below are replaced with ones from your Magento system
-		private const int CartId = 3;
-
-		//IMPORTANT: Before you can run these tests, ensure the values below are replaced with ones from Endless Aisle
-		private const string OrderId = "2f471f62-411a-412a-89c9-5a5f4d9184be";
+		private readonly int _cartId = MockCartController.CartId;
 
 		private OrderMapper _orderMapper;
 		private CustomerMapper _customerMapper;
@@ -53,7 +49,7 @@ namespace Tests.Mappers
 		[TestMethod]
 		public void OrderMapper_AddOrderItemsToCart()
 		{
-			_orderMapper.AddOrderItemsToCart(OrderId, CartId);
+			_orderMapper.AddOrderItemsToCart(new Guid().ToString(), _cartId);
 		}
 
 		/// <summary>
@@ -63,7 +59,7 @@ namespace Tests.Mappers
 		[ExpectedException(typeof(ArgumentException))]
 		public void OrderMapper_AddOrderItemsToCart_InvalidOrderId()
 		{
-			_orderMapper.AddOrderItemsToCart("xxx", CartId);
+			_orderMapper.AddOrderItemsToCart("xxx", _cartId);
 		}
 
 		/// <summary>
@@ -92,7 +88,7 @@ namespace Tests.Mappers
 		[TestMethod]
 		public void OrderMapper_SetShippingAndBillingInformationForCart()
 		{
-			_orderMapper.SetShippingAndBillingInformationForCart(CartId, _entityMapper.MagentoRegion, _entityMapper.EaLocation, _customerMapper.MagentoCustomer);
+			_orderMapper.SetShippingAndBillingInformationForCart(_cartId, _entityMapper.MagentoRegion, _entityMapper.EaLocation, _customerMapper.MagentoCustomer);
 		}
 		
 		/// <summary>
@@ -103,7 +99,7 @@ namespace Tests.Mappers
 		{
 			var cartIdForOrder = _orderMapper.CreateCustomerCart();
 
-			_orderMapper.AddOrderItemsToCart(OrderId, cartIdForOrder);
+			_orderMapper.AddOrderItemsToCart(new Guid().ToString(), cartIdForOrder);
 			_orderMapper.SetShippingAndBillingInformationForCart(cartIdForOrder, _entityMapper.MagentoRegion, _entityMapper.EaLocation, _customerMapper.MagentoCustomer);
 			_orderMapper.CreateOrderForCart(cartIdForOrder);
 		}

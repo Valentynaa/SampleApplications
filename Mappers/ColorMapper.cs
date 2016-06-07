@@ -45,12 +45,12 @@ namespace MagentoConnect.Mappers
 			var colorTags = new List<int> { colorTag };
 			var colorName =
 				GetLabelFromAttributeValue(_customAttributeColor.options, magentoColorId.ToString(CultureInfo.InvariantCulture)).ToString();
-			var exitingColorDefinitions = _eaProductController.GetColorDefinitions(productDocumentId);
+			var existingColorDefinitions = _eaProductController.GetColorDefinitions(productDocumentId);
 
-			if (exitingColorDefinitions != null)
+			if (existingColorDefinitions != null)
 			{
 				//Check if the color is already defined - only compare name and color tags
-				foreach (var existingColorDef in exitingColorDefinitions.ColorDefinitions)
+				foreach (var existingColorDef in existingColorDefinitions.ColorDefinitions)
 				{
 					if (colorName == existingColorDef.Name &&
 						Equals(colorTags, existingColorDef.ColorTagIds))
@@ -96,7 +96,7 @@ namespace MagentoConnect.Mappers
 				//Return the right one (irritating workarond)
 				foreach (var def in results.ColorDefinitions)
 				{
-					if (def.Name == colorDef.Name && Equals(colorDef.ColorTagIds, colorDef.ColorTagIds))
+					if (def.Name == colorDef.Name)
 					{
 						colorDef = def;
 					}

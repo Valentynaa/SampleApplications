@@ -8,6 +8,14 @@ namespace Tests.MockObjects.Controllers.Magento
 {
 	public class MockCartController : ICartController
 	{
+		/// <summary>
+		/// Cart ID used for tests
+		/// </summary>
+		public static int CartId
+		{
+			get { return 3; }
+		}
+
 		public int CreateCart(int customerId)
 		{
 			return 3;

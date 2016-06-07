@@ -7,6 +7,14 @@ namespace Tests.MockObjects.Controllers.Magento
 {
 	public class MockCustomAttributesController : ICustomAttributesController
 	{
+		/// <summary>
+		/// ID for a mapped color in GetCustomAttributeIfExists
+		/// </summary>
+		public static int MappedColorId
+		{
+			get { return 49; }
+		}
+
 		public CustomAttributeResource GetCustomAttributeIfExists(string attributeCode)
 		{
 			return new CustomAttributeResource()
