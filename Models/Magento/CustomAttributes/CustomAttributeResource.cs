@@ -38,7 +38,7 @@ namespace MagentoConnect.Models.Magento.CustomAttributes
         public string backend_type { get; set; }
         public string source_model { get; set; }
         public string default_value { get; set; }
-        public int is_unique { get; set; }
+        public string is_unique { get; set; }
 
         /* Unused values due to complexity */
         public object validation_rules = null;

@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Linq;
 using MagentoConnect.Controllers.Magento;
 using MagentoConnect.Models.EndlessAisle.ProductLibrary;
@@ -79,6 +80,9 @@ namespace MagentoConnect.Mappers
 		 */
 		public ColorDefinitionResource CreateColorDefinition(int productDocumentId, ColorDefinitionResource colorDef)
 		{
+			if (productDocumentId < 1)
+				throw new ArgumentOutOfRangeException(nameof(productDocumentId));
+
 			var colorDefList = new List<ColorDefinitionResource> {colorDef};
 
 			//Create color definition

@@ -23,7 +23,7 @@ namespace MagentoConnect.Mappers
 			if (catalogItemId == null)
 				throw new Exception("A catalogItemId is required to upsert pricing.");
 
-			_eaPricingController.CreatePricingResourceItem(new PricingResource(), catalogItemId, price);
+			_eaPricingController.CreatePricingResourceItem(new PricingResource(), catalogItemId, price, false);
 		}
 	}
 }

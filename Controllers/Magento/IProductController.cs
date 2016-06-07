@@ -9,7 +9,6 @@ namespace MagentoConnect.Controllers.Magento
 	{
 		ProductResource GetProductBySku(string productSku);
 		List<ProductResource> GetConfigurableProductChildren(string productSku);
-		CustomAttributeResource GetAttribute(string attributeId);
 		ProductSearchResource SearchForProducts(string property, string value, string condition);
 		void AddCustomAttributeToProduct(ProductResource magentoProduct, List<int> categoryIds, string attrCode, string attrValue);
 

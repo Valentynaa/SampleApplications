@@ -177,7 +177,7 @@ namespace MagentoConnect
 				LogException(ex);
 
 				//Uncomment if you want exceptions thrown at runtime.
-				throw;
+				//throw;
 			}
 			return false;
 		}
@@ -200,12 +200,11 @@ namespace MagentoConnect
 		{
 			LogUtility.Write(Log.Error, exception.Message);
 		}
-
-		/**
-		 * Main driver, updates a product
-		 * 
-		 * @param   sku     Magento product SKU
-		 */
+		
+		/// <summary>
+		/// Main driver, updates a product
+		/// </summary>
+		/// <param name="magentoProduct">Magento product SKU</param>
 		private static void UpsertProduct(ProductResource magentoProduct)
 		{
 			//Skip children of configurable products - they will be updated with the parent

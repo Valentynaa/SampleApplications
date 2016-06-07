@@ -226,7 +226,6 @@ namespace MagentoConnect.Mappers
 						});
 					}
 				}
-
 			}
 
 			return fields;

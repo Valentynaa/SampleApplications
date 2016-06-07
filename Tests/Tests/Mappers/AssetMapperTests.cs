@@ -4,12 +4,16 @@ using MagentoConnect.Mappers;
 using MagentoConnect.Models.Magento.Products;
 using MagentoConnect.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Tests.MockObjects.Controllers.EndlessAisle;
 using Tests.Utilities;
 
 namespace Tests.Mappers
 {
 	/// <summary>
 	/// This suite diagnoses problems with adding images to a product
+	/// 
+	/// NOTE:
+	///		This class does NOT use actual calls to the APIs and instead relies on mock controllers
 	/// </summary>
 	[TestClass]
 	public class AssetMapperTests
@@ -20,10 +24,8 @@ namespace Tests.Mappers
 		[TestInitialize]
 		public void SetUp()
 		{
-			var eaAuthToken = App.GetEaAuthToken();
-			var magentoAuthToken = App.GetMagentoAuthToken();
-			_assetMapper = new AssetMapper(magentoAuthToken, eaAuthToken);
-			_magentoTestProduct = TestHelper.TestProduct;
+			_assetMapper = new AssetMapper(new MockAssetsController(), new MockProductLibraryController());
+			_magentoTestProduct = TestHelper.MockTestProduct;
 		}
 
 		/// <summary>
@@ -31,11 +33,9 @@ namespace Tests.Mappers
 		/// test product has no image attached to it in magento.
 		/// </summary>
 		[TestMethod]
-		[ExpectedException(typeof(Exception))]
 		public void AssetMapper_GetHeroShot()
 		{
 			Assert.IsNotNull(_assetMapper.GetHeroShot(_magentoTestProduct));
-			_assetMapper.GetHeroShot(null);
 		}
 
 		/// <summary>

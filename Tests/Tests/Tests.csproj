@@ -75,11 +75,24 @@
     <Compile Include="Mappers\AvailabilityMapperTests.cs" />
     <Compile Include="Mappers\BaseMapperTests.cs" />
     <Compile Include="Mappers\ColorMapperTests.cs" />
-    <Compile Include="Mappers\CustomerMapperTests.cs" />
-    <Compile Include="Mappers\EntityMapperTests.cs" />
     <Compile Include="Mappers\FieldMapperTests.cs" />
     <Compile Include="Mappers\PricingMapperTests.cs" />
     <Compile Include="Mappers\ProductMapperTests.cs" />
+    <Compile Include="MockObjects\Controllers\EndlessAisle\MockAssetsController.cs" />
+    <Compile Include="MockObjects\Controllers\EndlessAisle\MockAvailabilityController.cs" />
+    <Compile Include="MockObjects\Controllers\EndlessAisle\MockCatalogsController.cs" />
+    <Compile Include="MockObjects\Controllers\EndlessAisle\MockClassificationTreeController.cs" />
+    <Compile Include="MockObjects\Controllers\EndlessAisle\MockEntitiesController.cs" />
+    <Compile Include="MockObjects\Controllers\EndlessAisle\MockFieldDefinitionController.cs" />
+    <Compile Include="MockObjects\Controllers\EndlessAisle\MockOrdersController.cs" />
+    <Compile Include="MockObjects\Controllers\EndlessAisle\MockPricingController.cs" />
+    <Compile Include="MockObjects\Controllers\EndlessAisle\MockProductLibraryController.cs" />
+    <Compile Include="MockObjects\Controllers\Magento\MockCartController.cs" />
+    <Compile Include="MockObjects\Controllers\Magento\MockCategoryController.cs" />
+    <Compile Include="MockObjects\Controllers\Magento\MockCustomAttributesController.cs" />
+    <Compile Include="MockObjects\Controllers\Magento\MockCustomerController.cs" />
+    <Compile Include="MockObjects\Controllers\Magento\MockProductController.cs" />
+    <Compile Include="MockObjects\Controllers\Magento\MockRegionController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProductSync\ProductValid.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -117,6 +130,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\TestImage.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="MockObjects\Resources\Magento\" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

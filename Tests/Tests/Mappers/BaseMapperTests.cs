@@ -9,6 +9,9 @@ namespace Tests.Mappers
 {
 	/// <summary>
 	/// This suite diagnoses problems with mapping values
+	/// 
+	/// NOTE:
+	///		This class does NOT use actual calls to the APIs and instead relies on mock controllers
 	/// </summary>
 	[TestClass]
 	public class BaseMapperTests
@@ -19,10 +22,8 @@ namespace Tests.Mappers
 		[TestInitialize]
 		public void SetUp()
 		{
-			var eaAuthToken = App.GetEaAuthToken();
-			var magentoAuthToken = App.GetMagentoAuthToken();
-			_baseMapper = new BaseMapper(magentoAuthToken, eaAuthToken);
-			_magentoTestProduct = TestHelper.TestProduct;
+			_baseMapper = new BaseMapper();
+			_magentoTestProduct = TestHelper.MockTestProduct;
 		}
 
 		/// <summary>

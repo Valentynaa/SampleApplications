@@ -6,9 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using MagentoConnect.Models.EndlessAisle.Catalog;
 using MagentoConnect.Utilities;
-using MagentoConnect.Controllers;
 
 namespace MagentoConnect.Mappers
 {
@@ -167,7 +167,11 @@ namespace MagentoConnect.Mappers
 		 * @return  string          Identifier of a created CatalogItem
 		 */
 		public string AddProductToEndlessAisle(string slug)
-		{        
+		{
+			if (!Regex.IsMatch(slug, RegexPatterns.SlugPattern))
+			{
+				throw new Exception(string.Format("\"{0}\" is in an invalid slug format.", slug));
+			}
 			var catalogItem = new CatalogItemResource
 			{
 				Slug = slug
@@ -185,6 +189,9 @@ namespace MagentoConnect.Mappers
 		 */
 		public List<string> AddProductHierarchyToEndlessAisle(int productDocumentId)
 		{
+			if (productDocumentId < 1)
+				throw new ArgumentOutOfRangeException(nameof(productDocumentId));
+
 			var createdCatalogItems = new List<string>();
 
 			var variationIds = GetVariationIdsForMasterProduct(productDocumentId);

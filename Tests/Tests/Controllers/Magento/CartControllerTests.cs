@@ -8,21 +8,21 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Controllers.Magento
 {
-    /// <summary>
-    /// This suite ensures the CartController is working correctly
-    /// </summary>
-    [TestClass]
+	/// <summary>
+	/// This suite ensures the CartController is working correctly
+	/// </summary>
+	[TestClass]
 	public class CartControllerTests
 	{
-        //IMPORTANT: Before you can run these tests, ensure the values below are replaced with ones from your Magento system
-        private const int CartId = 3;
-        private const string ItemSku = "Configurable Product";
-        private const string PaymentMethod = "checkmo";
-        private const string ShippingMethod = "flatrate";
-        private const int CustomerId = 2;
-        private const int SaskRegionId = 77;
+		//IMPORTANT: Before you can run these tests, ensure the values below are replaced with ones from your Magento system
+		private const int CartId = 3;
+		private const string ItemSku = "Configurable Product";
+		private const string PaymentMethod = "checkmo";
+		private const string ShippingMethod = "flatrate";
+		private const int CustomerId = 2;
+		private const int SaskRegionId = 77;
 
-        private CartController _cartController;
+		private CartController _cartController;
 		private CartAddItemResource _itemToAdd;
 		private CartAddPaymentMethodResource _methodToAdd;
 		private CartSetShippingInformationResource _shippingToSet;

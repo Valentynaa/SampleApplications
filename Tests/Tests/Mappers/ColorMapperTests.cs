@@ -5,30 +5,33 @@ using MagentoConnect.Mappers;
 using MagentoConnect.Models.EndlessAisle.ProductLibrary;
 using MagentoConnect.Models.Magento.Products;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Tests.MockObjects.Controllers.EndlessAisle;
+using Tests.MockObjects.Controllers.Magento;
 using Tests.Utilities;
 
 namespace Tests.Mappers
 {
-    /// <summary>
-    /// This suite ensures the ColorMapper is working correctly
-    /// </summary>
+	/// <summary>
+	/// This suite ensures the ColorMapper is working correctly
+	/// 
+	/// NOTE:
+	///		This class does NOT use actual calls to the APIs and instead relies on mock controllers
+	/// </summary>
 	[TestClass]
 	public class ColorMapperTests
 	{
-        //IMPORTANT: Before you can run these tests, ensure the values below are replaced with ones from Endless Aisle
-        private const int EaProductDocumentId = 2039;
-        private const int MappedColorId = 49;
+		//IMPORTANT: Before you can run these tests, ensure the values below are replaced with ones from Endless Aisle
+		private const int EaProductDocumentId = 2039;
+		private const int MappedColorId = 49;
 
-        private ColorMapper _colorMapper;
+		private ColorMapper _colorMapper;
 		private ProductResource _magentoTestProduct;
 
 		[TestInitialize]
 		public void SetUp()
 		{
-			var eaAuthToken = App.GetEaAuthToken();
-			var magentoAuthToken = App.GetMagentoAuthToken();
-			_colorMapper = new ColorMapper(magentoAuthToken, eaAuthToken);
-			_magentoTestProduct = TestHelper.TestProduct;
+			_colorMapper = new ColorMapper(new MockCustomAttributesController(), new MockProductLibraryController());
+			_magentoTestProduct = TestHelper.MockTestProduct;
 		}
 
 		/// <summary>
@@ -50,10 +53,10 @@ namespace Tests.Mappers
 		/// an invalid product document ID is supplied.
 		/// </summary>
 		[TestMethod]
-		[ExpectedException(typeof(Exception))]
+		[ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void ColorMapper_CreateColorDefinition_InvalidProductDocumentId()
 		{
-			_colorMapper.CreateColorDefinition(int.MaxValue,
+			_colorMapper.CreateColorDefinition(int.MinValue,
 				 new ColorDefinitionResource
 				 {
 					 ColorTagIds = new List<int>(),

@@ -4,31 +4,33 @@ using System.Linq;
 using MagentoConnect;
 using MagentoConnect.Mappers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Tests.MockObjects.Controllers.EndlessAisle;
+using Tests.MockObjects.Controllers.Magento;
 using Tests.Utilities;
 
 namespace Tests.Mappers
 {
-    /// <summary>
-    /// This suite ensures the ProductMapper is working correctly
-    /// </summary>
+	/// <summary>
+	/// This suite ensures the ProductMapper is working correctly
+	/// 
+	/// NOTE:
+	///		This class does NOT use actual calls to the APIs and instead relies on mock controllers
+	/// </summary>
 	[TestClass]
 	public class ProductMapperTests
 	{
-        //IMPORTANT: Before you can run these tests, ensure the values below are replaced with ones from your Magento system
-        private const int MagentoProductId = 1;
-        private const string MagentoProductSku = "24-MB01";
-        private const int MagentoCategoryId = 4;
-        private const int MagentoProductQuantity = 100;
+		//IMPORTANT: Before you can run these tests, ensure the values below are replaced with ones from your Magento system
+		private const int MagentoProductId = 1;
+		private const string MagentoProductSku = "24-MB01";
+		private const int MagentoCategoryId = 4;
+		private const int MagentoProductQuantity = 100;
 
-        private ProductMapper _productMapper;
+		private ProductMapper _productMapper;
 
-        [TestInitialize]
+		[TestInitialize]
 		public void SetUp()
 		{
-			var eaAuthToken = App.GetEaAuthToken();
-			var magentoAuthToken = App.GetMagentoAuthToken();
-			_productMapper = new ProductMapper(magentoAuthToken, eaAuthToken);
-			TestHelper.CreateTestUpdate(magentoAuthToken, MagentoProductId, MagentoProductSku, new List<int> { MagentoCategoryId });
+			_productMapper = new ProductMapper(new MockCatalogsController(), new MockProductLibraryController(), new MockProductController());
 		}
 
 		/// <summary>
@@ -42,7 +44,7 @@ namespace Tests.Mappers
 		}
 
 		/// <summary>
-		/// This test ensures that the ProductMapper can find the test product added since it will be within the time fram for updates
+		/// This test ensures that the ProductMapper can find the test product added since it will be within the time frame for updates
 		/// </summary>
 		[TestMethod]
 		public void ProductMapper_GetMagentoProductsUpdatedAfter_WithValidUpdate()
@@ -75,19 +77,10 @@ namespace Tests.Mappers
 		/// This test ensures that no catalog items are created when an invalid Document ID is supplied 
 		/// </summary>
 		[TestMethod]
-		[ExpectedException(typeof(Exception))]
+		[ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void ProductMapper_AddProductHierarchyToEndlessAisle_InvalidDocumentId()
 		{
-			_productMapper.AddProductHierarchyToEndlessAisle(int.MaxValue);
-		}
-
-		/// <summary>
-		/// If this test fails, the GetQuantityBySku function did not match the test value for quantity provided.
-		/// </summary>
-		[TestMethod]
-		public void ProductMapper_GetQuantityBySku()
-		{
-			Assert.AreEqual(MagentoProductQuantity, _productMapper.GetQuantityBySku(MagentoProductSku));
+			_productMapper.AddProductHierarchyToEndlessAisle(int.MinValue);
 		}
 	}
 }
