@@ -8,21 +8,20 @@ using MagentoConnect.Utilities;
 
 namespace MagentoConnect.Controllers.Magento
 {
-	public class ProductController : BaseController
+	public class ProductController : BaseController, IProductController
 	{
-		public static string MagentoAuthToken;
+		public string AuthToken { get; }
 
 		public ProductController(string magentoAuthToken)
 		{
-			MagentoAuthToken = magentoAuthToken;
+			AuthToken = magentoAuthToken;
 		}
-
-		/**
-		 * Returns a ProductResource representing a item in your catalog
-		 *
-		 * @param   productSku  SKU of a Product to fetch
-		 * @return              ProductResource Resource requested
-		 */
+		
+		/// <summary>
+		/// Returns a ProductResource representing a item in your catalog
+		/// </summary>
+		/// <param name="productSku">SKU of a Product to fetch</param>
+		/// <returns>ProductResource Resource requested</returns>
 		public ProductResource GetProductBySku(string productSku)
 		{
 			var endpoint = UrlFormatter.MagentoGetProductBySkuUrl(productSku);
@@ -30,7 +29,7 @@ namespace MagentoConnect.Controllers.Magento
 			var client = new RestClient(endpoint);
 			var request = new RestRequest(Method.GET);
 
-			request.AddHeader("Authorization", string.Format("Bearer {0}", MagentoAuthToken));
+			request.AddHeader("Authorization", string.Format("Bearer {0}", AuthToken));
 		  
 			var response = client.Execute(request);
 
@@ -40,12 +39,11 @@ namespace MagentoConnect.Controllers.Magento
 			return JsonConvert.DeserializeObject<ProductResource>(response.Content);
 		}
 
-		/**
-		 * Returns a list of children for a configurabke product
-		 *
-		 * @param   productSku              SKU of a Product
-		 * @return  List<ProductResource>   Array of Products representing children
-		 */
+		/// <summary>
+		/// Returns a list of children for a configurabke product
+		/// </summary>
+		/// <param name="productSku">SKU of a Product</param>
+		/// <returns>List of Products representing children</returns>
 		public List<ProductResource> GetConfigurableProductChildren(string productSku)
 		{
 			var endpoint = UrlFormatter.MagentoConfigurableProductUrl(productSku);
@@ -53,7 +51,7 @@ namespace MagentoConnect.Controllers.Magento
 			var client = new RestClient(endpoint);
 			var request = new RestRequest(Method.GET);
 
-			request.AddHeader("Authorization", string.Format("Bearer {0}", MagentoAuthToken));
+			request.AddHeader("Authorization", string.Format("Bearer {0}", AuthToken));
 
 			var response = client.Execute(request);
 
@@ -63,39 +61,13 @@ namespace MagentoConnect.Controllers.Magento
 			return JsonConvert.DeserializeObject<List<ProductResource>>(response.Content);
 		}
 
-		/**
-		 * Returns an Attribute resource
-		 *
-		 * @param   attributeId                 Identifier for an Attribute
-		 * @return  CustomAttributeResource     Attribute details
-		 */
-		public CustomAttributeResource GetAttribute(string attributeId)
-		{
-			var endpoint = UrlFormatter.MagentoAttributeUrl(attributeId);
-
-			var client = new RestClient(endpoint);
-			var request = new RestRequest(Method.GET);
-
-			request.AddHeader("Authorization", string.Format("Bearer {0}", MagentoAuthToken));
-
-			var response = client.Execute(request);
-
-			//Ensure we get the right code
-			CheckStatusCode(response.StatusCode);
-
-			return JsonConvert.DeserializeObject<CustomAttributeResource>(response.Content);
-
-		}
-
-		/**
-		 * Returns an list of Products in Magento matching search criteria
-		 *
-		 * @param   property    Property to search by
-		 * @param   value       Value to search for
-		 * @param   condition   Condition. See http://devdocs.magento.com/guides/v2.0/get-started/usage.html for a list of acceptable values
-		 *
-		 * @return  List<ProductResource>   Magento
-		 */
+		/// <summary>
+		/// Returns an list of Products in Magento matching search criteria
+		/// </summary>
+		/// <param name="property">Property to search by</param>
+		/// <param name="value">Value to search for</param>
+		/// <param name="condition">Condition. See http://devdocs.magento.com/guides/v2.0/get-started/usage.html for a list of acceptable values</param>
+		/// <returns>List of Magento Products that match the filter criteria</returns>
 		public ProductSearchResource SearchForProducts(string property, string value, string condition)
 		{
 			var endpoint = UrlFormatter.MagentoSearchProductsUrl(property, value, condition);
@@ -103,7 +75,7 @@ namespace MagentoConnect.Controllers.Magento
 			var client = new RestClient(endpoint);
 			var request = new RestRequest(Method.GET);
 
-			request.AddHeader("Authorization", string.Format("Bearer {0}", MagentoAuthToken));
+			request.AddHeader("Authorization", string.Format("Bearer {0}", AuthToken));
 
 			var response = client.Execute(request);
 
@@ -114,14 +86,13 @@ namespace MagentoConnect.Controllers.Magento
 
 		}
 
-		/**
-		 * Creates a custom property on a Magento product
-		 *
-		 * @param       magentoProduct  Magento product to update 
-		 * @param       categoryIds     Magento categories, required for updating
-		 * @param       attrCode        Code of value to add    
-		 * @param       attrValue       Value to add
-		 */
+		/// <summary>
+		/// Creates a custom property on a Magento product
+		/// </summary>
+		/// <param name="magentoProduct">Magento product to update </param>
+		/// <param name="categoryIds">Magento categories, required for updating</param>
+		/// <param name="attrCode">Code of value to add</param>
+		/// <param name="attrValue">Value to add</param>
 		public void AddCustomAttributeToProduct(ProductResource magentoProduct, List<int> categoryIds, string attrCode, string attrValue)
 		{
 			var endpoint = UrlFormatter.MagentoCreateProductUrl();
@@ -129,7 +100,7 @@ namespace MagentoConnect.Controllers.Magento
 			var client = new RestClient(endpoint);
 			var request = new RestRequest(Method.POST);
 
-			request.AddHeader("Authorization", string.Format("Bearer {0}", MagentoAuthToken));
+			request.AddHeader("Authorization", string.Format("Bearer {0}", AuthToken));
 			request.AddHeader("Content-Type", "application/json");
 
 			var customAttributes = new List<CustomAttributeRefResource>
@@ -169,7 +140,7 @@ namespace MagentoConnect.Controllers.Magento
 			var client = new RestClient(endpoint);
 			var request = new RestRequest(Method.GET);
 
-			request.AddHeader("Authorization", string.Format("Bearer {0}", MagentoAuthToken));
+			request.AddHeader("Authorization", string.Format("Bearer {0}", AuthToken));
 
 			var response = client.Execute(request);
 

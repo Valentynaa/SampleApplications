@@ -17,21 +17,21 @@ namespace MagentoConnect.Mappers
 {
 	public class OrderMapper : BaseMapper
 	{
-		private readonly OrdersController _eaOrderController;
-		private readonly CatalogsController _eaCatalogsController;
+		private readonly IOrdersController _eaOrderController;
+		private readonly ICatalogsController _eaCatalogsController;
+						 
+		private readonly ICartController _magentoCartController;
+		private readonly IProductController _magentoProductController;
 
-		private readonly CartController _magentoCartController;
-		private readonly ProductController _magentoProductController;
+		public const string CreatedDateProperty = "CreatedDateUtc";
 
-		public const string CreatedDate = "CreatedDateUtc";
-
-		public OrderMapper(string magentoAuthToken, string eaAuthToken) : base(magentoAuthToken, eaAuthToken)
+		public OrderMapper(IOrdersController ordersController, ICatalogsController catalogsController, ICartController cartController, IProductController productController)
 		{
-			_eaOrderController = new OrdersController(eaAuthToken);
-			_eaCatalogsController = new CatalogsController(eaAuthToken);
+			_eaOrderController = ordersController;
+			_eaCatalogsController = catalogsController;
 
-			_magentoCartController = new CartController(magentoAuthToken);
-			_magentoProductController = new ProductController(magentoAuthToken);
+			_magentoCartController = cartController;
+			_magentoProductController = productController;
 		}
 
 		/// <summary>
@@ -44,7 +44,7 @@ namespace MagentoConnect.Mappers
 			if (createdAfter > DateTime.UtcNow)
 				throw new ArgumentOutOfRangeException(nameof(createdAfter));
 
-			var createdOrders = _eaOrderController.GetOrders(new Filter(CreatedDate, createdAfter, FilterCondition.GreaterThan));
+			var createdOrders = _eaOrderController.GetOrders(new Filter(CreatedDateProperty, createdAfter, FilterCondition.GreaterThan));
 			return createdOrders;
 		}
 
@@ -65,6 +65,11 @@ namespace MagentoConnect.Mappers
 		/// <param name="cartId">Cart to add items to</param>
 		public void AddOrderItemsToCart(string orderId, int cartId)
 		{
+			Guid result;
+			if (!Guid.TryParse(orderId, out result))
+			{
+				throw new ArgumentException("Argument must be a valid Guid.", nameof(orderId));
+			}
 			IEnumerable<OrderItemResource> orderItems = _eaOrderController.GetOrderItems(orderId);
 			foreach (var orderItem in orderItems)
 			{
@@ -73,7 +78,8 @@ namespace MagentoConnect.Mappers
 					ConfigReader.MagentoEqualsCondition).items.FirstOrDefault();
 
 				if(product == null)
-					throw new Exception(string.Format("Magento product could not be found for product {0} on order {1} with mapping code {2}", orderItem.SKU, orderId, catalogItem.Slug));
+					throw new Exception(string.Format("Magento product could not be found for product {0} on order {1} with mapping code {2}", 
+						orderItem.SKU, orderId, catalogItem.Slug));
 
 				CartAddItemResource cartAddItem = new CartAddItemResource(cartId, product.sku, orderItem.Quantity);
 				_magentoCartController.AddItemToCart(cartId, cartAddItem);
@@ -102,7 +108,8 @@ namespace MagentoConnect.Mappers
 			_magentoCartController.SetShippingInformation(cartId, shippingInformation);
 
 			if(_magentoCartController.GetShippingMethods(cartId).FirstOrDefault(x => x.method_code == ConfigReader.MagentoShippingCode) == null)
-				throw new Exception(string.Format("Unable to add shipping information to cart {0}. Ensure that shipping code {1} is valid for this cart.", cartId, ConfigReader.MagentoShippingCode));
+				throw new Exception(string.Format("Unable to add shipping information to cart {0}. Ensure that shipping code {1} is valid for this cart.", 
+					cartId, ConfigReader.MagentoShippingCode));
 		}
 
 		/// <summary>
@@ -121,7 +128,9 @@ namespace MagentoConnect.Mappers
 			}
 			else
 			{
-				throw new Exception(string.Format("Unable to create Order for cart {0}. No payment method matching {1} found for cart. Ensure that Magento_PaymentMethod is valid in App.config", cartId, ConfigReader.MagentoPaymentMethod));
+				throw new Exception(string.Format("Unable to create Order for cart {0}. " +
+				                                  "\nNo payment method matching {1} found for cart. " +
+				                                  "\nEnsure that Magento_PaymentMethod is valid in App.config", cartId, ConfigReader.MagentoPaymentMethod));
 			}
 		}
 	}

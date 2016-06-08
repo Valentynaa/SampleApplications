@@ -2,10 +2,10 @@
 
 // ReSharper disable InconsistentNaming
 
-namespace MagentoConnect.Models.EndlessAisle.Authentication
+namespace MagentoConnect.Models.Authentication
 {
     [Serializable]
-    public class AuthenticationCredentialsResource
+    public class AuthenticationCredentialsResource : IAuthenticationCredentials
     {
         public string grant_type { get; set; }
         public string username { get; set; }

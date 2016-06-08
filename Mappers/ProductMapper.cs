@@ -1,27 +1,28 @@
 ﻿using MagentoConnect.Controllers.EndlessAisle;
 using MagentoConnect.Controllers.Magento;
+using MagentoConnect.Models.EndlessAisle.Catalog;
 using MagentoConnect.Models.EndlessAisle.ProductLibrary;
 using MagentoConnect.Models.Magento.Products;
+using MagentoConnect.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using MagentoConnect.Models.EndlessAisle.Catalog;
-using MagentoConnect.Utilities;
+using System.Text.RegularExpressions;
 
 namespace MagentoConnect.Mappers
 {
 	public class ProductMapper : BaseMapper
 	{
-		private readonly CatalogsController _eaCatalogController;
-		private readonly ProductLibraryController _eaProductController;
-		private readonly ProductController _magentoProductController;
+		private readonly ICatalogsController _eaCatalogController;
+		private readonly IProductLibraryController _eaProductController;
+		private readonly IProductController _magentoProductController;
 
-		public ProductMapper(string magentoAuthToken, string eaAuthToken) : base(magentoAuthToken, eaAuthToken)
+		public ProductMapper(ICatalogsController catalogsController, IProductLibraryController produtLibraryController, IProductController productController)
 		{
-			_eaCatalogController = new CatalogsController(eaAuthToken);
-			_eaProductController = new ProductLibraryController(eaAuthToken);
-			_magentoProductController = new ProductController(MagentoAuthToken);
+			_eaCatalogController = catalogsController;
+			_eaProductController = produtLibraryController;
+			_magentoProductController = productController;
 		}
 
 		/// <summary>
@@ -166,7 +167,10 @@ namespace MagentoConnect.Mappers
 		 * @return  string          Identifier of a created CatalogItem
 		 */
 		public string AddProductToEndlessAisle(string slug)
-		{        
+		{
+			if (!Regex.IsMatch(slug, RegexPatterns.SlugPattern))
+				throw new Exception(string.Format("\"{0}\" is in an invalid slug format.", slug));
+
 			var catalogItem = new CatalogItemResource
 			{
 				Slug = slug
@@ -184,6 +188,9 @@ namespace MagentoConnect.Mappers
 		 */
 		public List<string> AddProductHierarchyToEndlessAisle(int productDocumentId)
 		{
+			if (productDocumentId < 1)
+				throw new ArgumentOutOfRangeException(nameof(productDocumentId));
+
 			var createdCatalogItems = new List<string>();
 
 			var variationIds = GetVariationIdsForMasterProduct(productDocumentId);
@@ -243,9 +250,7 @@ namespace MagentoConnect.Mappers
 			var slug = string.Format("M{0}", productDocumentId);
 
 			if (variationId != null)
-			{
 				slug += string.Format("-V{0}", variationId);
-			}
 
 			return slug;
 		}
@@ -260,9 +265,7 @@ namespace MagentoConnect.Mappers
 		private static int GetVariationIdFromSlug(string slug)
 		{
 			if (slug.IndexOf("-", StringComparison.Ordinal) == -1)
-			{
 				throw new Exception(string.Format("Slug {0} is not associated with a variation!", slug));
-			}
 
 			return int.Parse(slug.Substring(slug.IndexOf("-", StringComparison.Ordinal) + 2));
 		}
@@ -284,9 +287,7 @@ namespace MagentoConnect.Mappers
 				if (@group.VariationId == null) continue;
 
 				if (!variationIds.Contains(@group.VariationId.Value))
-				{
 					variationIds.Add(@group.VariationId.Value);
-				}
 			}
 
 			return variationIds;

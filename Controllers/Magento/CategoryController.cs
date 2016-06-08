@@ -4,37 +4,37 @@ using RestSharp;
 
 namespace MagentoConnect.Controllers.Magento
 {
-    public class CategoryController : BaseController
-    {
-        public static string MagentoAuthToken;
+	public class CategoryController : BaseController, ICategoryController
+	{
+		public string AuthToken { get; }
 
-        public CategoryController(string magentoAuthToken)
-        {
-            MagentoAuthToken = magentoAuthToken;
-        }
+		public CategoryController(string magentoAuthToken)
+		{
+			AuthToken = magentoAuthToken;
+		}
 
-        /**
-         * Returns information about a category
-         *
-         * @param   categoryId          attribute_code of the attribute, see Product response
-         *
-         * @return  CategoryResource    Category requested
-         */
-        public CategoryResource GetCategory(int categoryId)
-        {
-            var endpoint = UrlFormatter.MagentoCategoryUrl(categoryId);
+		/**
+		 * Returns information about a category
+		 *
+		 * @param   categoryId          attribute_code of the attribute, see Product response
+		 *
+		 * @return  CategoryResource    Category requested
+		 */
+		public CategoryResource GetCategory(int categoryId)
+		{
+			var endpoint = UrlFormatter.MagentoCategoryUrl(categoryId);
 
-            var client = new RestClient(endpoint);
-            var request = new RestRequest(Method.GET);
+			var client = new RestClient(endpoint);
+			var request = new RestRequest(Method.GET);
 
-            request.AddHeader("Authorization", string.Format("Bearer {0}", MagentoAuthToken));
+			request.AddHeader("Authorization", string.Format("Bearer {0}", AuthToken));
 
-            var response = client.Execute(request);
+			var response = client.Execute(request);
 
-            //Ensure we get the right code
-            CheckStatusCode(response.StatusCode);
+			//Ensure we get the right code
+			CheckStatusCode(response.StatusCode);
 
-            return JsonConvert.DeserializeObject<CategoryResource>(response.Content);
-        }
-    }
+			return JsonConvert.DeserializeObject<CategoryResource>(response.Content);
+		}
+	}
 }

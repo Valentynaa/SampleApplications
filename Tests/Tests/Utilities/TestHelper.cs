@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Net;
 using MagentoConnect;
-using MagentoConnect.Controllers;
 using MagentoConnect.Controllers.Magento;
 using MagentoConnect.Models.Magento.Products;
 using MagentoConnect.Utilities;
@@ -12,7 +13,6 @@ namespace Tests.Utilities
 	{
 		//To troubleshoot issues with a specific Magento product, replace this value with a SKU from your Magento system
 		private const string MagentoProductSku = "Configurable Product";
-		private static ProductResource _testProduct;
 
 		/// <summary>
 		/// Creates a product update to ensure tests run correctly.
@@ -51,8 +51,13 @@ namespace Tests.Utilities
 			var response = client.Execute(request);
 
 			//Ensure we get the right code
-			new BaseController().CheckStatusCode(response.StatusCode);
+			if (response.StatusCode != HttpStatusCode.OK)
+			{
+				throw new Exception(string.Format("Unexpected HTTP status code. Expected {0}, returned {1}", HttpStatusCode.OK, response.StatusCode));
+			}
 		}
+
+		private static ProductResource _testProduct;
 		public static ProductResource TestProduct
 		{
 			get
@@ -60,6 +65,70 @@ namespace Tests.Utilities
 				return _testProduct ?? new ProductController(App.GetMagentoAuthToken()).GetProductBySku(MagentoProductSku);
 			}
 			set { _testProduct = value; }
+		}
+
+		public static ProductResource MockTestProduct
+		{
+			get
+			{
+				return new ProductResource()
+				{
+					id = 2049,
+					sku = "Configurable Product",
+					name = "Configurable Product",
+					attribute_set_id = 4,
+					price = new decimal(4.51),
+					status = 1,
+					visibility = 4,
+					type_id = "simple",
+					created_at = DateTime.Now,
+					updated_at = DateTime.Now,
+					product_links = new List<ProductLinkResource>(),
+					options = new List<OptionResource>(),
+					media_gallery_entries = new List<MediaGalleryEntryResource>()
+						{
+							new MediaGalleryEntryResource()
+							{
+								id = 3431,
+								media_type = "image",
+								label = "",
+								position = 5,
+								types = new List<string>()
+								{
+									"image",
+									"small_image",
+									"thumbnail",
+									"swatch_image"
+								},
+								file = "/b/r/brand_new.jpg"
+							}
+						},
+					tier_prices = new List<TierPriceResource>(),
+					custom_attributes = new List<CustomAttributeRefResource>()
+						{
+							new CustomAttributeRefResource()
+							{
+								attribute_code = "manufacturer",
+								value = "213"
+							},
+							new CustomAttributeRefResource()
+							{
+								attribute_code = ConfigReader.MappingCode,
+								value = "M2039"
+							},
+							new CustomAttributeRefResource()
+							{
+								attribute_code = ConfigReader.MagentoImageCode,
+								value = "/b/r/brand_new.jpg"
+							},
+							new CustomAttributeRefResource()
+							{
+								attribute_code = ConfigReader.MagentoColorCode,
+								value = "49"
+							}
+						}
+				};
+			}
 		}
 	}
 }

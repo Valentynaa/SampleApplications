@@ -13,17 +13,17 @@ namespace MagentoConnect.Mappers
 {
 	public class FieldMapper : BaseMapper
 	{
-		private readonly ProductController _magentoProductController;
-		private readonly FieldDefinitionController _eaFieldDefinitionController;
-		private readonly CustomAttributesController _magentoCustomAttributesController;
-		private readonly ProductLibraryController _eaProductController;
+		private readonly IProductLibraryController _eaProductController;
+		private readonly IProductController _magentoProductController;
+		private readonly IFieldDefinitionController _eaFieldDefinitionController;
+		private readonly ICustomAttributesController _magentoCustomAttributesController;
 
-		public FieldMapper(string magentoAuthToken, string eaAuthToken) : base(magentoAuthToken, eaAuthToken)
+		public FieldMapper(IProductLibraryController productLibraryController, IProductController productController, IFieldDefinitionController fieldDefinitionController, ICustomAttributesController customAttributesController)
 		{
-			_eaProductController = new ProductLibraryController(eaAuthToken);
-			_magentoProductController = new ProductController(magentoAuthToken);
-			_eaFieldDefinitionController = new FieldDefinitionController(eaAuthToken);
-			_magentoCustomAttributesController = new CustomAttributesController(magentoAuthToken);
+			_eaProductController = productLibraryController;
+			_magentoProductController = productController;
+			_eaFieldDefinitionController = fieldDefinitionController;
+			_magentoCustomAttributesController = customAttributesController;
 		}
 
 		/**
@@ -226,7 +226,6 @@ namespace MagentoConnect.Mappers
 						});
 					}
 				}
-
 			}
 
 			return fields;

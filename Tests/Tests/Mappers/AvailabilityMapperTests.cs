@@ -2,12 +2,16 @@
 using MagentoConnect;
 using MagentoConnect.Mappers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Tests.MockObjects.Controllers.EndlessAisle;
 
 namespace Tests.Mappers
 {
-    /// <summary>
-    /// This suite diagnoses problems with the Availability sync
-    /// </summary>
+	/// <summary>
+	/// This suite diagnoses problems with the Availability sync
+	/// 
+	/// NOTE:
+	///		This class does NOT use actual calls to the APIs and instead relies on mock controllers
+	/// </summary>
 	[TestClass]
 	public class AvailabilityMapperTests
 	{
@@ -16,9 +20,7 @@ namespace Tests.Mappers
 		[TestInitialize]
 		public void SetUp()
 		{
-			var eaAuthToken = App.GetEaAuthToken();
-			var magentoAuthToken = App.GetMagentoAuthToken();
-			_availabilityMapper = new AvailabilityMapper(magentoAuthToken, eaAuthToken);
+			_availabilityMapper = new AvailabilityMapper(new MockAvailabilityController());
 		}
 
 		/// <summary>

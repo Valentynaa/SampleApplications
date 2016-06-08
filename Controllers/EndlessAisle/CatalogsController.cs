@@ -6,13 +6,13 @@ using RestSharp;
 
 namespace MagentoConnect.Controllers.EndlessAisle
 {
-	public class CatalogsController : BaseController
+	public class CatalogsController : BaseController, ICatalogsController
 	{
-		public static string EndlessAisleAuthToken;
+		public string AuthToken { get; }
 
 		public CatalogsController(string eaAuthToken)
 		{
-			EndlessAisleAuthToken = eaAuthToken;
+			AuthToken = eaAuthToken;
 		}
 
 		/**
@@ -28,7 +28,7 @@ namespace MagentoConnect.Controllers.EndlessAisle
 			var client = new RestClient(endpoint);
 			var request = new RestRequest(Method.GET);
 
-			request.AddHeader("Authorization", string.Format("Bearer {0}", EndlessAisleAuthToken));
+			request.AddHeader("Authorization", string.Format("Bearer {0}", AuthToken));
 			request.AddHeader("Accept", "application/json");
 
 			var response = client.Execute(request);
@@ -51,7 +51,7 @@ namespace MagentoConnect.Controllers.EndlessAisle
 			var client = new RestClient(endpoint);
 			var request = new RestRequest(Method.GET);
 
-			request.AddHeader("Authorization", string.Format("Bearer {0}", EndlessAisleAuthToken));
+			request.AddHeader("Authorization", string.Format("Bearer {0}", AuthToken));
 			request.AddHeader("Accept", "application/json");
 
 			var response = client.Execute(request);
@@ -75,7 +75,7 @@ namespace MagentoConnect.Controllers.EndlessAisle
 			var client = new RestClient(endpoint);
 			var request = new RestRequest(Method.DELETE);
 
-			request.AddHeader("Authorization", string.Format("Bearer {0}", EndlessAisleAuthToken));
+			request.AddHeader("Authorization", string.Format("Bearer {0}", AuthToken));
 			request.AddHeader("Accept", "application/json");
 			request.AddHeader("Content-Type", "application/json");
 
@@ -100,7 +100,7 @@ namespace MagentoConnect.Controllers.EndlessAisle
 			var client = new RestClient(endpoint);
 			var request = new RestRequest(Method.POST);
 
-			request.AddHeader("Authorization", string.Format("Bearer {0}", EndlessAisleAuthToken));
+			request.AddHeader("Authorization", string.Format("Bearer {0}", AuthToken));
 			request.AddHeader("Accept", "application/json");
 			request.AddHeader("Content-Type", "application/json");
 

@@ -5,61 +5,61 @@ using RestSharp;
 
 namespace MagentoConnect.Controllers.EndlessAisle
 {
-    public class FieldDefinitionController : BaseController
-    {
-        public static string EndlessAisleAuthToken;
+	public class FieldDefinitionController : BaseController, IFieldDefinitionController
+	{
+		public string AuthToken { get; }
 
-        public FieldDefinitionController(string eaAuthToken)
-        {
-            EndlessAisleAuthToken = eaAuthToken;
-        }
+		public FieldDefinitionController(string eaAuthToken)
+		{
+			AuthToken = eaAuthToken;
+		}
 
-        /**
-         * Gets a field definition
-         *
-         * @param   fieldDefinitionId           Identifier of a field definition
-         *
-         * @return  FieldDefinitionResource     Returns a field definition
-         */
-        public FieldDefinitionResource GetAFieldDefinition(int fieldDefinitionId)
-        {
-            var endpoint = UrlFormatter.EndlessAisleFieldDefinitionUrl(fieldDefinitionId);
+		/**
+		 * Gets a field definition
+		 *
+		 * @param   fieldDefinitionId           Identifier of a field definition
+		 *
+		 * @return  FieldDefinitionResource     Returns a field definition
+		 */
+		public FieldDefinitionResource GetAFieldDefinition(int fieldDefinitionId)
+		{
+			var endpoint = UrlFormatter.EndlessAisleFieldDefinitionUrl(fieldDefinitionId);
 
-            var client = new RestClient(endpoint);
-            var request = new RestRequest(Method.GET);
+			var client = new RestClient(endpoint);
+			var request = new RestRequest(Method.GET);
 
-            request.AddHeader("Authorization", string.Format("Bearer {0}", EndlessAisleAuthToken));
-            request.AddHeader("Accept", "application/json");
+			request.AddHeader("Authorization", string.Format("Bearer {0}", AuthToken));
+			request.AddHeader("Accept", "application/json");
 
-            var response = client.Execute(request);
+			var response = client.Execute(request);
 
-            //Ensure we get the right code
-            CheckStatusCode(response.StatusCode);
+			//Ensure we get the right code
+			CheckStatusCode(response.StatusCode);
 
-            return JsonConvert.DeserializeObject<FieldDefinitionResource>(response.Content);
-        }
+			return JsonConvert.DeserializeObject<FieldDefinitionResource>(response.Content);
+		}
 
-        /**
-         * Gets information about all field definitions
-         *
-         * @return  List<FieldDefinitionResource>     Returns a list of field definitions
-         */
-        private List<FieldDefinitionResource> GetAllFieldDefinitions()
-        {
-            var endpoint = UrlFormatter.EndlessAisleFieldDefinitionsUrl();
+		/**
+		 * Gets information about all field definitions
+		 *
+		 * @return  List<FieldDefinitionResource>     Returns a list of field definitions
+		 */
+		public List<FieldDefinitionResource> GetAllFieldDefinitions()
+		{
+			var endpoint = UrlFormatter.EndlessAisleFieldDefinitionsUrl();
 
-            var client = new RestClient(endpoint);
-            var request = new RestRequest(Method.GET);
+			var client = new RestClient(endpoint);
+			var request = new RestRequest(Method.GET);
 
-            request.AddHeader("Authorization", string.Format("Bearer {0}", EndlessAisleAuthToken));
-            request.AddHeader("Accept", "application/json");
+			request.AddHeader("Authorization", string.Format("Bearer {0}", AuthToken));
+			request.AddHeader("Accept", "application/json");
 
-            var response = client.Execute(request);
+			var response = client.Execute(request);
 
-            //Ensure we get the right code
-            CheckStatusCode(response.StatusCode);
+			//Ensure we get the right code
+			CheckStatusCode(response.StatusCode);
 
-            return JsonConvert.DeserializeObject<List<FieldDefinitionResource>>(response.Content);
-        }       
-    }
+			return JsonConvert.DeserializeObject<List<FieldDefinitionResource>>(response.Content);
+		}       
+	}
 }

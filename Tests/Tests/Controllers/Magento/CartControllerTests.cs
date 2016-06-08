@@ -1,28 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using MagentoConnect;
+﻿using MagentoConnect;
 using MagentoConnect.Controllers.Magento;
 using MagentoConnect.Models.Magento.Cart;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Tests.MockObjects.Controllers.Magento;
 
 namespace Tests.Controllers.Magento
 {
-    /// <summary>
-    /// This suite ensures the CartController is working correctly
-    /// </summary>
-    [TestClass]
+	/// <summary>
+	/// This suite ensures the CartController is working correctly
+	/// </summary>
+	[TestClass]
 	public class CartControllerTests
 	{
-        //IMPORTANT: Before you can run these tests, ensure the values below are replaced with ones from your Magento system
-        private const int CartId = 3;
-        private const string ItemSku = "Configurable Product";
-        private const string PaymentMethod = "checkmo";
-        private const string ShippingMethod = "flatrate";
-        private const int CustomerId = 2;
-        private const int SaskRegionId = 77;
+		private const int CustomerId = 2;
+		private readonly int _cartId = MockCartController.CartId;
+		private readonly string _itemSku = MockCartController.ItemSku;
+		private readonly string _paymentMethod = MockCartController.PaymentMethod;
+		private readonly string _shippingMethod = MockCartController.ShippingMethod;
+		private readonly int _saskRegionId = MockCartController.MappedRegionId;
 
-        private CartController _cartController;
+		private CartController _cartController;
 		private CartAddItemResource _itemToAdd;
 		private CartAddPaymentMethodResource _methodToAdd;
 		private CartSetShippingInformationResource _shippingToSet;
@@ -38,14 +38,14 @@ namespace Tests.Controllers.Magento
 			var magentoAuthToken = App.GetMagentoAuthToken();
 			_cartController = new CartController(magentoAuthToken);
 
-			_itemToAdd = new CartAddItemResource(CartId, ItemSku, 1);
+			_itemToAdd = new CartAddItemResource(_cartId, _itemSku, 1);
 
-			_methodToAdd = new CartAddPaymentMethodResource(CartId, PaymentMethod);
+			_methodToAdd = new CartAddPaymentMethodResource(_cartId, _paymentMethod);
 
 			_address = new AddressResource
 			{
 				region = "Saskatchewan",
-				regionId = SaskRegionId,
+				regionId = _saskRegionId,
 				regionCode = "SK",
 				countryId = "CA",
 				street = new List<string> {"123 Fake Street"},
@@ -57,7 +57,7 @@ namespace Tests.Controllers.Magento
 				email = "joe@blow.com"
 			};
 
-			_shippingToSet = new CartSetShippingInformationResource(ShippingMethod, _address);
+			_shippingToSet = new CartSetShippingInformationResource(_shippingMethod, _address);
 		}
 
 		/// <summary>
@@ -66,7 +66,7 @@ namespace Tests.Controllers.Magento
 		[TestMethod]
 		public void CartController_AddItemToCart()
 		{
-			Assert.IsNotNull(_cartController.AddItemToCart(CartId, _itemToAdd));
+			Assert.IsNotNull(_cartController.AddItemToCart(_cartId, _itemToAdd));
 		}
 
 		/// <summary>
@@ -76,7 +76,7 @@ namespace Tests.Controllers.Magento
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void CartController_AddItemToCart_NullItem()
 		{
-			Assert.IsNotNull(_cartController.AddItemToCart(CartId, null));
+			Assert.IsNotNull(_cartController.AddItemToCart(_cartId, null));
 		}
 
 		/// <summary>
@@ -87,7 +87,7 @@ namespace Tests.Controllers.Magento
 		public void CartController_AddItemToCart_InvalidItem()
 		{
 			_itemToAdd.cartItem.sku = null;
-			Assert.IsNotNull(_cartController.AddItemToCart(CartId, _itemToAdd));
+			Assert.IsNotNull(_cartController.AddItemToCart(_cartId, _itemToAdd));
 		}
 
 		/// <summary>
@@ -96,8 +96,8 @@ namespace Tests.Controllers.Magento
 		[TestMethod]
 		public void CartController_AddPaymentMethod()
 		{
-			var cartModifiedId = _cartController.AddPaymentMethod(CartId, _methodToAdd);
-			Assert.AreEqual(CartId, cartModifiedId);
+			var cartModifiedId = _cartController.AddPaymentMethod(_cartId, _methodToAdd);
+			Assert.AreEqual(_cartId, cartModifiedId);
 		}
 
 		/// <summary>
@@ -115,7 +115,7 @@ namespace Tests.Controllers.Magento
 		[TestMethod]
 		public void CartController_SetShippingInformation()
 		{
-			Assert.IsNotNull(_cartController.SetShippingInformation(CartId, _shippingToSet));
+			Assert.IsNotNull(_cartController.SetShippingInformation(_cartId, _shippingToSet));
 		}
 
 		/// <summary>
@@ -124,7 +124,7 @@ namespace Tests.Controllers.Magento
 		[TestMethod]
 		public void CartController_GetCart()
 		{
-			Assert.AreEqual(CartId, _cartController.GetCart(CartId).id);
+			Assert.AreEqual(_cartId, _cartController.GetCart(_cartId).id);
 		}
 
 		/// <summary>
@@ -133,8 +133,8 @@ namespace Tests.Controllers.Magento
 		[TestMethod]
 		public void CartController_GetCartItems()
 		{
-			_cartController.AddItemToCart(CartId, _itemToAdd);
-			Assert.IsTrue(_cartController.GetCartItems(CartId).Any());
+			_cartController.AddItemToCart(_cartId, _itemToAdd);
+			Assert.IsTrue(_cartController.GetCartItems(_cartId).Any());
 		}
 
 		/// <summary>
@@ -143,7 +143,7 @@ namespace Tests.Controllers.Magento
 		[TestMethod]
 		public void CartController_GetPaymentMethods()
 		{
-			Assert.IsNotNull(_cartController.GetPaymenMethods(CartId));
+			Assert.IsNotNull(_cartController.GetPaymenMethods(_cartId));
 		}
 
 		/// <summary>
@@ -152,7 +152,7 @@ namespace Tests.Controllers.Magento
 		[TestMethod]
 		public void CartController_GetShippingMethods()
 		{
-			Assert.IsNotNull(_cartController.GetShippingMethods(CartId));
+			Assert.IsNotNull(_cartController.GetShippingMethods(_cartId));
 		}
 
 		/// <summary>

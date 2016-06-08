@@ -9,13 +9,13 @@ using RestSharp;
 
 namespace MagentoConnect.Controllers.Magento
 {
-	public class CartController : BaseController
+	public class CartController : BaseController, ICartController
 	{
-		public static string MagentoAuthToken;
+		public string AuthToken { get; }
 
 		public CartController(string magentoAuthToken)
 		{
-			MagentoAuthToken = magentoAuthToken;
+			AuthToken = magentoAuthToken;
 		}
 
 		/// <summary>
@@ -30,7 +30,7 @@ namespace MagentoConnect.Controllers.Magento
 			var client = new RestClient(endpoint);
 			var request = new RestRequest(Method.POST);
 
-			request.AddHeader("Authorization", string.Format("Bearer {0}", MagentoAuthToken));
+			request.AddHeader("Authorization", string.Format("Bearer {0}", AuthToken));
 			request.AddHeader("Content-Type", "application/json");
 
 			var response = client.Execute(request);
@@ -64,7 +64,7 @@ namespace MagentoConnect.Controllers.Magento
 			var client = new RestClient(endpoint);
 			var request = new RestRequest(Method.POST);
 
-			request.AddHeader("Authorization", string.Format("Bearer {0}", MagentoAuthToken));
+			request.AddHeader("Authorization", string.Format("Bearer {0}", AuthToken));
 			request.AddHeader("Content-Type", "application/json");
 
 			request.AddJsonBody(item);
@@ -93,7 +93,7 @@ namespace MagentoConnect.Controllers.Magento
 			var client = new RestClient(endpoint);
 			var request = new RestRequest(Method.POST);
 
-			request.AddHeader("Authorization", string.Format("Bearer {0}", MagentoAuthToken));
+			request.AddHeader("Authorization", string.Format("Bearer {0}", AuthToken));
 			request.AddHeader("Content-Type", "application/json");
 
 			request.AddJsonBody(shippingInformation);
@@ -118,7 +118,7 @@ namespace MagentoConnect.Controllers.Magento
 			var client = new RestClient(endpoint);
 			var request = new RestRequest(Method.GET);
 
-			request.AddHeader("Authorization", string.Format("Bearer {0}", MagentoAuthToken));
+			request.AddHeader("Authorization", string.Format("Bearer {0}", AuthToken));
 			request.AddHeader("Content-Type", "application/json");
 
 			var response = client.Execute(request);
@@ -141,7 +141,7 @@ namespace MagentoConnect.Controllers.Magento
 			var client = new RestClient(endpoint);
 			var request = new RestRequest(Method.GET);
 
-			request.AddHeader("Authorization", string.Format("Bearer {0}", MagentoAuthToken));
+			request.AddHeader("Authorization", string.Format("Bearer {0}", AuthToken));
 			request.AddHeader("Content-Type", "application/json");
 
 			var response = client.Execute(request);
@@ -168,7 +168,7 @@ namespace MagentoConnect.Controllers.Magento
 			var client = new RestClient(endpoint);
 			var request = new RestRequest(Method.PUT);
 
-			request.AddHeader("Authorization", string.Format("Bearer {0}", MagentoAuthToken));
+			request.AddHeader("Authorization", string.Format("Bearer {0}", AuthToken));
 			request.AddHeader("Content-Type", "application/json");
 
 			request.AddJsonBody(paymentMethod);
@@ -197,7 +197,7 @@ namespace MagentoConnect.Controllers.Magento
 			var client = new RestClient(endpoint);
 			var request = new RestRequest(Method.PUT);
 
-			request.AddHeader("Authorization", string.Format("Bearer {0}", MagentoAuthToken));
+			request.AddHeader("Authorization", string.Format("Bearer {0}", AuthToken));
 			request.AddHeader("Content-Type", "application/json");
 
 			request.AddJsonBody(paymentMethod);
@@ -222,7 +222,7 @@ namespace MagentoConnect.Controllers.Magento
 			var client = new RestClient(endpoint);
 			var request = new RestRequest(Method.GET);
 
-			request.AddHeader("Authorization", string.Format("Bearer {0}", MagentoAuthToken));
+			request.AddHeader("Authorization", string.Format("Bearer {0}", AuthToken));
 			request.AddHeader("Content-Type", "application/json");
 
 			var response = client.Execute(request);
@@ -245,7 +245,7 @@ namespace MagentoConnect.Controllers.Magento
 			var client = new RestClient(endpoint);
 			var request = new RestRequest(Method.GET);
 
-			request.AddHeader("Authorization", string.Format("Bearer {0}", MagentoAuthToken));
+			request.AddHeader("Authorization", string.Format("Bearer {0}", AuthToken));
 			request.AddHeader("Content-Type", "application/json");
 
 			var response = client.Execute(request);

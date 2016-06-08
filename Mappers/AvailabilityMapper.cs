@@ -7,11 +7,11 @@ namespace MagentoConnect.Mappers
 {
 	public class AvailabilityMapper : BaseMapper
 	{
-		private static AvailabilityController _eaAvailabilityController;
+		private static IAvailabilityController _eaAvailabilityController;
 
-		public AvailabilityMapper(string magentoAuthToken, string eaAuthToken) : base(magentoAuthToken, eaAuthToken)
+		public AvailabilityMapper(IAvailabilityController availabilityController)
 		{
-			_eaAvailabilityController = new AvailabilityController(eaAuthToken);
+			_eaAvailabilityController = availabilityController;
 		}
 
 		/// <summary>

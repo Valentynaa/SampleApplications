@@ -7,13 +7,13 @@ using System.IO;
 
 namespace MagentoConnect.Controllers.EndlessAisle
 {
-	public class AssetsController : BaseController
+	public class AssetsController : BaseController, IAssetsController
 	{
-		public static string EndlessAisleAuthToken;
+		public string AuthToken { get; }
 
 		public AssetsController(string eaAuthToken)
 		{
-			EndlessAisleAuthToken = eaAuthToken;
+			AuthToken = eaAuthToken;
 		}
 
 		/**
@@ -30,7 +30,7 @@ namespace MagentoConnect.Controllers.EndlessAisle
 			var client = new RestClient(endpoint);
 			var request = new RestRequest(Method.POST);
 
-			request.AddHeader("Authorization", string.Format("Bearer {0}", EndlessAisleAuthToken));
+			request.AddHeader("Authorization", string.Format("Bearer {0}", AuthToken));
 			request.AddHeader("Accept", "application/json");
 			request.AddHeader("Content-Type", "multipart/form-data");
 
@@ -59,7 +59,7 @@ namespace MagentoConnect.Controllers.EndlessAisle
 			var client = new RestClient(endpoint);
 			var request = new RestRequest(Method.PUT);
 
-			request.AddHeader("Authorization", string.Format("Bearer {0}", EndlessAisleAuthToken));
+			request.AddHeader("Authorization", string.Format("Bearer {0}", AuthToken));
 			request.AddHeader("Accept", "application/json");
 			request.AddHeader("Content-Type", "application/json");
 
@@ -85,7 +85,7 @@ namespace MagentoConnect.Controllers.EndlessAisle
 			var client = new RestClient(endpoint);
 			var request = new RestRequest(Method.GET);
 
-			request.AddHeader("Authorization", string.Format("Bearer {0}", EndlessAisleAuthToken));
+			request.AddHeader("Authorization", string.Format("Bearer {0}", AuthToken));
 			request.AddHeader("Accept", "application/json");
 			request.AddHeader("Content-Type", "application/json");
 			

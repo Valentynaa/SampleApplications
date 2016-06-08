@@ -1,33 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
 using MagentoConnect;
+using MagentoConnect.Controllers.EndlessAisle;
 using MagentoConnect.Mappers;
 using MagentoConnect.Models.Magento.Products;
 using MagentoConnect.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
+using Tests.MockObjects.Controllers.EndlessAisle;
+using Tests.MockObjects.Controllers.Magento;
 using Tests.Utilities;
 
 namespace Tests.Mappers
 {
-    /// <summary>
-    /// This suite ensures the FieldMapper is working correctly
-    /// </summary>
+	/// <summary>
+	/// This suite ensures the FieldMapper is working correctly
+	/// 
+	/// NOTE:
+	///		This class does NOT use actual calls to the APIs and instead relies on mock controllers
+	/// </summary>
 	[TestClass]
 	public class FieldMapperTests
 	{
-        //IMPORTANT: Before you can run these tests, ensure the values below are replaced with values from Endless Aisle
-        private const int EaManufacturerId = 9829;
+		//IMPORTANT: Before you can run these tests, ensure the values below are replaced with values from Endless Aisle
+		private const int EaManufacturerId = 9829;	//Must match EA manufacturer in App.config
+
 		private FieldMapper _fieldMapper;
 		private ProductResource _magentoTestProduct;
 
 		[TestInitialize]
 		public void SetUp()
 		{
-			var eaAuthToken = App.GetEaAuthToken();
-			var magentoAuthToken = App.GetMagentoAuthToken();
-			_fieldMapper = new FieldMapper(magentoAuthToken, eaAuthToken);
-			_magentoTestProduct = TestHelper.TestProduct;
+			_fieldMapper = new FieldMapper(new MockProductLibraryController(), new MockProductController(), new MockFieldDefinitionController(), new MockCustomAttributesController());
+			_magentoTestProduct = TestHelper.MockTestProduct;
 		}
 
 		/// <summary>
@@ -66,7 +71,7 @@ namespace Tests.Mappers
 		[TestMethod]
 		public void FieldMapper_GetMatchingManufacturer_VerfiyManufacturer()
 		{
-			Assert.IsTrue(_fieldMapper.GetMatchingManufacturer(_magentoTestProduct.custom_attributes) == EaManufacturerId);
+			Assert.AreEqual(EaManufacturerId, _fieldMapper.GetMatchingManufacturer(_magentoTestProduct.custom_attributes));
 		}
 
 		/// <summary>

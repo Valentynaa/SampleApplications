@@ -6,11 +6,11 @@ namespace MagentoConnect.Mappers
 {
 	public class PricingMapper : BaseMapper
 	{
-		private static PricingController _eaPricingController;
+		private static IPricingController _eaPricingController;
 
-		public PricingMapper(string magentoAuthToken, string eaAuthToken) : base(magentoAuthToken, eaAuthToken)
+		public PricingMapper(IPricingController pricingController)
 		{
-			_eaPricingController = new PricingController(eaAuthToken);
+			_eaPricingController = pricingController;
 		}
 		
 		/// <summary>
@@ -23,7 +23,7 @@ namespace MagentoConnect.Mappers
 			if (catalogItemId == null)
 				throw new Exception("A catalogItemId is required to upsert pricing.");
 
-			_eaPricingController.CreatePricingResourceItem(new PricingResource(), catalogItemId, price);
+			_eaPricingController.CreatePricingResourceItem(new PricingResource(), catalogItemId, price, false);
 		}
 	}
 }

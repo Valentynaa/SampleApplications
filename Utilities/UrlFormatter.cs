@@ -158,16 +158,6 @@ namespace MagentoConnect.Utilities
 		}
 
 		/**
-		 * @param   attributeId     Attribute identifier
-		 *
-		 * @return  string          Url needed to get attribute information in Magento
-		 */
-		public string MagentoAttributeUrl(string attributeId)
-		{
-			return string.Format("{0}rest/V1/products/attributes/{1}", MagentoUrl, attributeId);
-		}
-
-		/**
 		 * @param   property    Property to search by
 		 * @param   value       Value to search for
 		 * @param   condition   Condition. See http://devdocs.magento.com/guides/v2.0/get-started/usage.html for a list of acceptable values

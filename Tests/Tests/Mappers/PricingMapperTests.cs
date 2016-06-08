@@ -2,14 +2,18 @@
 using MagentoConnect;
 using MagentoConnect.Mappers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Tests.MockObjects.Controllers.EndlessAisle;
 
 namespace Tests.Mappers
 {
-    /// <summary>
-    /// This suite ensures the PricingMapper is working correctly
-    /// </summary>
+	/// <summary>
+	/// This suite ensures the PricingMapper is working correctly
+	/// 
+	/// NOTE:
+	///		This class does NOT use actual calls to the APIs and instead relies on mock controllers
+	/// </summary>
 
-    [TestClass]
+	[TestClass]
 	public class PricingMapperTests
 	{
 		private PricingMapper _pricingMapper;
@@ -18,9 +22,7 @@ namespace Tests.Mappers
 		[TestInitialize]
 		public void SetUp()
 		{
-			var eaAuthToken = App.GetEaAuthToken();
-			var magentoAuthToken = App.GetMagentoAuthToken();
-			_pricingMapper = new PricingMapper(magentoAuthToken, eaAuthToken);
+			_pricingMapper = new PricingMapper(new MockPricingController());
 		}
 
 		/// <summary>

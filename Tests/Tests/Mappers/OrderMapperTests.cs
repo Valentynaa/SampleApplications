@@ -3,36 +3,35 @@ using System.Linq;
 using MagentoConnect;
 using MagentoConnect.Mappers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Tests.MockObjects.Controllers.EndlessAisle;
+using Tests.MockObjects.Controllers.Magento;
 
 namespace Tests.Mappers
 {
 
-    /// <summary>
-    /// This suite ensures the OrderMapper is working correctly
-    /// </summary>
-    [TestClass]
+	/// <summary>
+	/// This suite ensures the OrderMapper is working correctly
+	/// 
+	/// NOTE:
+	///		This class does NOT use actual calls to the APIs and instead relies on mock controllers
+	/// </summary>
+	[TestClass]
 	public class OrderMapperTests
 	{
-        //IMPORTANT: Before you can run these tests, ensure the values below are replaced with ones from your Magento system
-        private const int CartId = 3;
+		private readonly int _cartId = MockCartController.CartId;
 
-        //IMPORTANT: Before you can run these tests, ensure the values below are replaced with ones from Endless Aisle
-        private const string OrderId = "2f471f62-411a-412a-89c9-5a5f4d9184be";
-
-        private OrderMapper _orderMapper;
+		private OrderMapper _orderMapper;
 		private CustomerMapper _customerMapper;
 		private EntityMapper _entityMapper;
-		private DateTime _filterDate;
+		private int _orderItemsCount;
 
 		[TestInitialize]
 		public void SetUp()
 		{
-			var eaAuthToken = App.GetEaAuthToken();
-			var magentoAuthToken = App.GetMagentoAuthToken();
-			_orderMapper = new OrderMapper(magentoAuthToken, eaAuthToken);
-			_customerMapper = new CustomerMapper(magentoAuthToken, eaAuthToken);
-			_entityMapper = new EntityMapper(magentoAuthToken, eaAuthToken);
-			_filterDate = new DateTime(2015, 12, 13);
+			_orderMapper = new OrderMapper(new MockOrdersController(), new MockCatalogsController(), new MockCartController(), new MockProductController());
+			_customerMapper = new CustomerMapper(new MockCustomerController());
+			_entityMapper = new EntityMapper(new MockEntitiesController(), new MockRegionController());
+			_orderItemsCount = MockOrdersController.OrderItemCount;
 		}
 
 		/// <summary>
@@ -50,17 +49,17 @@ namespace Tests.Mappers
 		[TestMethod]
 		public void OrderMapper_AddOrderItemsToCart()
 		{
-			_orderMapper.AddOrderItemsToCart(OrderId, CartId);
+			_orderMapper.AddOrderItemsToCart(new Guid().ToString(), _cartId);
 		}
 
 		/// <summary>
 		/// This test ensures that an exception is thrown for an invalid order ID
 		/// </summary>
 		[TestMethod]
-		[ExpectedException(typeof(Exception))]
+		[ExpectedException(typeof(ArgumentException))]
 		public void OrderMapper_AddOrderItemsToCart_InvalidOrderId()
 		{
-			_orderMapper.AddOrderItemsToCart("xxx", CartId);
+			_orderMapper.AddOrderItemsToCart("xxx", _cartId);
 		}
 
 		/// <summary>
@@ -69,10 +68,8 @@ namespace Tests.Mappers
 		[TestMethod]
 		public void OrderMapper_GetEaOrdersCreatedAfter()
 		{
-			var ordersAllTime = _orderMapper.GetEaOrdersCreatedAfter(DateTime.MinValue).ToList();
-			var ordersFiltered = _orderMapper.GetEaOrdersCreatedAfter(_filterDate).ToList();
-			Assert.IsTrue(ordersFiltered.Count < ordersAllTime.Count);
-			Assert.AreEqual(true, !ordersFiltered.Any(x => x.CreatedDateUtc < _filterDate));
+			var orders = _orderMapper.GetEaOrdersCreatedAfter(DateTime.MinValue).ToList();
+			Assert.AreEqual(_orderItemsCount, orders.Count);
 		}
 
 		/// <summary>
@@ -91,19 +88,9 @@ namespace Tests.Mappers
 		[TestMethod]
 		public void OrderMapper_SetShippingAndBillingInformationForCart()
 		{
-			_orderMapper.SetShippingAndBillingInformationForCart(CartId, _entityMapper.MagentoRegion, _entityMapper.EaLocation, _customerMapper.MagentoCustomer);
+			_orderMapper.SetShippingAndBillingInformationForCart(_cartId, _entityMapper.MagentoRegion, _entityMapper.EaLocation, _customerMapper.MagentoCustomer);
 		}
-
-		/// <summary>
-		/// This test ensures that an exception occurs when a cart unable to have shipping information set is selected
-		/// </summary>
-		[TestMethod]
-		[ExpectedException(typeof(Exception))]
-		public void OrderMapper_SetShippingAndBillingInformationForCart_InvalidCart()
-		{
-			_orderMapper.SetShippingAndBillingInformationForCart(1, _entityMapper.MagentoRegion, _entityMapper.EaLocation, _customerMapper.MagentoCustomer);
-		}
-
+		
 		/// <summary>
 		/// This test ensures that an exception is thrown for an invalid order ID
 		/// </summary>
@@ -112,7 +99,7 @@ namespace Tests.Mappers
 		{
 			var cartIdForOrder = _orderMapper.CreateCustomerCart();
 
-			_orderMapper.AddOrderItemsToCart(OrderId, cartIdForOrder);
+			_orderMapper.AddOrderItemsToCart(new Guid().ToString(), cartIdForOrder);
 			_orderMapper.SetShippingAndBillingInformationForCart(cartIdForOrder, _entityMapper.MagentoRegion, _entityMapper.EaLocation, _customerMapper.MagentoCustomer);
 			_orderMapper.CreateOrderForCart(cartIdForOrder);
 		}
