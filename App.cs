@@ -1,15 +1,15 @@
-﻿using System;
+﻿using MagentoConnect.Controllers;
+using MagentoConnect.Controllers.EndlessAisle;
+using MagentoConnect.Controllers.Magento;
+using MagentoConnect.Mappers;
+using MagentoConnect.Models.Authentication;
+using MagentoConnect.Models.EndlessAisle.ProductLibrary;
+using MagentoConnect.Models.Magento.Products;
+using MagentoConnect.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using MagentoConnect.Controllers;
-using MagentoConnect.Controllers.EndlessAisle;
-using MagentoConnect.Controllers.Magento;
-using MagentoConnect.Models.Magento.Products;
-using MagentoConnect.Utilities;
-using MagentoConnect.Models.EndlessAisle.ProductLibrary;
-using MagentoConnect.Mappers;
-using MagentoConnect.Models.Authentication;
 
 namespace MagentoConnect
 {
@@ -44,7 +44,6 @@ namespace MagentoConnect
 			var assetsController = controllerFactory.CreateController(ControllerType.Assets) as AssetsController;
 			var availabilityController = controllerFactory.CreateController(ControllerType.Availability) as AvailabilityController;
 			var catalogsController = controllerFactory.CreateController(ControllerType.Catalogs) as CatalogsController;
-			var classificationContoller = controllerFactory.CreateController(ControllerType.ClassificationTree) as ClassificationTreeController;
 			var entitiesController = controllerFactory.CreateController(ControllerType.Entities) as EntitiesController;
 			var fieldController = controllerFactory.CreateController(ControllerType.FieldDefinition) as FieldDefinitionController;
 			var ordersController = controllerFactory.CreateController(ControllerType.Orders) as OrdersController;
@@ -52,7 +51,6 @@ namespace MagentoConnect
 			var productLibraryController = controllerFactory.CreateController(ControllerType.ProductLibrary) as ProductLibraryController;
 
 			var cartController = controllerFactory.CreateController(ControllerType.Cart) as CartController;
-			var categoryController = controllerFactory.CreateController(ControllerType.Category) as CategoryController;
 			var attributesController = controllerFactory.CreateController(ControllerType.CustomAttributes) as CustomAttributesController;
 			var customerController = controllerFactory.CreateController(ControllerType.Customer) as CustomerController;
 			var productController = controllerFactory.CreateController(ControllerType.Product) as ProductController;

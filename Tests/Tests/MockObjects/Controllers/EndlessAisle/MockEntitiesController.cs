@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using MagentoConnect.Controllers.EndlessAisle;
+﻿using MagentoConnect.Controllers.EndlessAisle;
 using MagentoConnect.Models.EndlessAisle.Entities;
+using System;
+using System.Collections.Generic;
 
 namespace Tests.MockObjects.Controllers.EndlessAisle
 {
-	public class MockEntitiesController : IEntitiesController
+	public class MockEntitiesController : BaseMockController, IEntitiesController
 	{
 		public List<ManufacturerResource> GetAllManufacturers()
 		{
@@ -90,14 +90,6 @@ namespace Tests.MockObjects.Controllers.EndlessAisle
 				LastModifiedUtc = null,
 				TypeId = 95
 			};
-		}
-
-		public string AuthToken
-		{
-			get
-			{
-				return "WHdvc0h9b3NYQW9zWHZvc1h2JSYBAyc_PhRWBSAYLUFsIBkSMEA9MRYVWAcsPCQQaD8NJiBPLSUeFVgXGjEBJA4bX0EaBBtAOR8I";
-			}
 		}
 	}
 }

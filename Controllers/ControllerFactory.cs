@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using MagentoConnect.Controllers.EndlessAisle;
+﻿using MagentoConnect.Controllers.EndlessAisle;
 using MagentoConnect.Controllers.Magento;
-using MagentoConnect.Exceptions;
+using System;
+using System.Collections.Generic;
 
 namespace MagentoConnect.Controllers
 {
@@ -11,18 +9,18 @@ namespace MagentoConnect.Controllers
 	{
 		Assets,
 		Availability,
+		Cart,
 		Catalogs,
+		Category,
 		ClassificationTree,
+		CustomAttributes,
+		Customer,
 		Entities,
 		FieldDefinition,
 		Orders,
 		Pricing,
-		ProductLibrary,
-		Cart,
-		Category,
-		CustomAttributes,
-		Customer,
 		Product,
+		ProductLibrary,
 		Region
 	}
 

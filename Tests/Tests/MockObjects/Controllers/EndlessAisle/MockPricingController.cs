@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using MagentoConnect.Controllers.EndlessAisle;
+﻿using MagentoConnect.Controllers.EndlessAisle;
 using MagentoConnect.Models.EndlessAisle.Pricing;
+using System;
 
 namespace Tests.MockObjects.Controllers.EndlessAisle
 {
-	public class MockPricingController : IPricingController
+	public class MockPricingController : BaseMockController, IPricingController
 	{
 		public PricingResource CreatePricingResourceItem(PricingResource pricing, string catalogItemId, decimal regularPrice, bool discountable = false)
 		{
@@ -15,14 +14,6 @@ namespace Tests.MockObjects.Controllers.EndlessAisle
 			pricing.EntityId = 14192;
 			pricing.IsDiscountable = discountable;
 			return pricing;
-		}
-
-		public string AuthToken
-		{
-			get
-			{
-				return "WHdvc0h9b3NYQW9zWHZvc1h2JSYBAyc_PhRWBSAYLUFsIBkSMEA9MRYVWAcsPCQQaD8NJiBPLSUeFVgXGjEBJA4bX0EaBBtAOR8I";
-			}
 		}
 	}
 }

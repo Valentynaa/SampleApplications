@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MagentoConnect.Controllers.EndlessAisle;
+﻿using MagentoConnect.Controllers.EndlessAisle;
 using MagentoConnect.Models.EndlessAisle.ClassificationTree;
+using System.Collections.Generic;
 
 namespace Tests.MockObjects.Controllers.EndlessAisle
 {
-	public class MockClassificationTreeController : IClassificationTreeController
+	public class MockClassificationTreeController : BaseMockController, IClassificationTreeController
 	{
 		public ClassificationTreeResource GetClassificationTree(int classificationTreeId)
 		{
@@ -25,14 +21,6 @@ namespace Tests.MockObjects.Controllers.EndlessAisle
 		public int GetClassificationById(int classificationTreeId, int classificationId)
 		{
 			return 1;
-		}
-
-		public string AuthToken
-		{
-			get
-			{
-				return "WHdvc0h9b3NYQW9zWHZvc1h2JSYBAyc_PhRWBSAYLUFsIBkSMEA9MRYVWAcsPCQQaD8NJiBPLSUeFVgXGjEBJA4bX0EaBBtAOR8I";
-			}
 		}
 	}
 }

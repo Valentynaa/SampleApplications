@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using MagentoConnect.Controllers.EndlessAisle;
+﻿using MagentoConnect.Controllers.EndlessAisle;
 using MagentoConnect.Models.EndlessAisle.ProductLibrary;
 using MagentoConnect.Models.EndlessAisle.ProductLibrary.Projections;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
 
 namespace Tests.MockObjects.Controllers.EndlessAisle
 {
-	public class MockProductLibraryController : IProductLibraryController
+	public class MockProductLibraryController : BaseMockController, IProductLibraryController
 	{
 		public ProductDetailsResource GetProductBySlug(string slug)
 		{
@@ -212,14 +211,6 @@ namespace Tests.MockObjects.Controllers.EndlessAisle
 			{
 				VariationId = productDocumentId
 			};
-		}
-
-		public string AuthToken
-		{
-			get
-			{
-				return "WHdvc0h9b3NYQW9zWHZvc1h2JSYBAyc_PhRWBSAYLUFsIBkSMEA9MRYVWAcsPCQQaD8NJiBPLSUeFVgXGjEBJA4bX0EaBBtAOR8I";
-			}
 		}
 	}
 }

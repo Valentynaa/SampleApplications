@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MagentoConnect.Controllers.EndlessAisle;
+﻿using MagentoConnect.Controllers.EndlessAisle;
 using MagentoConnect.Models.EndlessAisle.ProductLibrary;
 using MagentoConnect.Models.EndlessAisle.ProductLibrary.Projections;
+using System;
 
 namespace Tests.MockObjects.Controllers.EndlessAisle
 {
-	public class MockAssetsController : IAssetsController
+	public class MockAssetsController : BaseMockController, IAssetsController
 	{
 		public AssetResource CreateAsset(string path)
 		{
@@ -39,14 +35,6 @@ namespace Tests.MockObjects.Controllers.EndlessAisle
 				MimeType = "image/jpeg",
 				Name = "TestImage.jpg"
 			};
-		}
-
-		public string AuthToken
-		{
-			get
-			{
-				return "WHdvc0h9b3NYQW9zWHZvc1h2JSYBAyc_PhRWBSAYLUFsIBkSMEA9MRYVWAcsPCQQaD8NJiBPLSUeFVgXGjEBJA4bX0EaBBtAOR8I";
-			}
 		}
 	}
 }

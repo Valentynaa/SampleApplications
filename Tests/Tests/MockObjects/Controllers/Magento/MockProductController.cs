@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using MagentoConnect.Controllers.Magento;
+﻿using MagentoConnect.Controllers.Magento;
 using MagentoConnect.Models.Magento.Inventory;
 using MagentoConnect.Models.Magento.Products;
 using MagentoConnect.Utilities;
+using System;
+using System.Collections.Generic;
 using OptionResource = MagentoConnect.Models.Magento.Products.OptionResource;
 
 namespace Tests.MockObjects.Controllers.Magento
 {
-	public class MockProductController : IProductController
+	public class MockProductController : BaseMockController, IProductController
 	{
 		public ProductResource GetProductBySku(string productSku)
 		{
@@ -200,14 +200,6 @@ namespace Tests.MockObjects.Controllers.Magento
 				manage_stock = true,
 				stock_status_changed_auto = 0
 			};
-		}
-
-		public string AuthToken
-		{
-			get
-			{
-				return "WHdvc0h9b3NYQW9zWHZvc1h2JSYBAyc_PhRWBSAYLUFsIBkSMEA9MRYVWAcsPCQQaD8NJiBPLSUeFVgXGjEBJA4bX0EaBBtAOR8I";
-			}
 		}
 	}
 }

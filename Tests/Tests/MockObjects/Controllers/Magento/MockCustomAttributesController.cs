@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using MagentoConnect.Controllers.Magento;
+﻿using MagentoConnect.Controllers.Magento;
 using MagentoConnect.Models.Magento.CustomAttributes;
+using System.Collections.Generic;
 
 namespace Tests.MockObjects.Controllers.Magento
 {
-	public class MockCustomAttributesController : ICustomAttributesController
+	public class MockCustomAttributesController : BaseMockController, ICustomAttributesController
 	{
 		/// <summary>
 		/// ID for a mapped color in GetCustomAttributeIfExists
@@ -106,14 +105,6 @@ namespace Tests.MockObjects.Controllers.Magento
 				default_value = "213",
 				is_unique = "0"
 			};
-		}
-
-		public string AuthToken
-		{
-			get
-			{
-				return "WHdvc0h9b3NYQW9zWHZvc1h2JSYBAyc_PhRWBSAYLUFsIBkSMEA9MRYVWAcsPCQQaD8NJiBPLSUeFVgXGjEBJA4bX0EaBBtAOR8I";
-			}
 		}
 	}
 }

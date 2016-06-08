@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MagentoConnect.Controllers.Magento;
+﻿using MagentoConnect.Controllers.Magento;
 using MagentoConnect.Models.Magento.Category;
+using System;
 
 namespace Tests.MockObjects.Controllers.Magento
 {
-	public class MockCategoryController : ICategoryController
+	public class MockCategoryController : BaseMockController, ICategoryController
 	{
 		public CategoryResource GetCategory(int categoryId)
 		{
@@ -25,14 +21,6 @@ namespace Tests.MockObjects.Controllers.Magento
 				path = "1",
 				position = 0
 			};
-		}
-
-		public string AuthToken
-		{
-			get
-			{
-				return "WHdvc0h9b3NYQW9zWHZvc1h2JSYBAyc_PhRWBSAYLUFsIBkSMEA9MRYVWAcsPCQQaD8NJiBPLSUeFVgXGjEBJA4bX0EaBBtAOR8I";
-			}
 		}
 	}
 }

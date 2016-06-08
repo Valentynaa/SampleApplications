@@ -78,6 +78,7 @@
     <Compile Include="Mappers\FieldMapperTests.cs" />
     <Compile Include="Mappers\PricingMapperTests.cs" />
     <Compile Include="Mappers\ProductMapperTests.cs" />
+    <Compile Include="MockObjects\Controllers\BaseMockController.cs" />
     <Compile Include="MockObjects\Controllers\EndlessAisle\MockAssetsController.cs" />
     <Compile Include="MockObjects\Controllers\EndlessAisle\MockAvailabilityController.cs" />
     <Compile Include="MockObjects\Controllers\EndlessAisle\MockCatalogsController.cs" />

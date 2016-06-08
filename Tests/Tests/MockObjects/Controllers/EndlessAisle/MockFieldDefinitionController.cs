@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using MagentoConnect.Controllers.EndlessAisle;
+﻿using MagentoConnect.Controllers.EndlessAisle;
 using MagentoConnect.Models.EndlessAisle.FieldDefinitions;
+using System.Collections.Generic;
 
 namespace Tests.MockObjects.Controllers.EndlessAisle
 {
-	public class MockFieldDefinitionController : IFieldDefinitionController
+	public class MockFieldDefinitionController : BaseMockController, IFieldDefinitionController
 	{
 		public FieldDefinitionResource GetAFieldDefinition(int fieldDefinitionId)
 		{
@@ -49,14 +48,6 @@ namespace Tests.MockObjects.Controllers.EndlessAisle
 					Options = new List<OptionValueResource>()
 				}
 			};
-		}
-
-		public string AuthToken
-		{
-			get
-			{
-				return "WHdvc0h9b3NYQW9zWHZvc1h2JSYBAyc_PhRWBSAYLUFsIBkSMEA9MRYVWAcsPCQQaD8NJiBPLSUeFVgXGjEBJA4bX0EaBBtAOR8I";
-			}
 		}
 	}
 }

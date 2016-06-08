@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using MagentoConnect.Controllers.Magento;
+﻿using MagentoConnect.Controllers.Magento;
 using MagentoConnect.Models.Magento.Cart;
 using MagentoConnect.Models.Magento.Customer;
+using System.Collections.Generic;
 
 namespace Tests.MockObjects.Controllers.Magento
 {
-	public class MockCartController : ICartController
+	public class MockCartController : BaseMockController, ICartController
 	{
 		/// <summary>
 		/// Cart ID used for tests
@@ -14,6 +13,38 @@ namespace Tests.MockObjects.Controllers.Magento
 		public static int CartId
 		{
 			get { return 3; }
+		}
+
+		/// <summary>
+		/// Region ID used for cart tests
+		/// </summary>
+		public static int MappedRegionId
+		{
+			get { return 77; }
+		}
+
+		/// <summary>
+		/// Region ID used for cart tests
+		/// </summary>
+		public static string ItemSku
+		{
+			get { return "Configurable Product"; }
+		}
+
+		/// <summary>
+		/// Payment method used for cart tests
+		/// </summary>
+		public static string PaymentMethod
+		{
+			get { return "checkmo"; }
+		}
+
+		/// <summary>
+		/// Shipping method used for cart tests
+		/// </summary>
+		public static string ShippingMethod
+		{
+			get { return "flatrate"; }
 		}
 
 		public int CreateCart(int customerId)
@@ -193,14 +224,6 @@ namespace Tests.MockObjects.Controllers.Magento
 					product_type = "simple"
 				}
 			};
-		}
-
-		public string AuthToken
-		{
-			get
-			{
-				return "WHdvc0h9b3NYQW9zWHZvc1h2JSYBAyc_PhRWBSAYLUFsIBkSMEA9MRYVWAcsPCQQaD8NJiBPLSUeFVgXGjEBJA4bX0EaBBtAOR8I";
-			}
 		}
 	}
 }

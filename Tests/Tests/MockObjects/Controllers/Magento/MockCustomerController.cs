@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using MagentoConnect.Controllers.Magento;
+﻿using MagentoConnect.Controllers.Magento;
 using MagentoConnect.Models.Magento.Customer;
+using System.Collections.Generic;
 
 namespace Tests.MockObjects.Controllers.Magento
 {
-	public class MockCustomerController : ICustomerController
+	public class MockCustomerController : BaseMockController, ICustomerController
 	{
 		public CustomerResource GetCustomer(int customerId)
 		{
@@ -38,14 +37,6 @@ namespace Tests.MockObjects.Controllers.Magento
 					}
 				}
 			};
-		}
-
-		public string AuthToken
-		{
-			get
-			{
-				return "WHdvc0h9b3NYQW9zWHZvc1h2JSYBAyc_PhRWBSAYLUFsIBkSMEA9MRYVWAcsPCQQaD8NJiBPLSUeFVgXGjEBJA4bX0EaBBtAOR8I";
-			}
 		}
 	}
 }

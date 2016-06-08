@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using MagentoConnect.Controllers.Magento;
+﻿using MagentoConnect.Controllers.Magento;
 using MagentoConnect.Models.Magento.Country;
+using System.Collections.Generic;
 
 namespace Tests.MockObjects.Controllers.Magento
 {
-	public class MockRegionController : IRegionController
+	public class MockRegionController : BaseMockController, IRegionController
 	{
 		public IEnumerable<CountryResource> GetCountries()
 		{
@@ -54,14 +53,6 @@ namespace Tests.MockObjects.Controllers.Magento
 					}
 				}
 			};
-		}
-
-		public string AuthToken
-		{
-			get
-			{
-				return "WHdvc0h9b3NYQW9zWHZvc1h2JSYBAyc_PhRWBSAYLUFsIBkSMEA9MRYVWAcsPCQQaD8NJiBPLSUeFVgXGjEBJA4bX0EaBBtAOR8I";
-			}
 		}
 	}
 }
