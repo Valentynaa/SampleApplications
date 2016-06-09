@@ -7,3 +7,8 @@ TestingApp.config
 Tests/Tests/obj/Debug/*
 Tests/Tests/bin/Debug/
 Tests/Tests/App.config
+Magento/bin/*
+Magento/packages/*
+Magento/obj/*
+Magento/Tests/Tests/bin
+Magento/Tests/Tests/obj
