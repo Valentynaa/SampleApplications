@@ -36,7 +36,6 @@ Specifically, this project will demonstrate how to:
 ## Important Notes
 
 * This project uses the [Magento REST API](http://devdocs.magento.com/guides/v2.0/rest/bk-rest.html) using `JSON`. SOAP and XML are **not** covered in the scope of this project
-* Comments follow the [Javadoc](http://www.oracle.com/technetwork/articles/java/index-137868.html) standard
 
 ## Getting Started
 

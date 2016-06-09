@@ -1,6 +1,6 @@
 # Getting Started
 
-This guide goes over everything needed to run [MagentoSync](https://github.com/iQmetrix/SampleApplications/Magento).
+This guide goes over everything needed to run MagentoSync.
 
 The audience for this guide is intended to be developers interested in extending MagentoSync.
 
