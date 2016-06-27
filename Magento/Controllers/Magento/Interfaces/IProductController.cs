@@ -1,9 +1,8 @@
 using System.Collections.Generic;
-using MagentoSync.Models.Magento.CustomAttributes;
 using MagentoSync.Models.Magento.Inventory;
 using MagentoSync.Models.Magento.Products;
 
-namespace MagentoSync.Controllers.Magento
+namespace MagentoSync.Controllers.Magento.Interfaces
 {
 	public interface IProductController : IController
 	{

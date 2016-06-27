@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MagentoSync.Controllers.Magento;
+﻿using MagentoSync.Controllers.Magento.Interfaces;
 using MagentoSync.Models.Magento.Customer;
 using MagentoSync.Utilities;
 

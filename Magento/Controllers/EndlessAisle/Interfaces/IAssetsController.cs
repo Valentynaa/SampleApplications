@@ -1,12 +1,10 @@
 using MagentoSync.Models.EndlessAisle.ProductLibrary;
-using MagentoSync.Models.EndlessAisle.ProductLibrary.Projections;
 
-namespace MagentoSync.Controllers.EndlessAisle
+namespace MagentoSync.Controllers.EndlessAisle.Interfaces
 {
 	public interface IAssetsController : IController
 	{
 		AssetResource CreateAsset(string path);
-		AssetResponse SetHeroShot(string slug, AssetResponse heroShotAsset);
 
 		/// <summary>
 		/// Gets an EA asset for an asset identifier

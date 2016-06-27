@@ -3,12 +3,9 @@ using MagentoSync.Controllers.EndlessAisle;
 using MagentoSync.Controllers.Magento;
 using MagentoSync.Mappers;
 using MagentoSync.Models.Authentication;
-using MagentoSync.Models.EndlessAisle.ProductLibrary;
 using MagentoSync.Models.Magento.Products;
 using MagentoSync.Utilities;
 using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 
 namespace MagentoSync
@@ -39,7 +36,7 @@ namespace MagentoSync
 			_cachedEaAuthToken = GetEaAuthToken();
 			_cachedMagentoAuthToken = GetMagentoAuthToken();
 
-			ControllerFactory controllerFactory = new ControllerFactory(_cachedMagentoAuthToken, _cachedEaAuthToken);
+			var controllerFactory = new ControllerFactory(_cachedMagentoAuthToken, _cachedEaAuthToken);
 
 			var assetsController = controllerFactory.CreateController(ControllerType.Assets) as AssetsController;
 			var availabilityController = controllerFactory.CreateController(ControllerType.Availability) as AvailabilityController;
@@ -57,10 +54,10 @@ namespace MagentoSync
 			var regionController = controllerFactory.CreateController(ControllerType.Region) as RegionController;
 
 			_productMapper = new ProductMapper(catalogsController, productLibraryController, productController);
-			_assetMapper = new AssetMapper(assetsController, productLibraryController);
+			_assetMapper = new AssetMapper(assetsController, productLibraryController, catalogsController);
 			_availabilityMapper = new AvailabilityMapper(availabilityController);
 			_colorMapper = new ColorMapper(attributesController, productLibraryController);
-			_fieldMapper = new FieldMapper(productLibraryController, productController, fieldController, attributesController);
+			_fieldMapper = new FieldMapper(productLibraryController, productController, fieldController, catalogsController, attributesController);
 			_pricingMapper = new PricingMapper(pricingController);
 			_orderMapper = new OrderMapper(ordersController, catalogsController, cartController, productController);
 			_entityMapper = new EntityMapper(entitiesController, regionController);
@@ -233,8 +230,8 @@ namespace MagentoSync
 		/// 
 		/// NOTE: 
 		///		This function requires you prepare the product by ensuring it has:
-		///		- Assigned Manufacturer that matches one in EA
 		///		- The first category must also be one defined in EA
+		///     - If manufacturer exists, it will be mapped to a manufacturer in EA
 		///		- If there are multiple Categories or Manufacturers, the first one will be used
 		///		- When the product is sucessfully created, an attribute (MappingCode) will be added to each Magento product
 		///		- If MULTIPLE images are provided, the BASE Magento image will be used as the hero shot
@@ -257,34 +254,20 @@ namespace MagentoSync
 				eaManufacturerId, fields, assets);
 
 			var slug = _productMapper.CalculateSlug(productDocumentId, null);
-
-			string catalogItemId;
+        
 			if (productMapping == null)
 			{
-				//Add newly created product library product to your catalog
-				catalogItemId = _productMapper.AddProductToEndlessAisle(slug);
+                //Add to your library
+                productMapping = _productMapper.AddProductToEndlessAisle(slug);
 
-				//Set the mapping SLUG on the product so we know it is mapped
-				_fieldMapper.CreateMappingForProduct(magentoProduct, slug);
-			}
-			else
-			{
-				catalogItemId = _productMapper.GetCatalogItemIdBySlug(slug);
+				//Set the mapping on the product so we know it is mapped
+				_fieldMapper.CreateMappingForProduct(magentoProduct, productMapping);
 			}
 
-			if (catalogItemId != null)
-			{
-				_pricingMapper.UpsertPricingForCatalogItem(catalogItemId, magentoProduct.price);
+		    _pricingMapper.UpsertPricingForCatalogItem(productMapping, magentoProduct.price);
 
-				//Create availability for product at company level
-				_availabilityMapper.UpsertAvailabilityForCatalogItem(catalogItemId, _productMapper.GetQuantityBySku(magentoProduct.sku));
-			}
-			else
-			{
-				Console.WriteLine(
-					"Product {0} unable to have its price or inventory updated since no catalog items could be found for mapping code {1}.",
-					magentoProduct.sku, slug);
-			}
+		    //Create availability for product at company level
+		    _availabilityMapper.UpsertAvailabilityForCatalogItem(productMapping, _productMapper.GetQuantityBySku(magentoProduct.sku));
 
 			//If we have colors defined, add it as a color definition (if its not already added)
 			var colorId = _colorMapper.GetMagentoColorAttribute(magentoProduct);
@@ -294,22 +277,13 @@ namespace MagentoSync
 				_colorMapper.UpsertColorDefinitions(productDocumentId, int.Parse(colorId));
 			}
 
-			SetHeroShot(magentoProduct, assets, slug);
-
 			return productDocumentId;
 		}
 
 		/// <summary>
 		/// This function provides an example of how to create a product structure in EA given a Magento SKU
 		/// This function specifically creates a Master Product with Variations from a *CONFIGURABLE* Magento Product
-		///
-		/// NOTE: 
-		///		This function requires you prepare the product by ensuring it has an
-		///		assigned Manufacturer that matches one in EA
-		///		The first category must also be one defined in EA
-		///		If there are multiple Categories or Manufacturers, the first one will be used
-		///		When the product is sucessfully created, an attribute (MappingCode) will be added to each Magento product
-		/// 
+		///	
 		/// LIMITATION: 
 		///		This app CANNOT remove child products from a variation if they are removed from a configurable product
 		/// </summary>
@@ -348,59 +322,19 @@ namespace MagentoSync
 				var slug = _productMapper.CalculateSlug(productDocumentId, variationId);
 				var productMapping = _fieldMapper.GetProductMapping(childProduct);
 
-				SetHeroShot(childProductObj, assets, slug);
-
-				string catalogItemId;
 				if (productMapping == null)
 				{
-					//Add to Endless Aisle
-					catalogItemId = _productMapper.AddProductToEndlessAisle(slug);
+                    //Add to Endless Aisle
+                    productMapping = _productMapper.AddProductToEndlessAisle(slug);
 
 					//Set the mapping on the product to make updating it easier next time
-					_fieldMapper.CreateMappingForProduct(childProduct, slug);
-				}
-				else
-				{
-					catalogItemId = _productMapper.GetCatalogItemIdBySlug(slug);
+					_fieldMapper.CreateMappingForProduct(childProduct, productMapping);
 				}
 
-				if (catalogItemId != null)
-				{
-					_pricingMapper.UpsertPricingForCatalogItem(catalogItemId, magentoProduct.price);
+				_pricingMapper.UpsertPricingForCatalogItem(productMapping, magentoProduct.price);
 
-					//Create availability for product at company level
-					_availabilityMapper.UpsertAvailabilityForCatalogItem(catalogItemId, _productMapper.GetQuantityBySku(magentoProduct.sku));
-				}
-				else
-				{
-					Console.WriteLine(
-						"Product {0} unable to have its price or inventory updated since no catalog items could be found for mapping code {1}.",
-						magentoProduct.sku, slug);
-				}
-			}
-		}
-		
-		/**
-		 * This function sets a hero shot
-		 * 
-		 * @param   magentoAssets   Magento assets
-		 * @paran   eaAssets        EA product assets
-		 * @param   slug            Identifier for a product in EA
-		 */
-		private static void SetHeroShot(ProductResource magentoProduct, IReadOnlyList<AssetResource> eaAssets, string slug)
-		{
-			var heroShot = _assetMapper.GetHeroShot(magentoProduct);
-
-			if (magentoProduct.media_gallery_entries == null || eaAssets == null || heroShot == null) return;
-			
-			var magentoPath = new UrlFormatter().MagentoCatalogAssetPath(ConfigReader.MagentoServerPath);
-			var heroShotImage = Image.FromFile(magentoPath + heroShot.file);
-			foreach (var asset in eaAssets)
-			{
-				if (ImageUtility.AreEqual(heroShotImage, _assetMapper.GetAssetImage(slug, asset)))
-				{
-					_assetMapper.SetHeroShot(slug, asset.Id);
-				}
+				//Create availability for product at company level
+				_availabilityMapper.UpsertAvailabilityForCatalogItem(productMapping, _productMapper.GetQuantityBySku(magentoProduct.sku));
 			}
 		}
 
@@ -435,14 +369,14 @@ namespace MagentoSync
 			return _cachedMagentoAuthToken;
 		}
 
-		/**
+        /**
 		 * Returns a string representing an authorization token for Endless Aisle
 		 * This value is required when creating any EA controllers
 		 * If there is a previously cached EA token, that will be returned instead
 		 * 
 		 * @return  _cachedEaAuthToken  An Endless Aisle authorization token
 		 */
-		public static string GetEaAuthToken()
+        public static string GetEaAuthToken()
 		{
 			if (!string.IsNullOrEmpty(_cachedEaAuthToken))
 			{

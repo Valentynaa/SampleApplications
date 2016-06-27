@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using MagentoSync.Controllers.Magento.Interfaces;
 using MagentoSync.Models.Magento.Country;
 using Newtonsoft.Json;
 using RestSharp;

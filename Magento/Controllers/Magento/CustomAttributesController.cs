@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using MagentoSync.Controllers.Magento.Interfaces;
 using MagentoSync.Models.Magento.CustomAttributes;
 using Newtonsoft.Json;
 using RestSharp;

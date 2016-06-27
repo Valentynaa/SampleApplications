@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using MagentoSync.Controllers.EndlessAisle.Interfaces;
 using MagentoSync.Models.EndlessAisle.ProductLibrary;
 using Newtonsoft.Json;
 using RestSharp;

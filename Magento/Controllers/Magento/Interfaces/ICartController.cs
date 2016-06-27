@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using MagentoSync.Models.Magento.Cart;
 
-namespace MagentoSync.Controllers.Magento
+namespace MagentoSync.Controllers.Magento.Interfaces
 {
 	public interface ICartController : IController
 	{

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MagentoSync.Controllers.EndlessAisle;
-using MagentoSync.Controllers.Magento;
+﻿using System.Linq;
+using MagentoSync.Controllers.EndlessAisle.Interfaces;
+using MagentoSync.Controllers.Magento.Interfaces;
 using MagentoSync.Models.EndlessAisle.Entities;
 using MagentoSync.Models.Magento.Country;
 
@@ -32,33 +28,21 @@ namespace MagentoSync.Mappers
 		{
 			get
 			{
-				if (_magentoRegion == null)
-				{
-					var countries = _magentoRegionController.GetCountries();
+			    if (_magentoRegion != null) return _magentoRegion;
+			    var countries = _magentoRegionController.GetCountries();
 
-					var country = countries.First(x => x.id == EaLocation.Address.CountryCode);
-					if (country.available_regions != null)
-					{
-						_magentoRegion = country.available_regions.First(x => x.code == EaLocation.Address.StateCode || x.code == EaLocation.Address.StateName);
-					}
-				}
-				return _magentoRegion;
+			    var country = countries.First(x => x.id == EaLocation.Address.CountryCode);
+			    if (country.available_regions != null)
+			    {
+			        _magentoRegion = country.available_regions.First(x => x.code == EaLocation.Address.StateCode || x.code == EaLocation.Address.StateName);
+			    }
+			    return _magentoRegion;
 			}
 		}
 		private RegionResource _magentoRegion;
 
 		//Endless Aisle location from App.config
-		public LocationResource EaLocation
-		{
-			get
-			{
-				if (_eaLocation == null)
-				{
-					_eaLocation = _eaEntitiesController.GetLocation();
-				}
-				return _eaLocation;
-			}
-		}
-		private LocationResource _eaLocation;
+		public LocationResource EaLocation => _eaLocation ?? (_eaLocation = _eaEntitiesController.GetLocation());
+	    private LocationResource _eaLocation;
 	}
 }

@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Globalization;
-using System.Linq;
-using MagentoSync.Controllers.Magento;
 using MagentoSync.Models.EndlessAisle.ProductLibrary;
 using MagentoSync.Models.Magento.CustomAttributes;
 using System.Collections.Generic;
-using MagentoSync.Controllers.EndlessAisle;
+using MagentoSync.Controllers.EndlessAisle.Interfaces;
+using MagentoSync.Controllers.Magento.Interfaces;
 using MagentoSync.Models.Magento.Products;
 using MagentoSync.Utilities;
 
@@ -15,15 +14,13 @@ namespace MagentoSync.Mappers
 	{
 		private readonly CustomAttributeResource _customAttributeColor;
 
-		private readonly ICustomAttributesController _magentoCustomAttributesController;
-		private readonly IProductLibraryController _eaProductController;
+	    private readonly IProductLibraryController _eaProductController;
 
 		public ColorMapper(ICustomAttributesController customAttributesController, IProductLibraryController productLibraryController)
 		{
-			_magentoCustomAttributesController = customAttributesController;
-			_eaProductController = productLibraryController;
+		    _eaProductController = productLibraryController;
 
-			_customAttributeColor = _magentoCustomAttributesController.GetCustomAttributeIfExists(ConfigReader.MagentoColorCode);
+			_customAttributeColor = customAttributesController.GetCustomAttributeIfExists(ConfigReader.MagentoColorCode);
 		}
 
 		/**
@@ -47,20 +44,25 @@ namespace MagentoSync.Mappers
 				GetLabelFromAttributeValue(_customAttributeColor.options, magentoColorId.ToString(CultureInfo.InvariantCulture)).ToString();
 			var existingColorDefinitions = _eaProductController.GetColorDefinitions(productDocumentId);
 
-			if (existingColorDefinitions != null)
-			{
-				//Check if the color is already defined - only compare name and color tags
-				foreach (var existingColorDef in existingColorDefinitions.ColorDefinitions)
-				{
-					if (colorName == existingColorDef.Name &&
-						Equals(colorTags, existingColorDef.ColorTagIds))
-					{
-						return existingColorDef.Id.ToString();
-					}
-				}
-			}
+		    if (existingColorDefinitions == null)
+		        return CreateColorDefinition(productDocumentId,
+		            new ColorDefinitionResource
+		            {
+		                ColorTagIds = colorTags,
+		                Name = colorName,
+		                Swatch = null
+		            }).Id.ToString();
+		    //Check if the color is already defined - only compare name and color tags
+		    foreach (var existingColorDef in existingColorDefinitions.ColorDefinitions)
+		    {
+		        if (colorName == existingColorDef.Name &&
+		            Equals(colorTags, existingColorDef.ColorTagIds))
+		        {
+		            return existingColorDef.Id.ToString();
+		        }
+		    }
 
-			//Create color definition
+		    //Create color definition
 			return CreateColorDefinition(productDocumentId,
 				new ColorDefinitionResource
 				{
@@ -120,7 +122,7 @@ namespace MagentoSync.Mappers
 
 			var colorObj = GetAttributeByCode(magentoProduct.custom_attributes, ConfigReader.MagentoColorCode);
 
-			return colorObj == null ? null : colorObj.ToString();
+			return colorObj?.ToString();
 		}
 	}
 }

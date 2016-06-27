@@ -1,7 +1,7 @@
-﻿using MagentoSync.Controllers.EndlessAisle;
-using MagentoSync.Models.EndlessAisle.Availability;
+﻿using MagentoSync.Models.EndlessAisle.Availability;
 using MagentoSync.Utilities;
 using System;
+using MagentoSync.Controllers.EndlessAisle.Interfaces;
 
 namespace MagentoSync.Mappers
 {

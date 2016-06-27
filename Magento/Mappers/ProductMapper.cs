@@ -1,6 +1,4 @@
-﻿using MagentoSync.Controllers.EndlessAisle;
-using MagentoSync.Controllers.Magento;
-using MagentoSync.Models.EndlessAisle.Catalog;
+﻿using MagentoSync.Models.EndlessAisle.Catalog;
 using MagentoSync.Models.EndlessAisle.ProductLibrary;
 using MagentoSync.Models.Magento.Products;
 using MagentoSync.Utilities;
@@ -8,7 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text.RegularExpressions;
+using MagentoSync.Controllers.EndlessAisle.Interfaces;
+using MagentoSync.Controllers.Magento.Interfaces;
 
 namespace MagentoSync.Mappers
 {
@@ -46,25 +45,27 @@ namespace MagentoSync.Mappers
 			return updatedProducts.items.Where(x => x.updated_at > updatedAfter);
 		}
 
-		/**
+        /**
 		  * This function creates a master product
 		  * 
 		  * @param  productMapping          Mapping value, can be null
 		  * @param  eaCategoryId            Identifier for a category in EA
 		  * @param  eaClassificationTreeId  Identifier for a classification tree in ea
-		  * @param  eaManufacturerId        Identifier for a manufactrer in EA
+		  * @param  eaManufacturerId        Identifier for a manufacturer in EA
 		  * @param  fields                  Fields representing changes to product details
 		  * @param  assets                  Assets for product
 		  *
 		  * @return int                     Identifier of a product document in EA
 		  */
-		public int UpsertMasterProduct(string productMapping, int eaCategoryId, int eaClassificationTreeId, int eaManufacturerId, List<FieldResource> fields, List<AssetResource> assets)
+        public int UpsertMasterProduct(string productMapping, int eaCategoryId, int eaClassificationTreeId, int? eaManufacturerId, List<FieldResource> fields, List<AssetResource> assets)
 		{
 			var productDocumentId = -1;
 
 			if (productMapping != null)
 			{
-				productDocumentId = _eaProductController.UpdateMasterProduct(GetProductDocumentIdFromSlug(productMapping), 
+			    var slug = _eaCatalogController.GetCatalogItem(productMapping).Slug;
+
+                productDocumentId = _eaProductController.UpdateMasterProduct(GetProductDocumentIdFromSlug(slug), 
 					new RevisionEditResource
 					{
 						FieldValues = fields,
@@ -82,10 +83,6 @@ namespace MagentoSync.Mappers
 						Id = eaCategoryId,
 						TreeId = eaClassificationTreeId
 					},
-					Manufacturer = new EntityRefResource
-					{
-						Id = eaManufacturerId
-					},
 					OwnerEntityId = ConfigReader.EaCompanyId,
 					RootRevision = new RootRevisionResource
 					{
@@ -93,6 +90,11 @@ namespace MagentoSync.Mappers
 						Assets = assets
 					}
 				};
+
+			    if (eaManufacturerId != null)
+			    {
+			        requestBody.Manufacturer = new EntityRefResource { Id = (int) eaManufacturerId };
+			    }
 
 				productDocumentId = _eaProductController.CreateMasterProduct(requestBody).Id;
 			}
@@ -120,9 +122,13 @@ namespace MagentoSync.Mappers
 			if (ProductHasMapping(magentoProduct))
 			{
 				//Get identifier of variation we are updating 
-				var mappingSlug =
+				var catalogItemId =
 					GetAttributeByCode(magentoProduct.custom_attributes, ConfigReader.MappingCode).ToString();
-				variationId = GetVariationIdFromSlug(mappingSlug);
+
+			    var slug = _eaCatalogController.GetCatalogItem(catalogItemId).Slug;
+
+				variationId = GetVariationIdFromSlug(slug);
+
 				Guid? colorDefGuid;
 
 				if (colorDefinitionId != null)
@@ -168,50 +174,13 @@ namespace MagentoSync.Mappers
 		 */
 		public string AddProductToEndlessAisle(string slug)
 		{
-			if (!Regex.IsMatch(slug, RegexPatterns.SlugPattern))
-				throw new Exception(string.Format("\"{0}\" is in an invalid slug format.", slug));
-
-			var catalogItem = new CatalogItemResource
+       		var catalogItem = new CatalogItemResource
 			{
 				Slug = slug
 			};
 
 			return _eaCatalogController.CreateCatalogItem(catalogItem).CatalogItemId.ToString();
 		}    
-
-		/**
-		 * This function will parse a product document and add it to your catalog in EA
-		 * 
-		 * @param   productDocumentId   Identifier of a ProductDocument
-		 *
-		 * @return  List<string>        Identifiers of created CatalogItems
-		 */
-		public List<string> AddProductHierarchyToEndlessAisle(int productDocumentId)
-		{
-			if (productDocumentId < 1)
-				throw new ArgumentOutOfRangeException(nameof(productDocumentId));
-
-			var createdCatalogItems = new List<string>();
-
-			var variationIds = GetVariationIdsForMasterProduct(productDocumentId);
-
-			if (!variationIds.Any() && variationIds.Count == 0)
-			{
-				//No variations? Add it to EA as a simple product
-				createdCatalogItems.Add(
-					AddProductToEndlessAisle(CalculateSlug(productDocumentId, null)));
-			}
-			else
-			{
-				//Variations? Add them to EA
-				createdCatalogItems.AddRange(
-					variationIds.Select(
-						variationId =>
-							AddProductToEndlessAisle(CalculateSlug(productDocumentId, variationId))));
-			}
-
-			return createdCatalogItems;
-		}
 
 		/**
 		 * Gets children of a configurable magento product
@@ -268,45 +237,6 @@ namespace MagentoSync.Mappers
 				throw new Exception(string.Format("Slug {0} is not associated with a variation!", slug));
 
 			return int.Parse(slug.Substring(slug.IndexOf("-", StringComparison.Ordinal) + 2));
-		}
-
-		/**
-		 * Gets Variations from a product structure
-		 * 
-		 * @param   productDocumentId               Identifier for a Product Document in EA
-		 *
-		 * @return  IList<RevisionGroupResource>    Revisions on the Product Document
-		 */
-		public List<int> GetVariationIdsForMasterProduct(int productDocumentId)
-		{
-			var revisionGroups = _eaProductController.GetProductHierarchy(productDocumentId).RevisionGroups;
-			var variationIds = new List<int>();
-
-			foreach (var group in revisionGroups)
-			{
-				if (@group.VariationId == null) continue;
-
-				if (!variationIds.Contains(@group.VariationId.Value))
-					variationIds.Add(@group.VariationId.Value);
-			}
-
-			return variationIds;
-		}
-
-		/// <summary>
-		/// Finds the catalog items that match the provided slug and returns the first item's catalogItemId.
-		/// 
-		/// NOTE: 
-		///		Multiple catalog items could correspond to a single slug, but for now only the first item
-		///		will have the pricing updated in EA.
-		/// </summary>
-		/// <param name="slug">Slug to find catalog items for.</param>
-		/// <returns>CatalogItemId of first item or null if no items are found.</returns>
-		public string GetCatalogItemIdBySlug(string slug)
-		{
-			var item = _eaCatalogController.GetCatalogItemsBySlug(slug).FirstOrDefault();
-			
-			return item?.CatalogItemId.ToString();
 		}
 
 		/// <summary>

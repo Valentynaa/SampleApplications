@@ -1,9 +1,8 @@
-﻿using System;
-using MagentoSync.Models.EndlessAisle.ProductLibrary;
-using MagentoSync.Models.EndlessAisle.ProductLibrary.Projections;
+﻿using MagentoSync.Models.EndlessAisle.ProductLibrary;
 using Newtonsoft.Json;
 using RestSharp;
 using System.IO;
+using MagentoSync.Controllers.EndlessAisle.Interfaces;
 
 namespace MagentoSync.Controllers.EndlessAisle
 {
@@ -42,35 +41,6 @@ namespace MagentoSync.Controllers.EndlessAisle
 			CheckStatusCode(response.StatusCode, System.Net.HttpStatusCode.Created);
 
 			return JsonConvert.DeserializeObject<AssetResource>(response.Content);
-		}
-		
-		/**
-		 * Sets the hero shot for a product
-		 * 
-		 * @param   slug            Identifier for a product in EA
-		 * @param   heroShotAsset   Object representing asset to become to new hero shot for the product  
-		 *
-		 * @return  AssetResource   Created asset
-		 */
-		public AssetResponse SetHeroShot(string slug, AssetResponse heroShotAsset)
-		{
-			var endpoint = UrlFormatter.EndlessAisleSetHeroShotUrl(slug);
-
-			var client = new RestClient(endpoint);
-			var request = new RestRequest(Method.PUT);
-
-			request.AddHeader("Authorization", string.Format("Bearer {0}", AuthToken));
-			request.AddHeader("Accept", "application/json");
-			request.AddHeader("Content-Type", "application/json");
-
-			request.AddJsonBody(heroShotAsset);
-
-			var response = client.Execute(request);
-
-			//Ensure we get the right code
-			//CheckStatusCode(response.StatusCode); <-- commented out for now because the API has a bug
-
-			return JsonConvert.DeserializeObject<AssetResponse>(response.Content);
 		}
 
 		/// <summary>

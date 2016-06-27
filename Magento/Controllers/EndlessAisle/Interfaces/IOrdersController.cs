@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using MagentoSync.Models.EndlessAisle.Orders;
 using MagentoSync.Utilities;
 
-namespace MagentoSync.Controllers.EndlessAisle
+namespace MagentoSync.Controllers.EndlessAisle.Interfaces
 {
 	public interface IOrdersController : IController
 	{

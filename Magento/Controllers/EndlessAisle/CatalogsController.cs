@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Net;
+using MagentoSync.Controllers.EndlessAisle.Interfaces;
 using MagentoSync.Models.EndlessAisle.Catalog;
 using Newtonsoft.Json;
 using RestSharp;
@@ -37,29 +38,6 @@ namespace MagentoSync.Controllers.EndlessAisle
 			CheckStatusCode(response.StatusCode);
 
 			return JsonConvert.DeserializeObject<CatalogItemResource>(response.Content);
-		}
-
-		/// <summary>
-		/// Gets the catalog items from the slug provided.
-		/// </summary>
-		/// <param name="slug">Slug to get items for.</param>
-		/// <returns>Catalog items for the slug provided.</returns>
-		public IEnumerable<CatalogItemResource> GetCatalogItemsBySlug(string slug)
-		{
-			var endpoint = UrlFormatter.EndlessAisleGetCatalogItemsBySlugUrl(slug);
-
-			var client = new RestClient(endpoint);
-			var request = new RestRequest(Method.GET);
-
-			request.AddHeader("Authorization", string.Format("Bearer {0}", AuthToken));
-			request.AddHeader("Accept", "application/json");
-
-			var response = client.Execute(request);
-
-			//Ensure we get the right code
-			CheckStatusCode(response.StatusCode);
-
-			return JsonConvert.DeserializeObject<CatalogSearchResultResource>(response.Content).Items;
 		}
 
 		/**

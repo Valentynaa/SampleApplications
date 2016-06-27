@@ -3,14 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration;
+using System.Linq;
 using MagentoSync.Database;
 
 namespace MagentoSync.Utilities
 {
 	public static class ConfigReader
 	{
-		private const bool readFromConfig = true;
-
 		//Mapping dictionaries
 		public static readonly List<MagentoEaMapping> ManufacturerMapping;
 		public static readonly List<MagentoEaMapping> CategoryMapping;
@@ -102,96 +101,66 @@ namespace MagentoSync.Utilities
 				}
 			}
 
-			//Override defaults with values from config
-			if (readFromConfig)
+
+			MappingCode = ReadFromConfig("MappingCode");
+			MagentoManufacturerCode = ReadFromConfig("Magento_ManufacturerCode");
+			MagentoCategoryCode = ReadFromConfig("Magento_CategoryCode");
+			MagentoDescriptionCode = ReadFromConfig("Magento_DescriptionCode");
+			MagentoCreatedAtProperty = ReadFromConfig("Magento_CreatedAtProperty");
+			MagentoUpdatedAtProperty = ReadFromConfig("Magento_UpdatedAtProperty");
+			MagentoGreaterThanCondition = ReadFromConfig("Magento_GreaterThanCondition");
+			MagentoEqualsCondition = ReadFromConfig("Magento_EqualsCondition");
+			MagentoSearchDateString = ReadFromConfig("Magento_SearchDateString");
+			MagentoConfigurableTypeId = ReadFromConfig("Magento_ConfigurableTypeId");
+			MagentoAttrCodeName = ReadFromConfig("Magento_AttrCodeName");
+			MagentoNameCode = ReadFromConfig("Magento_NameCode");
+			MagentoColorCode = ReadFromConfig("Magento_ColorCode");
+			MagentoMaterialCode = ReadFromConfig("Magento_MaterialCode");
+			MagentoImageCode = ReadFromConfig("Magento_ImageCode");
+			MagentoShippingCode = ReadFromConfig("Magento_ShippingCode");
+			MagentoPaymentMethod = ReadFromConfig("Magento_PaymentMethod");
+
+			EaClassificationTreeId = int.Parse(ReadFromConfig("EA_ClassificationTreeId"));
+
+			var fields = ConfigurationManager.GetSection("FieldMapping") as NameValueCollection;
+
+			if (fields != null)
 			{
-				MappingCode = ReadFromConfig("MappingCode");
-				MagentoManufacturerCode = ReadFromConfig("Magento_ManufacturerCode");
-				MagentoCategoryCode = ReadFromConfig("Magento_CategoryCode");
-				MagentoDescriptionCode = ReadFromConfig("Magento_DescriptionCode");
-				MagentoCreatedAtProperty = ReadFromConfig("Magento_CreatedAtProperty");
-				MagentoUpdatedAtProperty = ReadFromConfig("Magento_UpdatedAtProperty");
-				MagentoGreaterThanCondition = ReadFromConfig("Magento_GreaterThanCondition");
-				MagentoEqualsCondition = ReadFromConfig("Magento_EqualsCondition");
-				MagentoSearchDateString = ReadFromConfig("Magento_SearchDateString");
-				MagentoConfigurableTypeId = ReadFromConfig("Magento_ConfigurableTypeId");
-				MagentoAttrCodeName = ReadFromConfig("Magento_AttrCodeName");
-				MagentoNameCode = ReadFromConfig("Magento_NameCode");
-				MagentoColorCode = ReadFromConfig("Magento_ColorCode");
-				MagentoMaterialCode = ReadFromConfig("Magento_MaterialCode");
-				MagentoImageCode = ReadFromConfig("Magento_ImageCode");
-				MagentoShippingCode = ReadFromConfig("Magento_ShippingCode");
-				MagentoPaymentMethod = ReadFromConfig("Magento_PaymentMethod");
-
-				EaClassificationTreeId = int.Parse(ReadFromConfig("EA_ClassificationTreeId"));
-
-				var fields = ConfigurationManager.GetSection("FieldMapping") as NameValueCollection;
-
-				if (fields != null)
+				foreach (var key in fields.Keys)
 				{
-					foreach (var key in fields.Keys)
-					{
-						FieldMapping.Add(key.ToString(), int.Parse(fields[key.ToString()]));
-					}
-				}
-
-				var manufacturers = ConfigurationManager.GetSection("ManufacturerMapping") as NameValueCollection;
-
-				if (manufacturers != null)
-				{
-					foreach (var key in manufacturers.Keys)
-					{
-						ManufacturerMapping.Add(new MagentoEaMapping(int.Parse(key.ToString()), int.Parse(manufacturers[key.ToString()])));
-					}
-				}
-
-				var categories = ConfigurationManager.GetSection("CategoryMapping") as NameValueCollection;
-
-				if (categories != null)
-				{
-					foreach (var key in categories.Keys)
-					{
-						CategoryMapping.Add(new MagentoEaMapping(int.Parse(key.ToString()), int.Parse(categories[key.ToString()])));
-					}
-				}
-
-				var colors = ConfigurationManager.GetSection("ColorMapping") as NameValueCollection;
-
-				if (colors != null)
-				{
-					foreach (var key in colors.Keys)
-					{
-						ColorMapping.Add(new MagentoEaMapping(int.Parse(key.ToString()), int.Parse(colors[key.ToString()])));
-					}
+					FieldMapping.Add(key.ToString(), int.Parse(fields[key.ToString()]));
 				}
 			}
-			else
+
+			var manufacturers = ConfigurationManager.GetSection("ManufacturerMapping") as NameValueCollection;
+
+			if (manufacturers != null)
 			{
-				MappingCode = "iqmetrixproductidentifier";
-				MagentoManufacturerCode = "manufacturer";
-				MagentoCategoryCode = "category_ids";
-				MagentoDescriptionCode = "description";
-				MagentoCreatedAtProperty = "created_at";
-				MagentoUpdatedAtProperty = "updated_at";
-				MagentoGreaterThanCondition = "gt";
-				MagentoEqualsCondition = "eq";
-				MagentoSearchDateString = "yyyy-MM-dd hh:mm:ss";
-				MagentoConfigurableTypeId = "configurable";
-				MagentoAttrCodeName = "attribute_code";
-				MagentoNameCode = "name";
-				MagentoColorCode = "color";
-				MagentoMaterialCode = "material";
-				MagentoImageCode = "image";
-				MagentoShippingCode = "flatrate";
-				MagentoPaymentMethod = "checkmo";
-
-				EaClassificationTreeId = 88;
-
-				FieldMapping.Add("name", 1);
-				CategoryMapping.Add(new MagentoEaMapping(4, 295));
-				ManufacturerMapping.Add(new MagentoEaMapping(213, 9827));
-				ColorMapping.Add(new MagentoEaMapping(49, 1));
+				foreach (var key in manufacturers.Keys)
+				{
+					ManufacturerMapping.Add(new MagentoEaMapping(int.Parse(key.ToString()), int.Parse(manufacturers[key.ToString()])));
+				}
 			}
+
+			var categories = ConfigurationManager.GetSection("CategoryMapping") as NameValueCollection;
+
+			if (categories != null)
+			{
+				foreach (var key in categories.Keys)
+				{
+					CategoryMapping.Add(new MagentoEaMapping(int.Parse(key.ToString()), int.Parse(categories[key.ToString()])));
+				}
+			}
+
+			var colors = ConfigurationManager.GetSection("ColorMapping") as NameValueCollection;
+
+		    if (colors == null) return;
+		    {
+		        foreach (var key in colors.Keys)
+		        {
+		            ColorMapping.Add(new MagentoEaMapping(int.Parse(key.ToString()), int.Parse(colors[key.ToString()])));
+		        }
+		    }
 		}
 
 		/**
@@ -205,12 +174,9 @@ namespace MagentoSync.Utilities
 		{
 			var eaId = -1;
 
-			foreach (var value in FieldMapping)
+			foreach (var value in FieldMapping.Where(value => value.Key == attrCode))
 			{
-				if (value.Key == attrCode)
-				{
-					eaId = value.Value;
-				}
+			    eaId = value.Value;
 			}
 
 			return eaId;
@@ -227,12 +193,9 @@ namespace MagentoSync.Utilities
 		{
 			var eaId = -1;
 
-			foreach (var value in ColorMapping)
+			foreach (var value in ColorMapping.Where(value => value.magentoId == magentoColorId))
 			{
-				if (value.magentoId == magentoColorId)
-				{
-					eaId = value.eaId;
-				}
+			    eaId = value.eaId;
 			}
 
 			return eaId;
@@ -249,12 +212,9 @@ namespace MagentoSync.Utilities
 		{
 			var eaId = -1;
 
-			foreach(var value in CategoryMapping)
+			foreach (var value in CategoryMapping.Where(value => value.magentoId == magentoCategoryId))
 			{
-				if(value.magentoId == magentoCategoryId)
-				{
-					eaId = value.eaId;
-				}
+			    eaId = value.eaId;
 			}
 
 			return eaId;
@@ -271,12 +231,9 @@ namespace MagentoSync.Utilities
 		{
 			var eaId = -1;
 
-			foreach (var value in ManufacturerMapping)
+			foreach (var value in ManufacturerMapping.Where(value => value.magentoId == magentoManufacturerId))
 			{
-				if (value.magentoId == magentoManufacturerId)
-				{
-					eaId = value.eaId;
-				}
+			    eaId = value.eaId;
 			}
 
 			return eaId;

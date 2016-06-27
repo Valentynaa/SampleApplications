@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using MagentoSync.Controllers.EndlessAisle.Interfaces;
+using Newtonsoft.Json;
 using RestSharp;
 using MagentoSync.Models.EndlessAisle.Availability;
 

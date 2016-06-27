@@ -1,5 +1,5 @@
 ﻿using System;
-using MagentoSync.Controllers.EndlessAisle;
+using MagentoSync.Controllers.EndlessAisle.Interfaces;
 using MagentoSync.Models.EndlessAisle.Pricing;
 
 namespace MagentoSync.Mappers

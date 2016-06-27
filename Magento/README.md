@@ -30,7 +30,6 @@ Specifically, this project will demonstrate how to:
 	* [Models](#models)
 	* [Utilities](#utilities)
 	* [App.config](#appconfig)
-* [Tests](#tests)
 * [Logging](#logging)
 
 ## Important Notes
@@ -54,19 +53,18 @@ The App works according to the following logic:
 * Each field specified in `{FieldMapping}` is created or updated
 * Each image is checked, if there are new images they are uploaded to EA 
     * Images can be retrieved for both the File System and Database settings for Media Storage
-* The Magento **base** image is set to the product's **hero shot** image
-* The product is checked for a valid mapped category and manufacturer
+* The product is checked for a valid mapped category and (if provided) manufacturer
 * The Product is created or updated in EA
 * For NEW products
     * A [CatalogItem](http://developers.iqmetrix.com/api/catalog/#catalogitem) is created
     * [Inventory Availability](http://developers.iqmetrix.com/api/availability/#availability) is set to Magento quantity at `{EA_LocationId}` 
-    * The [Slug](http://developers.iqmetrix.com/api/catalog/#product-slug) of the new product is calculated
-    * The Slug is added to the magento product in the `{MappingCode}` attribute
+    * The CatalogItemId is added to the magento product in the `{MappingCode}` attribute
 * If the Magento product has a color, it is created or updated as a ColorDefinition on the product
 * If the Magento product has a quantity, it is created or updated as an [Availability](/api/availability/#availability) resource
 * If the Magento product has a price, it is created or updated as a [Pricing](/api/pricing/#pricing) resource
 
 ### Order Sync
+
 * Occurs after product sync
 * Each [Order](http://developers.iqmetrix.com/api/orders/#order) created in Endless Aisle since the last sync, or the last **hour** (this value can be changed) if no sync data is found, are fetched
 * For each order, a cart is created in Magento for `{Magento_CustomerId}` specified in the config file
@@ -87,7 +85,6 @@ To add a Magento product to Endless Aisle, the product must have a:
 * Sku
 * Name 
 * Category, the first category listed will be used if there are multiple listed
-* Manufacturer
 * Image
 
 ### Supported Product Types
@@ -174,9 +171,11 @@ This folder contains controller classes which manage the API requests.
 Controllers are organized by Magento/Endless Aisle and API.
 
 Base:
+
 * **BaseController** - All controllers extend this class, which contains the UrlFormatter and all future utility classes
 
 EndlessAisle:
+
 * **AssetsController** - Allows you to create an Asset, see [Assets](http://developers.iqmetrix.com/api/assets/)
 * **AuthController** - Allows you to get an Auth Token, needed to call EA APIs
 * **AvailabilityController** - Allows you to create inventory availability, see [Inventory Availability](http://developers.iqmetrix.com/api/availability/)
@@ -189,6 +188,7 @@ EndlessAisle:
 * **ProductLibraryController** - Allows you to create Master Products, Variations and Revisions, see [Product Structure ](http://developers.iqmetrix.com/api/product-structure/)
 
 Magento:
+
 * **AuthController** - Allows you to get an Auth Token, needed to call Magento APIs
 * **CartController** - Allows you to create, manage, and create an Order for a Cart
 * **CategoryController** - Allows you to get details about Categories
@@ -287,20 +287,6 @@ The following values only need to be set if your Magento system is using the Dat
 * `Magento_DatabaseUserId` - User ID for connection to database
 * `Magento_DatabasePassword` - Password for User ID
 * `Magento_DatabasePort` - Port used for database (default is "3306")
-
-## Tests
-
-The App solution includes a series of unit tests which are intended to help figure out problems with the App.
-
-Many of these files have defined constants. These will need to be replaced with values from your Magento or Endless Aisle system before the tests can be run.
-
-| Test Folder | Uses |
-|:------------|:-----|
-| Configuration | Diagnose problems related to App.config entries |
-| Controllers | Ensure Controllers are working correctly |
-| Mappers | Ensure the Mappers are working correctly |
-| ProductSync | Diagnose problems with the Product sync |
-| Utilities | Determine if there are any problems with the Utility classes |
 
 ## Logging
 

@@ -1,6 +1,6 @@
 using MagentoSync.Models.Magento.CustomAttributes;
 
-namespace MagentoSync.Controllers.Magento
+namespace MagentoSync.Controllers.Magento.Interfaces
 {
 	public interface ICustomAttributesController : IController
 	{

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using MagentoSync.Models.Magento.CustomAttributes;
+using MagentoSync.Controllers.Magento.Interfaces;
 using MagentoSync.Models.Magento.Inventory;
 using MagentoSync.Models.Magento.Products;
 using Newtonsoft.Json;

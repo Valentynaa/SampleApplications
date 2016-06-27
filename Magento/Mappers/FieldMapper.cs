@@ -1,32 +1,33 @@
-﻿using MagentoSync.Controllers.EndlessAisle;
-using MagentoSync.Controllers.Magento;
-using MagentoSync.Models.EndlessAisle.ProductLibrary;
+﻿using MagentoSync.Models.EndlessAisle.ProductLibrary;
 using MagentoSync.Models.Magento.Products;
 using MagentoSync.Utilities;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
+using MagentoSync.Controllers.EndlessAisle.Interfaces;
+using MagentoSync.Controllers.Magento.Interfaces;
 
 namespace MagentoSync.Mappers
 {
 	public class FieldMapper : BaseMapper
 	{
 		private readonly IProductLibraryController _eaProductController;
-		private readonly IProductController _magentoProductController;
-		private readonly IFieldDefinitionController _eaFieldDefinitionController;
+        private readonly IFieldDefinitionController _eaFieldDefinitionController;
+	    private readonly ICatalogsController _eaCatalogsController;
+        private readonly IProductController _magentoProductController;
 		private readonly ICustomAttributesController _magentoCustomAttributesController;
 
-		public FieldMapper(IProductLibraryController productLibraryController, IProductController productController, IFieldDefinitionController fieldDefinitionController, ICustomAttributesController customAttributesController)
+		public FieldMapper(IProductLibraryController productLibraryController, IProductController productController, IFieldDefinitionController fieldDefinitionController, ICatalogsController catalogsController, ICustomAttributesController customAttributesController)
 		{
 			_eaProductController = productLibraryController;
-			_magentoProductController = productController;
 			_eaFieldDefinitionController = fieldDefinitionController;
+		    _eaCatalogsController = catalogsController;
 			_magentoCustomAttributesController = customAttributesController;
-		}
+            _magentoProductController = productController;
+        }
 
-		/**
+        /**
 		 * Gets a matching Ea category given a magento category
 		 * This will only get the FIRST category, as EA does not suppport multiple categories for a product
 		 * 
@@ -34,7 +35,7 @@ namespace MagentoSync.Mappers
 		 *
 		 * @return      int                         Id of a Classification or Category in EA that matches the Magento category for the Product
 		 */
-		public int GetMatchingCategory(List<CustomAttributeRefResource> magentoCustomAttributes)
+        public int GetMatchingCategory(List<CustomAttributeRefResource> magentoCustomAttributes)
 		{
 			//First get the list of Categories on the Magento product
 			var magentoCategoryList =
@@ -65,19 +66,19 @@ namespace MagentoSync.Mappers
 		 * 
 		 * @param       magentoCustomAttributes     Magento custom attributes to search
 		 *
-		 * @return      int                         Id of Manufacturer EA that matches the Magento category for the Product
+		 * @return      int>                        Id of Manufacturer EA that matches the Magento category for the Product, if found
 		 */
-		public int GetMatchingManufacturer(List<CustomAttributeRefResource> magentoCustomAttributes)
+		public int? GetMatchingManufacturer(List<CustomAttributeRefResource> magentoCustomAttributes)
 		{
 			var manufacturerAttribute = GetAttributeByCode(magentoCustomAttributes, ConfigReader.MagentoManufacturerCode);
+
 			if (manufacturerAttribute == null)
 			{
-				throw new Exception("No Magento manufacturers found in attribute list provided.");
+                return null;
 			}
 
 			//Get Identifier of Manufacturer
-			var magentoManufacturerId =
-				int.Parse(manufacturerAttribute.ToString());
+			var magentoManufacturerId = int.Parse(manufacturerAttribute.ToString());
 			var eaManufacturerId = ConfigReader.GetMatchingEndlessAisleManufacturer(magentoManufacturerId);
 
 			if (eaManufacturerId == -1)
@@ -89,23 +90,16 @@ namespace MagentoSync.Mappers
 			return eaManufacturerId;
 		}
 
-		/**
-		 * This function will add a new Custom Property to a Magento product and store a SLUG in it
+        /**
+		 * This function will add a new Custom Property to a Magento product and store a catalog item id
 		 * This will serve to tie the two products together
-		 * NOTE: The Magento product must use an attribute set that has an Endless Aisle Slug property added, 
-		 * And you must ensure the MappingCode value at top is set to the attribute code
 		 * 
 		 * @param   magentoProduct  Magento product
-		 * @param   slug            Slug of a Product in EA
+		 * @param   catalogItemId   Identifier for a Catalog Item
 		 *
 		 */
-		public void CreateMappingForProduct(ProductResource magentoProduct, string slug)
+        public void CreateMappingForProduct(ProductResource magentoProduct, string catalogItemId)
 		{
-			if (!Regex.IsMatch(slug, RegexPatterns.SlugPattern))
-			{
-				throw new Exception(string.Format("\"{0}\" is in an invalid slug format.", slug));
-			}
-
 			//Check for a mapping
 			var mappingAttrValue = GetAttributeByCode(magentoProduct.custom_attributes, ConfigReader.MappingCode);
 
@@ -116,7 +110,7 @@ namespace MagentoSync.Mappers
 			var magentoCategoryList = (JArray)GetAttributeByCode(magentoProduct.custom_attributes, ConfigReader.MagentoCategoryCode);
 			var categoryIds = magentoCategoryList.Select(category => int.Parse(category.ToString())).ToList();
 
-			_magentoProductController.AddCustomAttributeToProduct(magentoProduct, categoryIds, ConfigReader.MappingCode, slug);
+			_magentoProductController.AddCustomAttributeToProduct(magentoProduct, categoryIds, ConfigReader.MappingCode, catalogItemId);
 		}
 
 		/**
@@ -130,7 +124,7 @@ namespace MagentoSync.Mappers
 		{
 			var mapping = GetAttributeByCode(magentoProduct.custom_attributes, ConfigReader.MappingCode);
 
-			return mapping != null ? mapping.ToString() : null;
+			return mapping?.ToString();
 		}
 
 		/**
@@ -150,8 +144,6 @@ namespace MagentoSync.Mappers
 					CreateField(ConfigReader.GetValueForField(ConfigReader.MagentoNameCode),
 								magentoProduct.name)
 				};
-
-			//Add Name field
 
 			//Add fields from custom attributes
 			foreach (var attribute in magentoProduct.custom_attributes)
@@ -195,13 +187,12 @@ namespace MagentoSync.Mappers
 			//If this is an "Upsert" 
 			if (ProductHasMapping(magentoProduct))
 			{
-				var mappingSlug =
-					GetAttributeByCode(magentoProduct.custom_attributes, ConfigReader.MappingCode).ToString();
+				var catalogItemId = GetAttributeByCode(magentoProduct.custom_attributes, ConfigReader.MappingCode).ToString();      
+			    var slug = _eaCatalogsController.GetCatalogItem(catalogItemId).Slug;
+                var productDocumentId = GetProductDocumentIdFromSlug(slug);
 
-				var productDocumentId = GetProductDocumentIdFromSlug(mappingSlug);
-
-				//Go through and ensure all product fields no longer on the product are "empty", this will ensure they are deleted
-				var eaFields =
+                //Go through and ensure all product fields no longer on the product are "empty", this will ensure they are deleted
+                var eaFields =
 					_eaProductController.GetProductHierarchy(productDocumentId).RootRevision.FieldValues;
 
 				foreach (var eaField in eaFields)
@@ -352,7 +343,6 @@ namespace MagentoSync.Mappers
 
 			return resource;
 		}
-
 
 		/**
 		* This function creates a Field 

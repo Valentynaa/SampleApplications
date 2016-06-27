@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using MagentoSync.Controllers.EndlessAisle.Interfaces;
 using MagentoSync.Models.EndlessAisle.Orders;
 using MagentoSync.Utilities;
 using Newtonsoft.Json;

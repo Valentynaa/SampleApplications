@@ -1,7 +1,5 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace MagentoSync.Utilities
 {
@@ -18,7 +16,6 @@ namespace MagentoSync.Utilities
 		public readonly string EaEntitiesBaseTemplate = "https://entitymanager{UrlSuffix}.iqmetrix.net/v1";
 		public readonly string EaAssetsTemplate = "https://ams{UrlSuffix}.iqmetrix.net";
 		public readonly string EaAvailabilityTemplate = "https://availability{UrlSuffix}.iqmetrix.net/v1";
-		public readonly string EaProductManagerTemplate = "https://productlibrary{UrlSuffix}.iqmetrix.net/ProductManager";
 		public readonly string EaPricingTemplate = "https://pricing{UrlSuffix}.iqmetrix.net/v1";
 		public readonly string EaOrderTemplate = "https://order{UrlSuffix}.iqmetrix.net/v1";
 
@@ -29,7 +26,6 @@ namespace MagentoSync.Utilities
 		public readonly string EaEntitiesUrl;
 		public readonly string EaAssetsUrl;
 		public readonly string EaAvailabilityUrl;
-		public readonly string EaProductManagerUrl;
 		public readonly string EaPricingUrl;
 		public readonly string EaOrderUrl;
 
@@ -51,7 +47,6 @@ namespace MagentoSync.Utilities
 			EaEntitiesUrl = ReplaceEnviornment(EaEntitiesBaseTemplate);
 			EaAssetsUrl = ReplaceEnviornment(EaAssetsTemplate);
 			EaAvailabilityUrl = ReplaceEnviornment(EaAvailabilityTemplate);
-			EaProductManagerUrl = ReplaceEnviornment(EaProductManagerTemplate);
 			EaPricingUrl = ReplaceEnviornment(EaPricingTemplate);
 			EaOrderUrl = ReplaceEnviornment(EaOrderTemplate);
 		}
@@ -328,14 +323,6 @@ namespace MagentoSync.Utilities
 			return string.Format("{0}/Companies({1})/catalog/items", EaCatalogsUrl, CompanyId);
 		}
 
-		public string EndlessAisleGetCatalogItemsBySlugUrl(string slug)
-		{
-			if(!Regex.IsMatch(slug, RegexPatterns.SlugPattern))
-				throw new Exception("Invalid slug format provided.");
-
-			return string.Format("{0}/companies({1})/catalog/items(Slug={2})", EaCatalogsUrl, CompanyId, slug);
-		}
-
 		/**
 		 * @return  string  URL needed to create products in EA
 		 */
@@ -352,12 +339,22 @@ namespace MagentoSync.Utilities
 			return string.Format("{0}/ClassificationTrees", EaProductLibraryUrl);
 		}
 
-		/**
+        /**
+		 * @param   slug    Identifier for a product in EA
+		 * 
+		 * @return  string  URL needed to get products in EA
+		 */
+        public string EndlessAisleGetProductBySlugUrl(string slug)
+        {
+            return string.Format("{0}/Products/{1}", EaProductLibraryUrl, slug);
+        }
+
+        /**
 		 * @param   classificationTreeId    Identifier of a ClassificationTree
 		 * 
 		 * @return  string                  URL needed GET a classification tree
 		 */
-		public string EndlessAisleClassificationTreeUrl(int classificationTreeId)
+        public string EndlessAisleClassificationTreeUrl(int classificationTreeId)
 		{
 			return string.Format("{0}/ClassificationTrees({1})", EaProductLibraryUrl, classificationTreeId);
 		}
@@ -421,16 +418,6 @@ namespace MagentoSync.Utilities
 		}
 
 		/**
-		 * @param   slug    Identifier for a product in EA
-		 * 
-		 * @return  string  URL needed to get products in EA
-		 */
-		public string EndlessAisleGetProductBySlugUrl(string slug)
-		{
-			return string.Format("{0}/Products/{1}", EaProductLibraryUrl, slug);
-		}
-
-		/**
 		 * @param   productDocument     Identifier for a product in EA
 		 * 
 		 * @return  string              URL needed to add color definitions in EA
@@ -471,16 +458,6 @@ namespace MagentoSync.Utilities
 		{
 			return string.Format("{0}/companies({1})/catalogitems", EaAvailabilityUrl, CompanyId);
 		}     
-   
-		/**
-		 * @param   slug    Identifier of a product in EA
-		 * 
-		 * @return  string  URL needed to set a heroshot in EA
-		 */
-		 public string EndlessAisleSetHeroShotUrl(string slug)
-		{
-			return string.Format("{0}/products/{1}/heroshot", EaProductManagerUrl, slug);      
-		}
 
 		/// <summary>
 		/// Gets the string for the URL needed to set pricing in EA

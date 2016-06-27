@@ -1,4 +1,5 @@
-﻿using MagentoSync.Models.Magento.Category;
+﻿using MagentoSync.Controllers.Magento.Interfaces;
+using MagentoSync.Models.Magento.Category;
 using Newtonsoft.Json;
 using RestSharp;
 

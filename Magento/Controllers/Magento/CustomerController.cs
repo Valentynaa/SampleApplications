@@ -1,4 +1,4 @@
-﻿using System;
+﻿using MagentoSync.Controllers.Magento.Interfaces;
 using MagentoSync.Models.Magento.Customer;
 using Newtonsoft.Json;
 using RestSharp;

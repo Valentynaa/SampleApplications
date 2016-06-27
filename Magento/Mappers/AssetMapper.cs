@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Drawing;
 using System.Linq;
-using MagentoSync.Controllers.EndlessAisle;
 using MagentoSync.Models.EndlessAisle.ProductLibrary;
 using System.Collections.Generic;
+using MagentoSync.Controllers.EndlessAisle.Interfaces;
 using MagentoSync.Database;
-using MagentoSync.Exceptions;
-using MagentoSync.Models.EndlessAisle.ProductLibrary.Projections;
 using MagentoSync.Models.Magento.Products;
 using MagentoSync.Utilities;
 
@@ -16,11 +14,13 @@ namespace MagentoSync.Mappers
 	{
 		private readonly IAssetsController _eaAssetsController;
 		private readonly IProductLibraryController _eaProductController;
+        private readonly ICatalogsController _eaCatalogsController;
 
-		public AssetMapper(IAssetsController assetsController, IProductLibraryController productLibraryController)
+		public AssetMapper(IAssetsController assetsController, IProductLibraryController productLibraryController, ICatalogsController catalogsController)
 		{
 			_eaAssetsController = assetsController;
 			_eaProductController = productLibraryController;
+		    _eaCatalogsController = catalogsController;
 		}
 
 		/**
@@ -46,10 +46,12 @@ namespace MagentoSync.Mappers
 			if (ProductHasMapping(magentoProduct))
 			{
 				//Get master product Id from the mapping slug
-				var mappingSlug =
+				var catalogItemId =
 					GetAttributeByCode(magentoProduct.custom_attributes, ConfigReader.MappingCode).ToString();
 
-				var eaAssets = _eaProductController.GetProductBySlug(mappingSlug).Assets.ToList();
+			    var slug = _eaCatalogsController.GetCatalogItem(catalogItemId).Slug;
+
+				var eaAssets = _eaProductController.GetProductBySlug(slug).Assets.ToList();
 
 				//Loop through magento product assets. This update can only ADD assets, not remove or change
 				foreach (var magentoAsset in magentoAssets)
@@ -102,22 +104,6 @@ namespace MagentoSync.Mappers
 		}
 
 		/**
-		* This function changes the Hero Shot, or main image, of a product to a different asset
-		* The new asset must ALREADY be assigned to the product
-		* 
-		* @param   slug     Identifier of a product in EA
-		* @param   assetId  Identifier of new hero shot asset
-		*
-		* @return  Guid     Identifier of new hero shot asset
-		*/
-		public Guid SetHeroShot(string slug, Guid assetId)
-		{
-			var assetRequest = new AssetResponse { assetId = assetId };
-
-			return _eaAssetsController.SetHeroShot(slug, assetRequest).assetId;
-		}
-
-		/**
 		* This function determines the hero shot, based on the Image attribute on the magento product
 		* It then cross references this value with the media images and returns the appropriate one, or null 
 		* 
@@ -135,22 +121,6 @@ namespace MagentoSync.Mappers
 			var imageAttr = GetAttributeByCode(magentoProduct.custom_attributes, ConfigReader.MagentoImageCode);
 
 			return imageAttr == null ? null : magentoProduct.media_gallery_entries.FirstOrDefault(asset => asset.file == imageAttr.ToString());
-		}
-
-		/// <summary>
-		/// Gets the Image associated with the specified asset on the EA product with the slug provided.
-		/// </summary>
-		/// <param name="slug">Identifier for EA product to get image for</param>
-		/// <param name="asset">Asset to get</param>
-		/// <returns>Image associated with asset and slug</returns>
-		public Image GetAssetImage(string slug, AssetResource asset)
-		{
-			var matches = _eaProductController.GetProductBySlug(slug).Assets.Where(x => x.Id == asset.Id).ToList();
-			if (!matches.Any())
-			{
-				throw new NotFoundException(string.Format("No asset with ID \"{0}\" found for EA product with slug \"{1}\".", asset.Id, slug));
-			}
-			return ImageUtility.ImageFromUri(matches.First().Uri);
 		}
 	}
 }

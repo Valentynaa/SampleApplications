@@ -1,6 +1,6 @@
 ﻿using MagentoSync.Models.EndlessAisle.Pricing;
 
-namespace MagentoSync.Controllers.EndlessAisle
+namespace MagentoSync.Controllers.EndlessAisle.Interfaces
 {
 	public interface IPricingController : IController
 	{

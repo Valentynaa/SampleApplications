@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using MagentoSync.Controllers.EndlessAisle.Interfaces;
 using MagentoSync.Models.EndlessAisle.FieldDefinitions;
 using Newtonsoft.Json;
 using RestSharp;

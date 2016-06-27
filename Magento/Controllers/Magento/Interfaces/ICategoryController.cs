@@ -1,6 +1,6 @@
 ﻿using MagentoSync.Models.Magento.Category;
 
-namespace MagentoSync.Controllers.Magento
+namespace MagentoSync.Controllers.Magento.Interfaces
 {
 	public interface ICategoryController : IController
 	{

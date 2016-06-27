@@ -1,4 +1,5 @@
 ﻿using System;
+using MagentoSync.Controllers.EndlessAisle.Interfaces;
 using MagentoSync.Models.EndlessAisle.Pricing;
 using MagentoSync.Utilities;
 using Newtonsoft.Json;
