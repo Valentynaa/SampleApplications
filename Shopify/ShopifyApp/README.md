@@ -34,9 +34,9 @@ Specifically, this project will demonstrate how to:
 	* [dev-settings.json](#dev-settingsjson)
 
 ## Getting Started
-To set up the environment necessary for the application please see the [Getting Started Guide](https://github.com/iQmetrix/SampleApplications/blob/master/Shopify/docs/GettingStarted.md).
+To set up the environment necessary for the application please see the [Getting Started Guide](https://github.com/iQmetrix/SampleApplications/blob/master/Shopify/README.md).
 
-Before the App can be run, you must first create a series of Mapping values in [`dev-settings.json`](path to dev-settings). Configuration is done in JSON format with key value pairs.
+Before the App can be run, you must first create a series of Mapping values in [`dev-settings.json`](https://github.com/iQmetrix/SampleApplications/blob/master/Shopify/ShopifyApp/dev-settings.json). Configuration is done in JSON format with key value pairs.
 
 ### FieldMapping
 
@@ -130,7 +130,7 @@ For each Manufacturer to be mapped, there must be an entry listed in `manufactur
 }
 ```
 
-See [Getting Started Guide](https://github.com/iQmetrix/SampleApplications/blob/master/Shopify/docs/GettingStarted.md) for more details.
+See [Getting Started Guide](https://github.com/iQmetrix/SampleApplications/blob/master/Shopify/README.md) for more details.
 
 ## How it Works
 The integration uses Shopify [webooks](https://help.shopify.com/api/tutorials/webhooks), which trigger actions in the application. When a webhook request is received the corresponding mapping function is triggered. Below is a description of how the mapping is performed for each supported topic.
@@ -290,7 +290,7 @@ Mapping to records in each system is done as shown in the below table:
 * **webhook** - Handles webhook requests and passes the required work off to a mapper.
 * **iqmetrix_auth.js** - Gets the Auth Token needed to use the iQmetrix APIs
 * **shopify_auth.js** - Gets the Auth Token needed to use the Shopify APIs
-**NOTE**: This application has no UI, but to add a UI to the application it can be done here. See [index.js renderApp](link to function)
+**NOTE**: This application has no UI, but to add a UI to the application it can be done here. See [index.js renderApp](https://github.com/iQmetrix/SampleApplications/blob/master/Shopify/ShopifyApp/routes/index.js#L40)
 
 ### Shopify Metafield Node
 Structured similar to [Shopify API node](https://github.com/microapps/Shopify-api-node). Allows the ability to get the metafields from a specific resource.
@@ -304,7 +304,7 @@ The following utilities are included in the project:
 * **regex** - Holds Regex patterns used throughout the application.
 
 ### dev-settings.json
-The following constants must be filled out in the dev-settings.json file for the project to run successfully. For more information see the [Getting Started Guide]():
+The following constants must be filled out in the dev-settings.json file for the project to run successfully. For more information see the [Getting Started Guide](https://github.com/iQmetrix/SampleApplications/blob/master/Shopify/README.md):
 
 * `general`
 	* `title` - Title for the application
@@ -341,8 +341,8 @@ The following constants must be filled out in the dev-settings.json file for the
 	* `option1` - Field for Variant option 1
 	* `option2` - Field for Variant option 2
 	* `option3` - Field for Variant option 3
-* `categoryMapping` - See [Getting Started]()
-* `manufacturerMapping` - See [Getting Started]()
+* `categoryMapping` - See [Getting Started](https://github.com/iQmetrix/SampleApplications/blob/master/Shopify/README.md)
+* `manufacturerMapping` - See [Getting Started](https://github.com/iQmetrix/SampleApplications/blob/master/Shopify/README.md)
 
 Example of **dev-settings** setup:
 ```json
