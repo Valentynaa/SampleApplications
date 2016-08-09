@@ -1,0 +1,27 @@
+{
+  "name": "application-name",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.14.2",
+    "colors": "^1.1.2",
+    "cookie-parser": "~1.4.0",
+    "cookie-session": "~1.2.0",
+    "crypto": "0.0.3",
+    "express": "^4.13.4",
+    "form-data": "^1.0.0-rc4",
+    "jade": "*",
+    "jslinq": "^1.0.15",
+    "linq": "^3.0.5",
+    "md5-file": "^3.1.1",
+    "morgan": "~1.6.1",
+    "nconf": "~0.8.0",
+    "oauth": "~0.9.14",
+    "path": "^0.12.7",
+    "shopify-api-node": "^1.2.0",
+    "unirest": "^0.5.0"
+  }
+}
