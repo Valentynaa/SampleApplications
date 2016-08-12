@@ -4,6 +4,7 @@ This guide provides all the steps neccessary to run the iQmetrix Shopify Integra
 
 The intended audience for this guide are developers interested in extending the Shopify Integration App.
 
+In this guide, you will be setting up a development store following the Shopify guide.
 
 ---
 
