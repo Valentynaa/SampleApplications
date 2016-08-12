@@ -37,11 +37,15 @@ These steps must be done in **sequential order**.
     * Get your [Shopify API credentials.](https://help.shopify.com/api/guides/api-credentials)  Set up a Shopify PARTNER account, log into the partner portal and create an integration application.
 Ensure ShopName, Scopes, APIKey and CallbackURL are filled in your ENV file in Postman.
     * Run the first request.
-    * Press Generate Code and combine peices so it looks similar to this:
+    * Press Generate Code and combine pieces so it looks similar to this:
 `https://{{storeName}}.myshopify.com/admin/oauth/authorize?client_id={{clientId}}&scope=write_orders,read_customers&redirect_uri=http://localhost/`
     * Copy + paste that into your browser URL. You may have to "approve" the connection. Then you will be directed to a dead page. Copy the "Code" from the URL and place it in the ENV.
  *  Exchange CODE for your ACCESS TOKEN
-    * Ensure APIKey, Secret, ShopName and Code are filled in your ENV.
+    * Ensure the following fields are filled in you ENV:
+        * APIKey
+        * Secret
+        * ShopName
+        * Code
 
 ### 2. Set up webhooks
 
