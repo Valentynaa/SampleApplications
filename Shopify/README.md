@@ -1,8 +1,9 @@
 # Getting Started
 
-This guide goes over everything needed to run the iQmetrix Shopify Integration App.
+This guide provides all the steps neccessary to run the iQmetrix Shopify Integration App.
 
 The intended audience for this guide are developers interested in extending the Shopify Integration App.
+
 
 ---
 
@@ -28,14 +29,20 @@ This guide assumes the following:
 
 These steps must be done in **sequential order**. 
 
-### 1. Set up Shopify
-1. Follow the Shopify developer's [getting started](https://help.shopify.com/api/guides) guide to create a development store. When [creating your application](https://help.shopify.com/api/guides/api-credentials) ensure that the app URL is `http://localhost:3000/` and that `http://localhost:3000/auth_token` is the used as the redirection URL since [express](https://expressjs.com/) works for port 3000. For further help take a look at [this blog post](http://blog.codezuki.com/blog/2014/02/10/shopify-nodejs/).
+### Step 1: Set Up Shopify
 
-2. Download [this collection](https://www.getpostman.com/collections/6227f475d29dba2ec653) and follow instructions in description of calls to get your authentication credentials.
+
+
+1. Follow the Shopify developer's [Getting Started Guide](https://help.shopify.com/api/guides) to create a development store. When [creating your application](https://help.shopify.com/api/guides/api-credentials) ensure that the app URL is `http://localhost:3000/` and that the redirection URL is `http://localhost:3000/auth_token`, since [express](https://expressjs.com/) works for port 3000. More information is available from the [CODEZUKI blog post](http://blog.codezuki.com/blog/2014/02/10/shopify-nodejs/).
+
+2. Download the [Postman collection](https://www.getpostman.com/collections/6227f475d29dba2ec653).
+
+3. Follow the instructions contained in the description of the calls to get your Shopify authentication credentials:
  
  * AUTHENTICATE
-    * Get your [Shopify API credentials.](https://help.shopify.com/api/guides/api-credentials)  Set up a Shopify PARTNER account, log into the partner portal and create an integration application.
-Ensure ShopName, Scopes, APIKey and CallbackURL are filled in your ENV file in Postman.
+    * Get your [Shopify API credentials.](https://help.shopify.com/api/guides/api-credentials) 
+    * Set up a Shopify PARTNER account, log into the partner portal and create an integration application.
+    Ensure ShopName, Scopes, APIKey and CallbackURL are filled in your ENV file in Postman.
     * Run the first request.
     * Press Generate Code and combine pieces so it looks similar to this:
 `https://{{storeName}}.myshopify.com/admin/oauth/authorize?client_id={{clientId}}&scope=write_orders,read_customers&redirect_uri=http://localhost/`
@@ -47,7 +54,7 @@ Ensure ShopName, Scopes, APIKey and CallbackURL are filled in your ENV file in P
         * ShopName
         * Code
 
-### 2. Set up webhooks
+### Step 2: Set Up Webhooks
 
 Shopify uses [webhooks](https://help.shopify.com/api/tutorials/webhooks) to push requests to subscribers when events happen in the Shopify system. Detailed information about using the webhook API calls can be viewed [at Shopify's API reference](https://help.shopify.com/api/reference/webhook).
  
