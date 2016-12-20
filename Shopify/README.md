@@ -1,3 +1,5 @@
+> **Note**: iQmetrix APIs are constantly improving to meet the needs of consumers. As a result, the code in this sample applicaton may be out of date.
+
 # Getting Started
 
 This guide provides all the steps neccessary to run the iQmetrix Shopify Integration App.
