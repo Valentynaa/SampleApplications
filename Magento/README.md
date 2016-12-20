@@ -1,3 +1,5 @@
+> **Note**: iQmetrix APIs are constantly improving to meet the needs of consumers. As a result, the code in this sample applicaton may be out of date.
+
 # MagentoSync
 
 This project is intended to accompany the [Endless Aisle Integration Guide](http://developers.iqmetrix.com/guides/ea-guide/overview) to provide an example how to integrate the iQmetrix [Endless Aisle](http://www.iqmetrix.com/products/endless-aisle) solution with [Magento](https://magento.com/) utilizing APIs.
